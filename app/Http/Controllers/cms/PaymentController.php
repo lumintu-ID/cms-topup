@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\cms;
 
-use App\Models\Country;
 use App\Models\Payment;
-use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\PaymentRequest;
+use App\Http\Requests\PaymentUpdateRequest;
+use App\Repository\Country\CountryImplement;
+use App\Repository\Payment\PaymentImplement;
+use App\Repository\Category\CategoryImplement;
 
 class PaymentController extends Controller
 {
@@ -26,11 +28,23 @@ class PaymentController extends Controller
     private function _remove($file, $data)
     {
         if ($file->file('thumbnail')) {
-            File::delete('image/' . $data->first()->logo_channel);
+            File::delete('image/' . $data->logo_channel);
             return;
         };
 
         return;
+    }
+
+
+    protected $categoryImplement;
+    protected $countryImplement;
+    protected $paymentImplement;
+
+    public function __construct(CategoryImplement $categoryImplement, CountryImplement $countryImplement, PaymentImplement $paymentImplement)
+    {
+        $this->categoryImplement = $categoryImplement;
+        $this->countryImplement = $countryImplement;
+        $this->paymentImplement = $paymentImplement;
     }
 
 
@@ -44,9 +58,9 @@ class PaymentController extends Controller
         try {
             $title = "Payment List";
 
-            $data = Payment::with('category', 'country')->orderBy('category_id')->get();
-            $category = Category::all();
-            $country = Country::all();
+            $data = $this->paymentImplement->getAll();
+            $category = $this->categoryImplement->getAll();
+            $country = $this->countryImplement->getAll();
 
             return view('cms.pages.payment.index', compact('title', 'data', 'country', 'category'));
         } catch (\Throwable $th) {
@@ -66,20 +80,9 @@ class PaymentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PaymentRequest $request)
     {
         try {
-            $valid = Validator::make($request->all(), [
-                'name' => 'required|string',
-                'category' => 'required',
-                'country' => 'required',
-                'channel_id' => 'required',
-                'thumbnail' => 'required|file|image|mimes:jpeg,png,jpg|max:1048'
-            ]);
-
-            if ($valid->fails()) {
-                return redirect()->back()->withInput()->withErrors($valid->errors());
-            };
 
             Payment::create([
                 'payment_id' => Str::uuid(),
@@ -114,11 +117,11 @@ class PaymentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(PaymentUpdateRequest $request)
     {
         try {
-            $payment = Payment::where('payment_id', $request->id);
-            if (!$payment->first()) {
+            $payment = $this->paymentImplement->getId($request->id);
+            if (!$payment) {
                 $notif = array(
                     'message' => 'Update Payment Failed',
                     'alert-info' => 'warning'
@@ -130,7 +133,7 @@ class PaymentController extends Controller
 
             $this->_remove($request, $payment);
 
-            $payment->update([
+            Payment::where('payment_id', $request->id)->update([
                 'category_id' => $request->category,
                 'country_id' => $request->country,
                 'channel_id' => $request->channel_id,
@@ -163,8 +166,8 @@ class PaymentController extends Controller
     public function destroy(Request $request)
     {
         try {
-            $payment = Payment::where('payment_id', $request->id);
-            if (!$payment->first()) {
+            $payment = $this->paymentImplement->getId($request->id);
+            if (!$payment) {
                 $notif = array(
                     'message' => 'Delete Payment Failed',
                     'alert-info' => 'warning'
@@ -175,9 +178,9 @@ class PaymentController extends Controller
 
 
 
-            File::delete('image/' .  $payment->first()->logo_channel);
+            File::delete('image/' .  $payment->logo_channel);
 
-            $payment->delete();
+            $this->paymentImplement->delete($request->id);
 
             $notif = array(
                 'message' => 'Success Delete Payment',
