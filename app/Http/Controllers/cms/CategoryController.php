@@ -33,25 +33,34 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $valid = Validator::make($request->all(), [
-            'category' => 'required|string'
-        ]);
+        try {
+            $valid = Validator::make($request->all(), [
+                'category' => 'required|string'
+            ]);
 
-        if ($valid->fails()) {
-            return redirect()->back()->withInput()->withErrors($valid->errors());
-        };
+            if ($valid->fails()) {
+                return redirect()->back()->withInput()->withErrors($valid->errors());
+            };
 
-        Category::create([
-            'category_id' => Str::uuid(),
-            'category' => $request->category
-        ]);
+            Category::create([
+                'category_id' => Str::uuid(),
+                'category' => $request->category
+            ]);
 
-        $notif = array(
-            'message' => 'Success Create Category',
-            'alert-info' => 'success'
-        );
+            $notif = array(
+                'message' => 'Success Create Category',
+                'alert-info' => 'success'
+            );
 
-        return redirect()->back()->with($notif);
+            return redirect()->back()->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
+                'alert-info' => 'warning'
+            );
+
+            return redirect()->back()->with($notif);
+        }
     }
 
 
@@ -64,27 +73,36 @@ class CategoryController extends Controller
      */
     public function update(Request $request)
     {
-        $category = Category::where('category_id', $request->id);
+        try {
+            $category = Category::where('category_id', $request->id);
 
-        if (!$category->first()) {
+            if (!$category->first()) {
+                $notif = array(
+                    'message' => 'Update Category Failed',
+                    'alert-info' => 'warning'
+                );
+
+                return redirect()->back()->with($notif);
+            };
+
+            $category->update([
+                'category' => $request->category
+            ]);
+
             $notif = array(
-                'message' => 'Update Category Failed',
+                'message' => 'Success Update Category',
+                'alert-info' => 'success'
+            );
+
+            return redirect()->back()->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
                 'alert-info' => 'warning'
             );
 
             return redirect()->back()->with($notif);
-        };
-
-        $category->update([
-            'category' => $request->category
-        ]);
-
-        $notif = array(
-            'message' => 'Success Update Category',
-            'alert-info' => 'success'
-        );
-
-        return redirect()->back()->with($notif);
+        }
     }
 
 
@@ -96,24 +114,33 @@ class CategoryController extends Controller
      */
     public function destroy(Request $request)
     {
-        $category = Category::where('category_id', $request->id);
+        try {
+            $category = Category::where('category_id', $request->id);
 
-        if (!$category->first()) {
+            if (!$category->first()) {
+                $notif = array(
+                    'message' => 'Delete Category Failed',
+                    'alert-info' => 'warning'
+                );
+
+                return redirect()->back()->with($notif);
+            };
+
+            $category->delete();
+
             $notif = array(
-                'message' => 'Delete Category Failed',
+                'message' => 'Success Delete Category',
+                'alert-info' => 'success'
+            );
+
+            return redirect()->back()->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
                 'alert-info' => 'warning'
             );
 
             return redirect()->back()->with($notif);
-        };
-
-        $category->delete();
-
-        $notif = array(
-            'message' => 'Success Delete Category',
-            'alert-info' => 'success'
-        );
-
-        return redirect()->back()->with($notif);
+        }
     }
 }

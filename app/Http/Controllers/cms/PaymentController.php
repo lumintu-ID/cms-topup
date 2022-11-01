@@ -41,13 +41,22 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $title = "Payment List";
+        try {
+            $title = "Payment List";
 
-        $data = Payment::with('category', 'country')->orderBy('category_id')->get();
-        $category = Category::all();
-        $country = Country::all();
+            $data = Payment::with('category', 'country')->orderBy('category_id')->get();
+            $category = Category::all();
+            $country = Country::all();
 
-        return view('cms.pages.payment.index', compact('title', 'data', 'country', 'category'));
+            return view('cms.pages.payment.index', compact('title', 'data', 'country', 'category'));
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
+                'alert-info' => 'warning'
+            );
+
+            return redirect()->back()->with($notif);
+        }
     }
 
 
@@ -59,33 +68,42 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        $valid = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'category' => 'required',
-            'country' => 'required',
-            'channel_id' => 'required',
-            'thumbnail' => 'required|file|image|mimes:jpeg,png,jpg|max:1048'
-        ]);
+        try {
+            $valid = Validator::make($request->all(), [
+                'name' => 'required|string',
+                'category' => 'required',
+                'country' => 'required',
+                'channel_id' => 'required',
+                'thumbnail' => 'required|file|image|mimes:jpeg,png,jpg|max:1048'
+            ]);
 
-        if ($valid->fails()) {
-            return redirect()->back()->withInput()->withErrors($valid->errors());
-        };
+            if ($valid->fails()) {
+                return redirect()->back()->withInput()->withErrors($valid->errors());
+            };
 
-        Payment::create([
-            'payment_id' => Str::uuid(),
-            'category_id' => $request->category,
-            'country_id' => $request->country,
-            'channel_id' => $request->channel_id,
-            'name_channel' => $request->name,
-            'logo_channel' => $this->_upload($request->file('thumbnail'))
-        ]);
+            Payment::create([
+                'payment_id' => Str::uuid(),
+                'category_id' => $request->category,
+                'country_id' => $request->country,
+                'channel_id' => $request->channel_id,
+                'name_channel' => $request->name,
+                'logo_channel' => $this->_upload($request->file('thumbnail'))
+            ]);
 
-        $notif = array(
-            'message' => 'Success Create Payment',
-            'alert-info' => 'success'
-        );
+            $notif = array(
+                'message' => 'Success Create Payment',
+                'alert-info' => 'success'
+            );
 
-        return redirect()->back()->with($notif);
+            return redirect()->back()->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
+                'alert-info' => 'warning'
+            );
+
+            return redirect()->back()->with($notif);
+        }
     }
 
 
@@ -98,34 +116,42 @@ class PaymentController extends Controller
      */
     public function update(Request $request)
     {
+        try {
+            $payment = Payment::where('payment_id', $request->id);
+            if (!$payment->first()) {
+                $notif = array(
+                    'message' => 'Update Payment Failed',
+                    'alert-info' => 'warning'
+                );
 
-        $payment = Payment::where('payment_id', $request->id);
-        if (!$payment->first()) {
+                return redirect()->back()->with($notif);
+            };
+
+
+            $this->_remove($request, $payment);
+
+            $payment->update([
+                'category_id' => $request->category,
+                'country_id' => $request->country,
+                'channel_id' => $request->channel_id,
+                'name_channel' => $request->name,
+                'logo_channel' => (!$request->file('thumbnail')) ? $payment->first()->logo_channel : $this->_upload($request->file('thumbnail'))
+            ]);
+
             $notif = array(
-                'message' => 'Update Payment Failed',
+                'message' => 'Success Update Payment',
+                'alert-info' => 'success'
+            );
+
+            return redirect()->back()->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
                 'alert-info' => 'warning'
             );
 
             return redirect()->back()->with($notif);
-        };
-
-
-        $this->_remove($request, $payment);
-
-        $payment->update([
-            'category_id' => $request->category,
-            'country_id' => $request->country,
-            'channel_id' => $request->channel_id,
-            'name_channel' => $request->name,
-            'logo_channel' => (!$request->file('thumbnail')) ? $payment->first()->logo_channel : $this->_upload($request->file('thumbnail'))
-        ]);
-
-        $notif = array(
-            'message' => 'Success Update Payment',
-            'alert-info' => 'success'
-        );
-
-        return redirect()->back()->with($notif);
+        }
     }
 
     /**
@@ -136,27 +162,36 @@ class PaymentController extends Controller
      */
     public function destroy(Request $request)
     {
-        $payment = Payment::where('payment_id', $request->id);
-        if (!$payment->first()) {
+        try {
+            $payment = Payment::where('payment_id', $request->id);
+            if (!$payment->first()) {
+                $notif = array(
+                    'message' => 'Delete Payment Failed',
+                    'alert-info' => 'warning'
+                );
+
+                return redirect()->back()->with($notif);
+            };
+
+
+
+            File::delete('image/' .  $payment->first()->logo_channel);
+
+            $payment->delete();
+
             $notif = array(
-                'message' => 'Delete Payment Failed',
+                'message' => 'Success Delete Payment',
+                'alert-info' => 'success'
+            );
+
+            return redirect()->back()->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
                 'alert-info' => 'warning'
             );
 
             return redirect()->back()->with($notif);
-        };
-
-
-
-        File::delete('image/' .  $payment->first()->logo_channel);
-
-        $payment->delete();
-
-        $notif = array(
-            'message' => 'Success Delete Payment',
-            'alert-info' => 'success'
-        );
-
-        return redirect()->back()->with($notif);
+        }
     }
 }

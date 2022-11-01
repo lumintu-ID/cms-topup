@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Repository\User\UserImplement;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -36,29 +38,33 @@ class AuthController extends Controller
         return view('cms.pages.auth.login', compact('title'));
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $this->validate($request, [
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+        try {
+            // cek apakah email dan password benar
+            if (Auth::attempt(request(['email', 'password']))) {
 
-        // cek apakah email dan password benar
-        if (Auth::attempt(request(['email', 'password']))) {
+                $notif = array(
+                    'message' => 'Success Login',
+                    'alert-info' => 'success'
+                );
+                return redirect()->route('cms.dashboard')->with($notif);
+            }
 
             $notif = array(
-                'message' => 'Success Login',
-                'alert-info' => 'success'
+                'message' => 'Email or password not match',
+                'alert-info' => 'warning'
             );
-            return redirect()->route('cms.dashboard')->with($notif);
-        }
+            // jika salah, kembali ke halaman login
+            return redirect()->back()->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
+                'alert-info' => 'warning'
+            );
 
-        $notif = array(
-            'message' => 'Email or password not match',
-            'alert-info' => 'warning'
-        );
-        // jika salah, kembali ke halaman login
-        return redirect()->back()->with($notif);
+            return redirect()->back()->with($notif);
+        };
     }
 
     public function register()
@@ -67,35 +73,44 @@ class AuthController extends Controller
         return view('cms.pages.auth.register', compact('title'));
     }
 
-    public function store(Request $request)
+    public function store(RegisterRequest $request)
     {
-        $validation = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed'
-        ]);
+        try {
 
-        if ($validation->fails()) {
-            return redirect()->back()->withInput()->withErrors($validation->errors());
+            $this->userImplement->Create($request);
+
+            $notif = array(
+                'message' => 'Success Register',
+                'alert-info' => 'success'
+            );
+            return redirect()->route('auth.login')->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
+                'alert-info' => 'warning'
+            );
+
+            return redirect()->back()->with($notif);
         };
-
-        $this->userImplement->Create($request);
-
-        $notif = array(
-            'message' => 'Success Register',
-            'alert-info' => 'success'
-        );
-        return redirect()->route('auth.login')->with($notif);
     }
 
     // fungsi logout
     public function logout()
     {
-        auth()->logout();
-        $notif = array(
-            'message' => 'Success Log out',
-            'alert-info' => 'success'
-        );
-        return redirect()->route('auth.login')->with($notif);
+        try {
+            auth()->logout();
+            $notif = array(
+                'message' => 'Success Log out',
+                'alert-info' => 'success'
+            );
+            return redirect()->route('auth.login')->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
+                'alert-info' => 'warning'
+            );
+
+            return redirect()->back()->with($notif);
+        };
     }
 }

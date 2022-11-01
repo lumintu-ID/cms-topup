@@ -32,27 +32,36 @@ class CountryController extends Controller
      */
     public function store(Request $request)
     {
-        $valid = Validator::make($request->all(), [
-            'currency' => 'required|string',
-            'country' => 'required|string'
-        ]);
+        try {
+            $valid = Validator::make($request->all(), [
+                'currency' => 'required|string',
+                'country' => 'required|string'
+            ]);
 
-        if ($valid->fails()) {
-            return redirect()->back()->withInput()->withErrors($valid->errors());
-        };
+            if ($valid->fails()) {
+                return redirect()->back()->withInput()->withErrors($valid->errors());
+            };
 
-        Country::create([
-            'country_id' => Str::uuid(),
-            'currency' => $request->currency,
-            'country' => $request->country
-        ]);
+            Country::create([
+                'country_id' => Str::uuid(),
+                'currency' => $request->currency,
+                'country' => $request->country
+            ]);
 
-        $notif = array(
-            'message' => 'Success Create Country',
-            'alert-info' => 'success'
-        );
+            $notif = array(
+                'message' => 'Success Create Country',
+                'alert-info' => 'success'
+            );
 
-        return redirect()->back()->with($notif);
+            return redirect()->back()->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
+                'alert-info' => 'warning'
+            );
+
+            return redirect()->back()->with($notif);
+        }
     }
 
 
@@ -66,28 +75,37 @@ class CountryController extends Controller
      */
     public function update(Request $request)
     {
-        $country = Country::where('country_id', $request->id);
+        try {
+            $country = Country::where('country_id', $request->id);
 
-        if (!$country->first()) {
+            if (!$country->first()) {
+                $notif = array(
+                    'message' => 'Update Country Failed',
+                    'alert-info' => 'warning'
+                );
+
+                return redirect()->back()->with($notif);
+            };
+
+            $country->update([
+                'currency' => $request->currency,
+                'country' => $request->country
+            ]);
+
             $notif = array(
-                'message' => 'Update Country Failed',
+                'message' => 'Success Update Country',
+                'alert-info' => 'success'
+            );
+
+            return redirect()->back()->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
                 'alert-info' => 'warning'
             );
 
             return redirect()->back()->with($notif);
-        };
-
-        $country->update([
-            'currency' => $request->currency,
-            'country' => $request->country
-        ]);
-
-        $notif = array(
-            'message' => 'Success Update Country',
-            'alert-info' => 'success'
-        );
-
-        return redirect()->back()->with($notif);
+        }
     }
 
     /**
@@ -98,24 +116,33 @@ class CountryController extends Controller
      */
     public function destroy(Request $request)
     {
-        $country = Country::where('country_id', $request->id);
+        try {
+            $country = Country::where('country_id', $request->id);
 
-        if (!$country->first()) {
+            if (!$country->first()) {
+                $notif = array(
+                    'message' => 'Delete Country Failed',
+                    'alert-info' => 'warning'
+                );
+
+                return redirect()->back()->with($notif);
+            };
+
+            $country->delete();
+
             $notif = array(
-                'message' => 'Delete Country Failed',
+                'message' => 'Success Delete Country',
+                'alert-info' => 'success'
+            );
+
+            return redirect()->back()->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
                 'alert-info' => 'warning'
             );
 
             return redirect()->back()->with($notif);
-        };
-
-        $country->delete();
-
-        $notif = array(
-            'message' => 'Success Delete Country',
-            'alert-info' => 'success'
-        );
-
-        return redirect()->back()->with($notif);
+        }
     }
 }

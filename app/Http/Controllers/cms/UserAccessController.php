@@ -150,47 +150,65 @@ class UserAccessController extends Controller
 
     public function access($id)
     {
-        $title = "List User Access";
-        $data = navigation::orderBy('id_label', 'asc')->get();
+        try {
+            $title = "List User Access";
+            $data = navigation::orderBy('id_label', 'asc')->get();
 
-        $role_id = base64_decode($id);
-        $role = user_role::where('role_id', $role_id)->first();
+            $role_id = base64_decode($id);
+            $role = user_role::where('role_id', $role_id)->first();
 
-        if (!$role) {
+            if (!$role) {
+                $notif = array(
+                    'message' => 'Role not Found',
+                    'alert-info' => 'warning'
+                );
+
+                return redirect()->back()->with($notif);
+            }
+
+            return view('cms.pages.user-access.access', compact('title', 'data', 'role'));
+        } catch (\Throwable $th) {
             $notif = array(
-                'message' => 'Role not Found',
+                'message' => 'Internal Server Error',
                 'alert-info' => 'warning'
             );
 
             return redirect()->back()->with($notif);
         }
-
-        return view('cms.pages.user-access.access', compact('title', 'data', 'role'));
     }
 
     public function checked(Request $request)
     {
-        $checkAccess = user_access::where('nav_id', $request->nav)
-            ->where('role_id', $request->role)
-            ->first();
-
-
-        if (!$checkAccess) {
-            user_access::create([
-                'access_id' => Str::uuid(),
-                'role_id'   => $request->role,
-                'nav_id'    => $request->nav
-            ]);
-
-
-            return 'Access ' . $request->name . ' Enable';
-        } else {
-            user_access::where('nav_id', $request->nav)
+        try {
+            $checkAccess = user_access::where('nav_id', $request->nav)
                 ->where('role_id', $request->role)
-                ->delete();
+                ->first();
 
 
-            return 'Access ' . $request->name . ' Disable';
+            if (!$checkAccess) {
+                user_access::create([
+                    'access_id' => Str::uuid(),
+                    'role_id'   => $request->role,
+                    'nav_id'    => $request->nav
+                ]);
+
+
+                return 'Access ' . $request->name . ' Enable';
+            } else {
+                user_access::where('nav_id', $request->nav)
+                    ->where('role_id', $request->role)
+                    ->delete();
+
+
+                return 'Access ' . $request->name . ' Disable';
+            }
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
+                'alert-info' => 'warning'
+            );
+
+            return redirect()->back()->with($notif);
         }
     }
 }
