@@ -3,13 +3,20 @@
 namespace App\Http\Controllers\cms;
 
 use App\Models\Country;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\CountryRequest;
+use App\Repository\Country\CountryImplement;
 
 class CountryController extends Controller
 {
+
+    protected $countryImplement;
+    public function __construct(CountryImplement $countryImplement)
+    {
+        $this->countryImplement = $countryImplement;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +26,7 @@ class CountryController extends Controller
     {
         $title = "Country List";
 
-        $data = Country::all();
+        $data = $this->countryImplement->getAll();
 
         return view('cms.pages.country.index', compact('title', 'data'));
     }
@@ -30,23 +37,11 @@ class CountryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CountryRequest $request)
     {
         try {
-            $valid = Validator::make($request->all(), [
-                'currency' => 'required|string',
-                'country' => 'required|string'
-            ]);
 
-            if ($valid->fails()) {
-                return redirect()->back()->withInput()->withErrors($valid->errors());
-            };
-
-            Country::create([
-                'country_id' => Str::uuid(),
-                'currency' => $request->currency,
-                'country' => $request->country
-            ]);
+            $this->countryImplement->create($request);
 
             $notif = array(
                 'message' => 'Success Create Country',
@@ -73,12 +68,12 @@ class CountryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(CountryRequest $request)
     {
         try {
-            $country = Country::where('country_id', $request->id);
+            $country = $this->countryImplement->getId($request->id);
 
-            if (!$country->first()) {
+            if (!$country) {
                 $notif = array(
                     'message' => 'Update Country Failed',
                     'alert-info' => 'warning'
@@ -87,10 +82,7 @@ class CountryController extends Controller
                 return redirect()->back()->with($notif);
             };
 
-            $country->update([
-                'currency' => $request->currency,
-                'country' => $request->country
-            ]);
+            $this->countryImplement->update($request->id, $request);
 
             $notif = array(
                 'message' => 'Success Update Country',
@@ -117,9 +109,9 @@ class CountryController extends Controller
     public function destroy(Request $request)
     {
         try {
-            $country = Country::where('country_id', $request->id);
+            $country = $this->countryImplement->getId($request->id);
 
-            if (!$country->first()) {
+            if (!$country) {
                 $notif = array(
                     'message' => 'Delete Country Failed',
                     'alert-info' => 'warning'
@@ -128,7 +120,7 @@ class CountryController extends Controller
                 return redirect()->back()->with($notif);
             };
 
-            $country->delete();
+            $this->countryImplement->delete($request->id);
 
             $notif = array(
                 'message' => 'Success Delete Country',
