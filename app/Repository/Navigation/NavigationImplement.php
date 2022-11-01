@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\Country;
+namespace App\Repository\Navigation;
 
 use App\Models\navigation;
 use Illuminate\Support\Str;

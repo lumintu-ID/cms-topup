@@ -42,7 +42,7 @@ Route::middleware(['auth', 'access'])->group(function () {
     Route::get('/administrator/navigation', [NavigationController::class, 'index'])->name('cms.navigation');
     Route::get('/administrator/navigation/{id}', [NavigationController::class, 'changeStatus'])->name('cms.navigation.status');
     Route::post('/administrator/navigation', [NavigationController::class, 'store'])->name('cms.navigation.store');
-    Route::patch('/administrator/navigation/update', [NavigationController::class, 'update'])->name('cms.navigation.update');
+    Route::patch('/administrator/navigation', [NavigationController::class, 'update'])->name('cms.navigation.update');
     Route::delete('/administrator/navigation/delete', [NavigationController::class, 'destroy'])->name('cms.navigation.delete');
 
 

@@ -130,15 +130,12 @@ class PaymentController extends Controller
                 return redirect()->back()->with($notif);
             };
 
-
-            $this->_remove($request, $payment);
-
             Payment::where('payment_id', $request->id)->update([
                 'category_id' => $request->category,
                 'country_id' => $request->country,
                 'channel_id' => $request->channel_id,
                 'name_channel' => $request->name,
-                'logo_channel' => (!$request->file('thumbnail')) ? $payment->first()->logo_channel : $this->_upload($request->file('thumbnail'))
+                'logo_channel' => (!$request->file('thumbnail')) ? $payment->logo_channel : $this->_upload($request->file('thumbnail'))
             ]);
 
             $notif = array(

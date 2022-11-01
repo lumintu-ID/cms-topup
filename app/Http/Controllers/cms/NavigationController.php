@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\cms;
 
 use App\Models\navigation;
-use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NavigationRequest;
-use App\Repository\Country\NavigationImplement;
-use Illuminate\Http\Request;
+use App\Repository\Navigation\NavigationImplement;
 
 class NavigationController extends Controller
 {
