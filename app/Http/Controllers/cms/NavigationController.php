@@ -6,14 +6,23 @@ use App\Models\navigation;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NavigationRequest;
+use App\Repository\Country\NavigationImplement;
 use Illuminate\Http\Request;
 
 class NavigationController extends Controller
 {
+
+    protected $navigationImplement;
+
+    public function __construct(NavigationImplement $navigationImplement)
+    {
+        $this->navigationImplement = $navigationImplement;
+    }
+
     public function index()
     {
         $title = "List Navigation";
-        $data = navigation::orderBy('id_label', 'asc')->get();
+        $data = $this->navigationImplement->getAll();
         return \view('cms.pages.navigation.index', \compact('title', 'data'));
     }
 
@@ -21,14 +30,7 @@ class NavigationController extends Controller
     {
 
         try {
-            navigation::create([
-                'nav_id'        => Str::uuid(),
-                'id_label'      => $request->label,
-                'url'           => $request->url,
-                'navigation'    => $request->name,
-                'icon'          => $request->icon,
-                'is_active'     => 1
-            ]);
+            $this->navigationImplement->create($request);
 
             $notif = array(
                 'message' => 'Success Create Navigation',
@@ -49,9 +51,9 @@ class NavigationController extends Controller
     public function update(NavigationRequest $request)
     {
         try {
-            $navigation = navigation::where('nav_id', $request->id);
+            $navigation = $this->navigationImplement->getId($request->id);
 
-            if (!$navigation->get()) {
+            if (!$navigation) {
                 $notif = array(
                     'message' => 'Update Navigation Failed',
                     'alert-info' => 'warning'
@@ -60,12 +62,7 @@ class NavigationController extends Controller
                 return redirect()->back()->with($notif);
             };
 
-            $navigation->update([
-                'id_label'      => $request->label,
-                'url'           => $request->url,
-                'navigation'    => $request->name,
-                'icon'          => $request->icon,
-            ]);
+            $this->navigationImplement->update($request->id, $request);
 
             $notif = array(
                 'message' => 'Success Create Navigation',
@@ -86,9 +83,9 @@ class NavigationController extends Controller
     public function changeStatus($id)
     {
         try {
-            $navigation = navigation::where('nav_id', $id);
+            $navigation = $this->navigationImplement->getId($id);
 
-            if (!$navigation->get()) {
+            if (!$navigation) {
                 $notif = array(
                     'message' => 'Update Navigation Failed',
                     'alert-info' => 'warning'
@@ -98,12 +95,7 @@ class NavigationController extends Controller
             };
 
 
-            $check = $navigation->first();
-
-
-            $navigation->update([
-                'is_active' => ($check->is_active == 0) ? 1 : 0,
-            ]);
+            $this->navigationImplement->updateStatus($id, $navigation);
 
             $notif = array(
                 'message' => 'Success Change Status Navigation',
@@ -124,9 +116,9 @@ class NavigationController extends Controller
     public function destroy(Request $request)
     {
         try {
-            $navigation = navigation::where('nav_id', $request->id);
+            $navigation = $this->navigationImplement->getId($request->id);
 
-            if (!$navigation->get()) {
+            if (!$navigation) {
                 $notif = array(
                     'message' => 'Navigation Not Failed',
                     'alert-info' => 'warning'
@@ -135,7 +127,7 @@ class NavigationController extends Controller
                 return redirect()->back()->with($notif);
             };
 
-            $navigation->delete();
+            $this->navigationImplement->delete($request->id);
 
             $notif = array(
                 'message' => 'Success Delete Navigation',
