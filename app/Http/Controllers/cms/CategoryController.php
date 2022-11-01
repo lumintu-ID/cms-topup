@@ -3,13 +3,21 @@
 namespace App\Http\Controllers\cms;
 
 use App\Models\Category;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\CategoryRequest;
+use App\Repository\Category\CategoryImplement;
 
 class CategoryController extends Controller
 {
+
+    protected $categoryImplement;
+
+    public function __construct(CategoryImplement $categoryImplement)
+    {
+        $this->categoryImplement = $categoryImplement;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +27,7 @@ class CategoryController extends Controller
     {
         $title = "Category List";
 
-        $data = Category::all();
+        $data = $this->categoryImplement->getAll();
 
         return view('cms.pages.category.index', compact('title', 'data'));
     }
@@ -31,21 +39,11 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
         try {
-            $valid = Validator::make($request->all(), [
-                'category' => 'required|string'
-            ]);
 
-            if ($valid->fails()) {
-                return redirect()->back()->withInput()->withErrors($valid->errors());
-            };
-
-            Category::create([
-                'category_id' => Str::uuid(),
-                'category' => $request->category
-            ]);
+            $this->categoryImplement->create($request);
 
             $notif = array(
                 'message' => 'Success Create Category',
@@ -71,12 +69,12 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(CategoryRequest $request)
     {
         try {
-            $category = Category::where('category_id', $request->id);
+            $category = $this->categoryImplement->getId($request->id);
 
-            if (!$category->first()) {
+            if (!$category) {
                 $notif = array(
                     'message' => 'Update Category Failed',
                     'alert-info' => 'warning'
@@ -85,9 +83,7 @@ class CategoryController extends Controller
                 return redirect()->back()->with($notif);
             };
 
-            $category->update([
-                'category' => $request->category
-            ]);
+            $this->categoryImplement->update($request->id, $request);
 
             $notif = array(
                 'message' => 'Success Update Category',
@@ -115,9 +111,9 @@ class CategoryController extends Controller
     public function destroy(Request $request)
     {
         try {
-            $category = Category::where('category_id', $request->id);
+            $category = $this->categoryImplement->getId($request->id);
 
-            if (!$category->first()) {
+            if (!$category) {
                 $notif = array(
                     'message' => 'Delete Category Failed',
                     'alert-info' => 'warning'
@@ -126,7 +122,7 @@ class CategoryController extends Controller
                 return redirect()->back()->with($notif);
             };
 
-            $category->delete();
+            $this->categoryImplement->delete($request->id);
 
             $notif = array(
                 'message' => 'Success Delete Category',
