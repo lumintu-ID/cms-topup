@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\cms\AuthController;
-use App\Http\Controllers\cms\CategoryController;
-use App\Http\Controllers\cms\CountryController;
-use App\Http\Controllers\cms\NavigationController;
-use App\Http\Controllers\cms\PaymentController;
-use App\Http\Controllers\cms\UserAccessController;
-use App\Http\Controllers\cms\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\cms\AuthController;
+use App\Http\Controllers\cms\GameController;
+use App\Http\Controllers\cms\UserController;
+use App\Http\Controllers\cms\CountryController;
+use App\Http\Controllers\cms\PaymentController;
+use App\Http\Controllers\cms\CategoryController;
+use App\Http\Controllers\cms\NavigationController;
+use App\Http\Controllers\cms\UserAccessController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,6 +84,12 @@ Route::middleware(['auth', 'access'])->group(function () {
     Route::post('/administrator/payment', [PaymentController::class, 'store'])->name('cms.payment.store');
     Route::patch('/administrator/payment', [PaymentController::class, 'update'])->name('cms.payment.update');
     Route::delete('/administrator/payment', [PaymentController::class, 'destroy'])->name('cms.payment.delete');
+
+    // Game Type
+    Route::get('/administrator/game', [GameController::class, 'index'])->name('cms.game');
+    Route::post('/administrator/game', [GameController::class, 'store'])->name('cms.game.store');
+    Route::patch('/administrator/game', [GameController::class, 'update'])->name('cms.game.update');
+    Route::delete('/administrator/game', [GameController::class, 'destroy'])->name('cms.game.delete');
 
     Route::get('/administrator/logout', [AuthController::class, 'logout'])->name('logout');
 });

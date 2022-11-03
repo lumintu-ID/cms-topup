@@ -4,6 +4,7 @@
     $userData  = \App\Models\User::where('user_id', $user)->first();
    
     $nav  = \App\Models\user_access::with('navigation')->where('role_id',$userData->role_id)->get();
+    // $nav = \App\Models\navigation::class::all();
 
     $label = \App\Models\label_navigation::all();
 
