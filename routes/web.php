@@ -93,3 +93,35 @@ Route::middleware(['auth', 'access'])->group(function () {
 
     Route::get('/administrator/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+
+Route::get('/pay', function () {
+    $merchanId = 'Esp5373790';
+    $trxId = Str::random(10);
+    $trxDate = date(now());
+    $amount = 100000;
+    $channelId = 2;
+
+    $sign = hash('sha256', $merchanId . $trxId . $trxDate . $channelId . $amount . 'IDR' . 'jqji815m748z0ql560982426ca0j70qk02411d2no6u94qgdf58js2jn596s99si');
+
+
+    $data = [
+        'merchantId' => $merchanId,
+        'trxId' => $trxId,
+        'trxDateTime' => $trxDate,
+        'channelId' => $channelId,
+        'amount'    => $amount,
+        'returnUrl' => 'http://127.0.0.1:8000/callback',
+        'currency'  => 'IDR',
+        'sign' => $sign
+    ];
+
+    $response = Http::asForm()->get("https://pay.goc.id/", $data);
+
+
+    return $response;
+});
+
+Route::get('/callback', function (Request $request) {
+    dd($request);
+});
