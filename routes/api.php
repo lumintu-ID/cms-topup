@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\api\GameController as ApiGameController;
+use App\Http\Controllers\api\PaymentController as ApiPaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,33 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::post('pay', function (Request $request) {
+Route::prefix('v1')->group(function () {
+    Route::get('/gamelist', [ApiGameController::class, 'index']);
+    Route::get('/gamedetail', [ApiGameController::class, 'gameDetail']);
 
 
-    $merchanId = 'Esp5373790';
-    $trxId = Str::random(10);
-    $trxDate = date(now());
-
-    $sign = hash('sha256', $merchanId . $trxId . $trxDate . $request->channelId . $request->amount . 'IDR' . 'jqji815m748z0ql560982426ca0j70qk02411d2no6u94qgdf58js2jn596s99si');
-
-
-    $data = [
-        'merchantId' => $merchanId,
-        'trxId' => $trxId,
-        'trxDateTime' => $trxDate,
-        'channelId' => $request->channelId,
-        'amount'    => $request->amount,
-        'returnUrl' => $request->returnUrl,
-        'currency'  => 'IDR',
-        'sign' => $sign
-    ];
-
-    $response = Http::asForm()->post("https://pay.goc.id/", $data);
-
-
-    return $response;
+    Route::get('/payment', [ApiPaymentController::class, 'index']);
 });
