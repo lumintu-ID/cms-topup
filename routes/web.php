@@ -9,6 +9,7 @@ use App\Http\Controllers\cms\PaymentController;
 use App\Http\Controllers\cms\CategoryController;
 use App\Http\Controllers\cms\NavigationController;
 use App\Http\Controllers\cms\PriceController;
+use App\Http\Controllers\cms\TransactionController;
 use App\Http\Controllers\cms\UserAccessController;
 
 /*
@@ -98,4 +99,10 @@ Route::middleware(['auth', 'access'])->group(function () {
     Route::delete('/administrator/price', [PriceController::class, 'destroy'])->name('cms.price.delete');
 
     Route::get('/administrator/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+
+    // notification
+
+    Route::post('/administrator/transaction/notify', [TransactionController::class, 'notify']);
 });

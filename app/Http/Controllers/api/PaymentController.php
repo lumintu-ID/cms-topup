@@ -7,6 +7,7 @@ use App\Models\Payment;
 use App\Models\GameList;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Repository\Api\ApiImplement;
 
@@ -31,6 +32,7 @@ class PaymentController extends Controller
             $payment = Payment::where('country_id', $country)->get();
 
             if ($dataGame == null || count($payment) == 0) {
+                Log::warning('Data get Payment Not Found', ["Date" => date(now())]);
                 return response()->json([
                     'code' => 404,
                     'status' => 'NOT_FOUND',
@@ -40,6 +42,7 @@ class PaymentController extends Controller
 
             $result = $this->apiImplement->priceList($payment, $dataGame->id);
 
+
             return \response()->json([
                 'code' => Response::HTTP_OK,
                 'status' => 'OK',
@@ -47,6 +50,9 @@ class PaymentController extends Controller
                 'data' => $result
             ], Response::HTTP_OK);
         } catch (\Throwable $th) {
+
+
+            Log::critical('Critical error', ['Path' => request()->server('PATH_INFO')]);
             return \response()->json([
                 'code' => Response::HTTP_BAD_REQUEST,
                 'status' => 'BAD_REQUEST',
