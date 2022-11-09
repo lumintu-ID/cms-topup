@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use Carbon\Carbon;
 use App\Models\Price;
 use App\Models\Payment;
 use App\Models\GameList;
@@ -32,7 +33,8 @@ class PaymentController extends Controller
             $payment = Payment::where('country_id', $country)->get();
 
             if ($dataGame == null || count($payment) == 0) {
-                Log::warning('Data get Payment Not Found', ["Date" => date(now())]);
+                Log::warning('Get Payment List Not Found', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | WARN ' . ' | id game ' . $game . ' and country id ' . $country . ' not found']);
+
                 return response()->json([
                     'code' => 404,
                     'status' => 'NOT_FOUND',
@@ -42,6 +44,7 @@ class PaymentController extends Controller
 
             $result = $this->apiImplement->priceList($payment, $dataGame->id);
 
+            Log::info('Success Get Payment List', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Success Get Payment List with id game ' . $game . ' and country id ' . $country]);
 
             return \response()->json([
                 'code' => Response::HTTP_OK,
@@ -50,9 +53,7 @@ class PaymentController extends Controller
                 'data' => $result
             ], Response::HTTP_OK);
         } catch (\Throwable $th) {
-
-
-            Log::critical('Critical error', ['Path' => request()->server('PATH_INFO')]);
+            Log::error('Error Get Payment List', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | ERR ' . ' | Error Get Payment List']);
             return \response()->json([
                 'code' => Response::HTTP_BAD_REQUEST,
                 'status' => 'BAD_REQUEST',

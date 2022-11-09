@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use App\Models\Country;
 
-use App\Repository\Api\ApiImplement;
-
 use Illuminate\Http\Request;
+
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use App\Repository\Api\ApiImplement;
 
 class GameController extends Controller
 {
@@ -29,7 +30,7 @@ class GameController extends Controller
 
 
             if (!$data) {
-                Log::warning('Data Game List Not Found', ["Date" => date(now())]);
+                Log::warning('Get Game List Not Found', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | WARN ' . ' | Data Game List not found']);
                 return response()->json([
                     'code' => 404,
                     'status' => 'NOT_FOUND',
@@ -55,8 +56,7 @@ class GameController extends Controller
                 array_push($result, $gm);
             }
 
-
-
+            Log::info('Success Get Game List', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Success Get Data Game List']);
             return \response()->json([
                 'code' => Response::HTTP_OK,
                 'status' => 'OK',
@@ -64,8 +64,7 @@ class GameController extends Controller
                 'data' => $result
             ], Response::HTTP_OK);
         } catch (\Throwable $th) {
-            Log::error('Error Get Data Game', ["Date" => date(now())]);
-            Log::critical('Critical error', ['Path' => request()->server('PATH_INFO')]);
+            Log::error('Error Get Game List', ["Date" => Carbon::now()->format('Y-m-d H:i:s')]);
 
             return \response()->json([
                 'code' => Response::HTTP_BAD_REQUEST,
@@ -84,7 +83,7 @@ class GameController extends Controller
             $country = Country::get();
 
             if (!$game) {
-                Log::warning('Data Game List Not Found', ["Date" => date(now())]);
+                Log::warning('Detail Game Not Found', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | WARN ' . ' | Game id ' . $game_id . ' not found']);
                 return \response()->json([
                     'code' => 404,
                     'status' => 'NOT_FOUND',
@@ -110,7 +109,7 @@ class GameController extends Controller
                 'country_list' => $country
             );
 
-
+            Log::info('Success Get Detail Game', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Success Get Detail Game with id ' . $game_id]);
 
             return \response()->json([
                 'code' => Response::HTTP_OK,
@@ -119,8 +118,7 @@ class GameController extends Controller
                 'data' => $result
             ], Response::HTTP_OK);
         } catch (\Throwable $th) {
-            Log::error('Error Get Data Game', ["Date" => date(now())]);
-            Log::critical('Critical error', ['Path' => request()->server('PATH_INFO')]);
+            Log::error('Error Get Detail Game', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | ERR ' . ' | Error Get Detail Game']);
 
             return \response()->json([
                 'code' => Response::HTTP_BAD_REQUEST,
