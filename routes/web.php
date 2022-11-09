@@ -11,7 +11,10 @@ use App\Http\Controllers\cms\NavigationController;
 use App\Http\Controllers\cms\PriceController;
 use App\Http\Controllers\cms\TransactionController;
 use App\Http\Controllers\cms\UserAccessController;
+use Illuminate\Support\Facades\Http;
 
+
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,10 +53,11 @@ Route::middleware(['auth', 'access'])->group(function () {
 
     // user
     Route::get('/administrator/user', [UserController::class, 'index'])->name('cms.user');
-    Route::get('/administrator/user/{id}', [UserController::class, 'changeStatus'])->name('cms.user.status');
     Route::post('/administrator/user', [UserController::class, 'store'])->name('cms.user.store');
     Route::patch('/administrator/user', [UserController::class, 'update'])->name('cms.user.update');
     Route::delete('/administrator/user', [UserController::class, 'destroy'])->name('cms.user.delete');
+
+    Route::get('/administrator/user/{id}', [UserController::class, 'changeStatus'])->name('cms.user.status');
 
 
     // user-access
