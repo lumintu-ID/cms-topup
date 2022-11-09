@@ -4,9 +4,9 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Country;
-use App\Models\GameList;
+
 use App\Repository\Api\ApiImplement;
-use Faker\Provider\UserAgent;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
@@ -38,12 +38,30 @@ class GameController extends Controller
             };
 
 
+            $result = [];
+
+            foreach ($data as $game) {
+
+                $gm = array(
+                    'id' => $game->id,
+                    'game_id' => $game->game_id,
+                    'game_title' => $game->game_title,
+                    'cover' => url('/cover/' . $game->cover),
+                    'created_at' => $game->created_at,
+                    'updated_at' => $game->updated_at
+                );
+
+
+                array_push($result, $gm);
+            }
+
+
 
             return \response()->json([
                 'code' => Response::HTTP_OK,
                 'status' => 'OK',
                 'message' => 'Success Get Game List',
-                'data' => $data
+                'data' => $result
             ], Response::HTTP_OK);
         } catch (\Throwable $th) {
             Log::error('Error Get Data Game', ["Date" => date(now())]);
@@ -75,9 +93,20 @@ class GameController extends Controller
             };
 
 
+            $gm = array(
+                'id' => $game['id'],
+                'game_id' => $game['game_id'],
+                'game_title' => $game['game_title'],
+                'cover' => url('/cover/' . $game['cover']),
+                'created_at' => $game['created_at'],
+                'updated_at' => $game['updated_at']
+            );
+
+
+
 
             $result = array(
-                'game_detail' => $game,
+                'game_detail' => $gm,
                 'country_list' => $country
             );
 

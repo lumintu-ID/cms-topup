@@ -11,10 +11,10 @@ class TransactionController extends Controller
 {
     public function notify(Request $request)
     {
-        Log::critical('Critical error', $data);
-        Log::info('info', ['data' => $data]);
-        Log::error('error', ['data' => $data]);
-        Log::warning('warning', ['data' => $data]);
+        Log::critical('Critical error', $request->all());
+        Log::info('info', ['data' => $request->all()]);
+        Log::error('error', ['data' => $request->all()]);
+        Log::warning('warning', ['data' => $request->all()]);
 
         return Response()->json([
             'data' => $request->all()
