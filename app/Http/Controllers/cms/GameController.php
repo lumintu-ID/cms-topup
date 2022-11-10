@@ -59,6 +59,7 @@ class GameController extends Controller
             GameList::create([
                 'id' => Str::uuid(),
                 'game_id' => $request->game_id,
+                'slug_game' => Str::slug($request->game_title),
                 'game_title' => $request->game_title,
                 'cover' => $this->_upload($request->file('cover'))
             ]);
@@ -89,45 +90,46 @@ class GameController extends Controller
     public function update(GameUpdateRequest $request)
     {
 
-        // try {
-        $game = GameList::where('id', $request->id)->first();
+        try {
+            $game = GameList::where('id', $request->id)->first();
 
-        if (!$game) {
+            if (!$game) {
+                $notif = array(
+                    'message' => 'Update Game Failed',
+                    'alert-info' => 'warning'
+                );
+
+                return redirect()->back()->with($notif);
+            };
+
+
+            if ($request->file('cover')) {
+                $this->_remove($request, $game->cover);
+            };
+
+
+            GameList::where('id', $request->id)->update([
+                'id' => Str::uuid(),
+                'game_id' => $request->game_id,
+                'slug_game' => Str::slug($request->game_title),
+                'game_title' => $request->game_title,
+                'cover' => (!$request->file('cover')) ? $game->cover : $this->_upload($request->file('cover'))
+            ]);
+
             $notif = array(
-                'message' => 'Update Game Failed',
+                'message' => 'Success Update Game',
+                'alert-info' => 'success'
+            );
+
+            return redirect()->back()->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
                 'alert-info' => 'warning'
             );
 
             return redirect()->back()->with($notif);
-        };
-
-
-        if ($request->file('cover')) {
-            $this->_remove($request, $game->cover);
-        };
-
-
-        GameList::where('id', $request->id)->update([
-            'id' => Str::uuid(),
-            'game_id' => $request->game_id,
-            'game_title' => $request->game_title,
-            'cover' => (!$request->file('cover')) ? $game->cover : $this->_upload($request->file('cover'))
-        ]);
-
-        $notif = array(
-            'message' => 'Success Update Game',
-            'alert-info' => 'success'
-        );
-
-        return redirect()->back()->with($notif);
-        // } catch (\Throwable $th) {
-        //     $notif = array(
-        //         'message' => 'Internal Server Error',
-        //         'alert-info' => 'warning'
-        //     );
-
-        //     return redirect()->back()->with($notif);
-        // }
+        }
     }
 
     /**

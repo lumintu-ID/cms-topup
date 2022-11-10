@@ -4,7 +4,7 @@ namespace App\Repository\Api;
 
 interface ApiRepository
 {
-    public function getGameList();
+    public function getGameList($limit);
 
     public function gameDetail($id);
 

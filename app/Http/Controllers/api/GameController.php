@@ -22,10 +22,10 @@ class GameController extends Controller
         $this->apiImplement = $apiImplement;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $data = $this->apiImplement->getGameList();
+            $data = $this->apiImplement->getGameList($request->query('limit'));
 
 
 
@@ -47,6 +47,7 @@ class GameController extends Controller
                     'id' => $game->id,
                     'game_id' => $game->game_id,
                     'game_title' => $game->game_title,
+                    'slug_game' => $game->slug_game,
                     'cover' => url('/cover/' . $game->cover),
                     'created_at' => $game->created_at,
                     'updated_at' => $game->updated_at
@@ -78,12 +79,12 @@ class GameController extends Controller
     public function gameDetail(Request $request)
     {
         try {
-            $game_id = $request->query('game');
-            $game = $this->apiImplement->gameDetail($game_id);
+            $slug = $request->query('game');
+            $game = $this->apiImplement->gameDetail($slug);
             $country = Country::get();
 
             if (!$game) {
-                Log::warning('Detail Game Not Found', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | WARN ' . ' | Game id ' . $game_id . ' not found']);
+                Log::warning('Detail Game Not Found', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | WARN ' . ' | Game ' . $slug . ' not found']);
                 return \response()->json([
                     'code' => 404,
                     'status' => 'NOT_FOUND',
@@ -95,6 +96,7 @@ class GameController extends Controller
             $gm = array(
                 'id' => $game['id'],
                 'game_id' => $game['game_id'],
+                'slug_game' => $game['slug_game'],
                 'game_title' => $game['game_title'],
                 'cover' => url('/cover/' . $game['cover']),
                 'created_at' => $game['created_at'],
@@ -109,7 +111,7 @@ class GameController extends Controller
                 'country_list' => $country
             );
 
-            Log::info('Success Get Detail Game', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Success Get Detail Game with id ' . $game_id]);
+            Log::info('Success Get Detail Game', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Success Get Detail Game with slug ' . $slug]);
 
             return \response()->json([
                 'code' => Response::HTTP_OK,

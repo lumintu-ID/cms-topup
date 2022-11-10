@@ -9,16 +9,16 @@ use App\Repository\Api\ApiRepository;
 
 class ApiImplement implements ApiRepository
 {
-    public function getGameList()
+    public function getGameList($limit)
     {
-        $data =  GameList::get();
+        $data =  GameList::limit($limit)->get();
 
         return $data;
     }
 
-    public function gameDetail($id)
+    public function gameDetail($slug)
     {
-        $game = GameList::where('game_id', $id)->first();
+        $game = GameList::where('slug_game', $slug)->first();
 
         return $game;
     }

@@ -106,7 +106,7 @@ Route::middleware(['auth', 'access'])->group(function () {
 
 
 
+    Route::get('/administrator/transaction', [TransactionController::class, 'index'])->name('cms.transaction');
     // notification
-
     Route::post('/administrator/transaction/notify', [TransactionController::class, 'notify']);
 });
