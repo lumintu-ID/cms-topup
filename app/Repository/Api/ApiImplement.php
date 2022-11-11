@@ -31,8 +31,20 @@ class ApiImplement implements ApiRepository
         $result = [];
         foreach ($payment as $pay) {
             $price = Price::where('payment_id', $pay->payment_id)->where('game_id', $gameId)->orderBy('price', 'asc')->get();
+
+            $p = array(
+                "payment_id" => $pay->payment_id,
+                "category_id" => $pay->category_id,
+                "country_id" => $pay->country_id,
+                "channel_id" => $pay->channel_id,
+                "name_channel" => $pay->name_channel,
+                "logo_channel" => url('/image/' . $pay->logo_channel),
+                "created_at" => $pay->created_at,
+                "updated_at" => $pay->updated_at
+            );
+
             $data = [
-                'Payment' => $pay,
+                'Payment' => $p,
                 'Price' => $price
             ];
 
