@@ -11,6 +11,11 @@ class ApiImplement implements ApiRepository
 {
     public function getGameList($limit)
     {
+
+        if ($limit == null) {
+            $limit = 5;
+        };
+
         $data =  GameList::limit($limit)->get();
 
         return $data;

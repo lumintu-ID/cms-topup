@@ -1,6 +1,52 @@
 
 </main>
 
+<script src="/build/assets/app.61f518c6.js"></script>
+
+<script>
+
+    function dateFormat() {
+        const today = new Date();
+	    const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1; // Months start at 0!
+        let dd = today.getDate();
+
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+
+        const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+        return formattedToday
+    }
+
+
+    window.Echo.channel("messages").listen("Transaction", (event) => {
+        const notyf = new Notyf({
+            position: {
+                x: 'right',
+                y: 'top',
+            },
+            types: [
+                {
+                    type: 'info',
+                    background: 'blue',
+                    icon: {
+                        className: 'fas fa-info-circle',
+                        tagName: 'span',
+                        color: '#fff'
+                    },
+                    dismissible: false
+                }
+            ]
+        });
+        notyf.open({
+            type: 'info',
+            message: 'New transaction From '+event.message.email+ ' in '+ dateFormat()
+        });
+    });
+</script>
+
+
 <!-- Core -->
 <script src="{{ url('assets') }}/vendor/@popperjs/core/dist/umd/popper.min.js"></script>
 <script src="{{ url('assets') }}/vendor/bootstrap/dist/js/bootstrap.min.js"></script>

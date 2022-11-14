@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers\cms;
 
+use App\Models\Transaction;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\Transaction;
-use Illuminate\Http\Response;
+use App\Events\Transaction as EventsTransaction;
 
 class TransactionController extends Controller
 {
+
+    protected $data = array();
+
     public function notify(Request $request)
     {
         Log::critical('Critical error', $request->all());
@@ -17,9 +22,19 @@ class TransactionController extends Controller
         Log::error('error', ['data' => $request->all()]);
         Log::warning('warning', ['data' => $request->all()]);
 
-        return Response()->json([
-            'data' => $request->all()
+        Transaction::create([
+            'Transaction_id' => Str::uuid(),
+            'game_id' => $request->game_id,
+            'method_payment' => $request->method_payment,
+            'product_name' => $request->product_name,
+            'email' => $request->email,
+            'amount' => $request->amount,
+            'status' => $request->status
         ]);
+
+        EventsTransaction::dispatch($request->all());
+
+        return response()->json($request->all());
     }
 
     public function index(Request $request)
@@ -27,9 +42,14 @@ class TransactionController extends Controller
         try {
             $title = "Transaction History";
 
-            $data = Transaction::orderBy('created_at', 'asc')->get();
 
-            return view('cms.pages.transaction.index', compact('title', 'data'));
+
+            if ($request->expectsJson()) {
+                $data = Transaction::orderBy('created_at', 'asc')->get();
+                return response()->json(['data' => $data], 200);
+            }
+
+            return view('cms.pages.transaction.index', compact('title'));
         } catch (\Throwable $th) {
             $notif = array(
                 'message' => 'Internal Server Error',

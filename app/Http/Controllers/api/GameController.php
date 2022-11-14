@@ -4,9 +4,7 @@ namespace App\Http\Controllers\api;
 
 use Carbon\Carbon;
 use App\Models\Country;
-
 use Illuminate\Http\Request;
-
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -26,8 +24,6 @@ class GameController extends Controller
     {
         try {
             $data = $this->apiImplement->getGameList($request->query('limit'));
-
-
 
             if (!$data) {
                 Log::warning('Get Game List Not Found', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | WARN ' . ' | Data Game List not found']);
@@ -102,9 +98,6 @@ class GameController extends Controller
                 'created_at' => $game['created_at'],
                 'updated_at' => $game['updated_at']
             );
-
-
-
 
             $result = array(
                 'game_detail' => $gm,

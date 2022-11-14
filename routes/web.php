@@ -1,20 +1,18 @@
 <?php
 
+use App\Events\ServerCreated;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\cms\AuthController;
 use App\Http\Controllers\cms\GameController;
 use App\Http\Controllers\cms\UserController;
+use App\Http\Controllers\cms\PriceController;
 use App\Http\Controllers\cms\CountryController;
 use App\Http\Controllers\cms\PaymentController;
 use App\Http\Controllers\cms\CategoryController;
 use App\Http\Controllers\cms\NavigationController;
-use App\Http\Controllers\cms\PriceController;
-use App\Http\Controllers\cms\TransactionController;
 use App\Http\Controllers\cms\UserAccessController;
-use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\cms\TransactionController;
 
-
-use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,7 +23,6 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 // auth
 
 Route::get('/administrator/login', [AuthController::class, 'index'])->name('login');
