@@ -90,6 +90,7 @@ class PaymentController extends Controller
                 'country_id' => $request->country,
                 'channel_id' => $request->channel_id,
                 'name_channel' => $request->name,
+                'url' => $request->url,
                 'logo_channel' => $this->_upload($request->file('thumbnail'))
             ]);
 
@@ -135,6 +136,7 @@ class PaymentController extends Controller
                 'country_id' => $request->country,
                 'channel_id' => $request->channel_id,
                 'name_channel' => $request->name,
+                'url' => $request->url,
                 'logo_channel' => (!$request->file('thumbnail')) ? $payment->logo_channel : $this->_upload($request->file('thumbnail'))
             ]);
 

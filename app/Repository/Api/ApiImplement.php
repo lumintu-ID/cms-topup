@@ -44,13 +44,14 @@ class ApiImplement implements ApiRepository
                 "channel_id" => $pay->channel_id,
                 "name_channel" => $pay->name_channel,
                 "logo_channel" => url('/image/' . $pay->logo_channel),
+                "url"   => $pay->url,
                 "created_at" => $pay->created_at,
                 "updated_at" => $pay->updated_at
             );
 
             $data = [
-                'Payment' => $p,
-                'Price' => $price
+                'payment' => $p,
+                'price' => $price
             ];
 
             array_push($result, $data);

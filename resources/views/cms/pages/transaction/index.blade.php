@@ -2,6 +2,7 @@
 
 @section('content')
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap4.min.css">
 
 @if ($errors->any())
 <div class="p-3">
@@ -28,69 +29,69 @@
 </div>
 @endif
 @endif
-<div class="table-responsive" id="appVue">
-    <table class="table table-centered table-nowrap mb-0 rounded">
-        <thead class="thead-light">
+
+
+<div class="table-responsive">
+
+    <table id="myTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
             <tr>
-                <th class="border-0 rounded-start">#</th>
-                <th class="border-0">email</th>
-                <th class="border-0">BILL FOR</th>
-                <th class="border-0">Total</th>
-                <th class="border-0">status</th>
-                <th class="border-0">#</th>
+                <th>Invoice</th>
+                <th>Email</th>
+                <th>Bill For</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Transaction</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(item,index) in transaction">
-                <td>@{{ index + 1 }}</td>
-                <td>@{{ item.email }}</td>
-                <td>@{{ item.product_name }}</td>
-                <td>@{{ item.amount }}</td>
+            @foreach ($data as $data)
+            <tr>
+                <td>{{ $data->transaction_id }}</td>
+                <td>{{ $data->email }}</td>
+                <td>{{ $data->product_name }}</td>
+                <td>{{ $data->amount }}</td>
                 <td>
-                    <span v-if="item.status == 1 " class="fw-bold text-warning">Due</span>
-                    <span v-else-if="item.status == 2 " class="fw-bold text-success">Paid</span>
-                    <span v-else class="fw-bold text-danger">Cancelled</span>
+                    @if ($data->status == 1)
+                        <span class="fw-bold text-warning">Due</span>
+                    @elseif($data->status == 2)
+                        <span class="fw-bold text-success">Paid</span>
+                    @else
+                        <span class="fw-bold text-danger">Cancelled</span>
+                    @endif 
+                </td>
+                <td>{{ $data->created_at }}</td>
+                <td>
+                    
                 </td>
             </tr>
+            @endforeach
         </tbody>
     </table>
 </div>
 
 
-<script src="/build/assets/app.61f518c6.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap4.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-    var vueDataTransaction = new Vue({
-            el: "#appVue",
-            data: {
-                transaction: []
-            },
-            mounted() {
-                this.getData();
-            },
-            methods: {
-                getData: function() {
-                    let url = "{{ url('/administrator/transaction') }}";
-
-                    axios.get(url)
-                        .then(resp => {
-                            this.transaction = resp.data.data;
-                        })
-                        .catch(err => {
-                            console.log(err);
-                            alert('error');
-                        })
-                }
-            }
-        })
+$(document).ready(function () {
+    $.noConflict();
+    var table = $('#myTable').DataTable();
+});
 </script>
 
+<script src="/build/assets/app.61f518c6.js"></script>
+
 <script>
 
+    var data = 0;
+
     function dateFormat() {
-        const today = new Date();
+        today = new Date();
+        
 	    const yyyy = today.getFullYear();
         let mm = today.getMonth() + 1; // Months start at 0!
         let dd = today.getDate();
@@ -105,11 +106,16 @@
 
 
     window.Echo.channel("messages").listen("Transaction", (event) => {
+
+
+        data += 1;
+
         const notyf = new Notyf({
             position: {
                 x: 'right',
                 y: 'top',
             },
+            autoHideDelay: 5000,
             types: [
                 {
                     type: 'info',
@@ -123,11 +129,13 @@
                 }
             ]
         });
+
         notyf.open({
             type: 'info',
             message: 'Transaction From '+event.message.email+ ' in '+ dateFormat()
         });
-        vueDataTransaction.getData();
+       
+        console.log(data);
     });
 </script>
 

@@ -142,6 +142,11 @@
                         <input type="text" name="channel_id" value="{{ old('channel_id') }}" class="form-control" id="channel_id"
                             placeholder="channel_id" required>
                     </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Url</label>
+                        <input type="url" name="url" value="{{ old('url') }}" class="form-control" id="url-payment"
+                            placeholder="url" required>
+                    </div>
                    
                 </div>
                 <div class="modal-footer">
@@ -156,6 +161,7 @@
 
 <script>
     function update(data) {
+        $('#thumb').empty()
         $('#thumbnail').removeAttr('required');
 
         $('#url').attr('action', "{{ route('cms.payment.update') }}");
@@ -169,6 +175,7 @@
         $('#name').val(data.name_channel)
         $('#channel_id').val(data.channel_id)
         $('#country').val(data.country_id)
+        $('#url-payment').val(data.url)
      
         $('#category').val(data.category_id)
         
@@ -186,6 +193,7 @@
         $('#country').val('Select Country')
         $('#country').prop('disabled', false)
         $('#category').val('')
+        $('#url-payment').val('')
         $('#category').val('Select Category')
         $('#category').prop('disabled', false)
         $('#modal-title').html('Create Payment')

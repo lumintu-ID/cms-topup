@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('channel_id');
             $table->string('name_channel');
             $table->string('logo_channel');
+            $table->string('url');
             $table->timestamps();
         });
     }

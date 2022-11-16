@@ -40,16 +40,13 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         try {
+
+
             $title = "Transaction History";
 
+            $data = Transaction::orderBy('created_at', 'desc')->get();
 
-
-            if ($request->expectsJson()) {
-                $data = Transaction::orderBy('created_at', 'asc')->get();
-                return response()->json(['data' => $data], 200);
-            }
-
-            return view('cms.pages.transaction.index', compact('title'));
+            return view('cms.pages.transaction.index', compact('title', 'data'));
         } catch (\Throwable $th) {
             $notif = array(
                 'message' => 'Internal Server Error',
