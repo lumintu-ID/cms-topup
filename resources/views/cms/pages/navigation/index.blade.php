@@ -1,5 +1,7 @@
 @extends('cms.layouts.index')
 
+@extends('cms.addons.css')
+
 @section('content')
 
 <button type="button" class="btn btn-block btn-gray-800 mb-3" data-bs-toggle="modal" data-bs-target="#add" onclick="add()">Add</button>
@@ -33,14 +35,14 @@
 
 
 <div class="table-responsive">
-    <table class="table table-centered table-nowrap mb-0 rounded">
+    <table id="myTable" class="table table-centered table-nowrap mb-0 rounded">
         <thead class="thead-light">
             <tr>
-                <th class="border-0 rounded-start">#</th>
+                <th class="border-0 rounded-start">No</th>
                 <th class="border-0">Navigation</th>
                 <th class="border-0">Url</th>
                 <th class="border-0">Status</th>
-                <th class="border-0">#</th>
+                <th class="border-0">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -177,3 +179,5 @@
 
 
 @endsection
+
+@extends('cms.addons.script')
