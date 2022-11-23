@@ -24,6 +24,7 @@ class PaymentRequest extends FormRequest
     public function rules()
     {
         return [
+            'url' => 'required|url',
             'name' => 'required|string',
             'category' => 'required',
             'country' => 'required',

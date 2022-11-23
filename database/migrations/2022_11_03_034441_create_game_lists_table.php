@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('game_lists', function (Blueprint $table) {
             $table->uuid("id");
             $table->string("game_id");
+            $table->string("slug_game");
             $table->string("game_title");
             $table->string("cover");
             $table->timestamps();

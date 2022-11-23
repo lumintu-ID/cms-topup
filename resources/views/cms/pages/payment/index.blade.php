@@ -1,5 +1,7 @@
 @extends('cms.layouts.index')
 
+@extends('cms.addons.css')
+
 @section('content')
 
 <button type="button" class="btn btn-block btn-gray-800 mb-3" data-bs-toggle="modal" data-bs-target="#add" onclick="add()">Add</button>
@@ -33,15 +35,15 @@
 
 
 <div class="table-responsive">
-    <table class="table table-centered table-nowrap mb-0 rounded">
+    <table id="myTable" class="table table-centered table-nowrap mb-0 rounded">
         <thead class="thead-light">
             <tr>
-                <th class="border-0 rounded-start">#</th>
+                <th class="border-0 rounded-start">No</th>
                 <th class="border-0">Thumbnail</th>
                 <th class="border-0">Name</th>
                 <th class="border-0">Category</th>
                 <th class="border-0">Country</th>
-                <th class="border-0">#</th>
+                <th class="border-0">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -142,6 +144,11 @@
                         <input type="text" name="channel_id" value="{{ old('channel_id') }}" class="form-control" id="channel_id"
                             placeholder="channel_id" required>
                     </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Url</label>
+                        <input type="url" name="url" value="{{ old('url') }}" class="form-control" id="url-payment"
+                            placeholder="url" required>
+                    </div>
                    
                 </div>
                 <div class="modal-footer">
@@ -156,6 +163,7 @@
 
 <script>
     function update(data) {
+        $('#thumb').empty()
         $('#thumbnail').removeAttr('required');
 
         $('#url').attr('action', "{{ route('cms.payment.update') }}");
@@ -169,6 +177,7 @@
         $('#name').val(data.name_channel)
         $('#channel_id').val(data.channel_id)
         $('#country').val(data.country_id)
+        $('#url-payment').val(data.url)
      
         $('#category').val(data.category_id)
         
@@ -186,6 +195,7 @@
         $('#country').val('Select Country')
         $('#country').prop('disabled', false)
         $('#category').val('')
+        $('#url-payment').val('')
         $('#category').val('Select Category')
         $('#category').prop('disabled', false)
         $('#modal-title').html('Create Payment')
@@ -199,3 +209,5 @@
 
 
 @endsection
+
+@extends('cms.addons.script')
