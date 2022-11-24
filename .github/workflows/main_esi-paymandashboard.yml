@@ -56,5 +56,5 @@ jobs:
         with:
           app-name: 'ESI-PayManDashboard'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9C8CFD36D83F419DA60DD15894407F75 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_70A71ABA2E9740C79BEE84134D3328E7 }}
           package: .
