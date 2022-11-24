@@ -89,7 +89,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="h6 modal-title" id="modal-title">Add Country</h2>
+                <h2 class="h6 modal-title" id="modal-title-form">Add Country</h2>
             </div>
             <form id="url" action="{{ route('cms.country.store') }}" method="post">
                 @csrf
@@ -109,7 +109,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-secondary" id="btn-modal">Create</button>
+                    <button type="submit" class="btn btn-secondary" id="btn-modal-form">Create</button>
                     <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -125,8 +125,8 @@
         id = `<input id="id" type="hidden" name="id" value="${data.country_id}">`
         $('#methods').append(method);
         $('#methods').append(id);
-        $('#modal-title').html('Update country')
-        $('#btn-modal').html('Update')
+        $('#modal-title-form').html('Update country')
+        $('#btn-modal-form').html('Update')
         $('#currency').val(data.currency)
         $('#country').val(data.country)
     }
@@ -135,8 +135,8 @@
         $('#url').attr('action', "{{ route('cms.country.store') }}");
         $('#currency').val('')
         $('#country').val('')
-        $('#modal-title').html('Create country')
-        $('#btn-modal').html('Create')
+        $('#modal-title-form').html('Create country')
+        $('#btn-modal-form').html('Create')
     }
     function delet(data) {
         $('#id').val(data.id)

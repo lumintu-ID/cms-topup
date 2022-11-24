@@ -93,7 +93,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="h6 modal-title" id="modal-title">Add Game</h2>
+                <h2 class="h6 modal-title" id="modal-title-form">Add Game</h2>
             </div>
             <form id="url" action="{{ route('cms.game.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
@@ -122,7 +122,7 @@
                    
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-secondary" id="btn-modal">Create</button>
+                    <input id="btn-modal-form" type="submit" value="Create" class="btn btn-secondary">
                     <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -145,8 +145,8 @@
         $('#thumb').append(thumb);
         $('#game_id').val(data.game_id)
         $('#game_title').val(data.game_title)
-        $('#modal-title').html('Update Game')
-        $('#btn-modal').html('Update')
+        $('#modal-title-form').html('Update Game')
+        $('#btn-modal-form').prop('value', 'Update');
     }
     function add() {
         $('#cover').attr('required', 'required');
@@ -155,8 +155,8 @@
         $('#url').attr('action', "{{ route('cms.game.store') }}");
         $('#game_id').val('')
         $('#game_title').val('')
-        $('#modal-title').html('Create Game')
-        $('#btn-modal').html('Create')
+        $('#modal-title-form').html('Create Game')
+        $('#btn-modal-form').prop('value', 'Create');
     }
     function delet(data) {
         $('#id').val(data.id)
