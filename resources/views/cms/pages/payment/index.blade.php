@@ -100,7 +100,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="h6 modal-title" id="modal-title">Add Payment</h2>
+                <h2 class="h6 modal-title" id="modal-title-form">Add Payment</h2>
             </div>
             <form id="url" action="{{ route('cms.payment.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
@@ -152,7 +152,7 @@
                    
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-secondary" id="btn-modal">Create</button>
+                    <input id="btn-modal-form" type="submit" value="Create" class="btn btn-secondary">
                     <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -181,8 +181,8 @@
      
         $('#category').val(data.category_id)
         
-        $('#modal-title').html('Update Payment')
-        $('#btn-modal').html('Update')
+        $('#modal-title-form').html('Update Payment')
+        $('#btn-modal-form').prop('value', 'Update');
     }
     function add() {
         $('#thumbnail').attr('required', 'required');
@@ -198,8 +198,9 @@
         $('#url-payment').val('')
         $('#category').val('Select Category')
         $('#category').prop('disabled', false)
-        $('#modal-title').html('Create Payment')
-        $('#btn-modal').html('Create')
+
+        $('#modal-title-form').html('Add Payment')
+        $('#btn-modal-form').prop('value', 'Create');
     }
     function delet(data) {
         $('#id').val(data.id)

@@ -104,7 +104,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="h6 modal-title" id="modal-title">Add user</h2>
+                <h2 class="h6 modal-title-form" id="modal-title-form">Add user</h2>
             </div>
             <form id="url" action="{{ route('cms.user.store') }}" method="post">
                 @csrf
@@ -138,7 +138,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-secondary" id="btn-modal">Create</button>
+                    <button type="submit" class="btn btn-secondary" id="btn-modal-form">Create</button>
                     <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -154,8 +154,8 @@
         id = `<input id="id" type="hidden" name="id" value="${data.user_id}">`
         $('#methods').append(method);
         $('#methods').append(id);
-        $('#modal-title').html('Update user')
-        $('#btn-modal').html('Update')
+        $('#modal-title-form').html('Update user')
+        $('#btn-modal-form').html('Update')
         $('#name').val(data.name)
         $('#email').val(data.email)
         $('#password').val('')
@@ -170,8 +170,8 @@
         $('#label').val('')
         $('#label').val('Select Role')
         $('#label').prop('disabled', false)
-        $('#modal-title').html('Create user')
-        $('#btn-modal').html('Create')
+        $('#modal-title-form').html('Create user')
+        $('#btn-modal-form').html('Create')
     }
     function delet(data) {
         $('#id').val(data.id)
