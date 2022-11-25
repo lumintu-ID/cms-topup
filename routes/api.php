@@ -22,6 +22,8 @@ Route::prefix('v1')->group(function () {
 
 
     Route::get('/payment', [ApiPaymentController::class, 'index']);
+
+    Route::get('/allpayment', [ApiPaymentController::class, 'getAllPayment']);
 });
 
 Route::post('/administrator/transaction/notify', [TransactionController::class, 'notify']);
