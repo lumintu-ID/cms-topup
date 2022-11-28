@@ -39,6 +39,6 @@ Route::prefix('v1')->group(function () {
 
         EventsTransaction::dispatch($request->all());
 
-        return response()->json('OK');
+        return 'OK';
     });
 });
