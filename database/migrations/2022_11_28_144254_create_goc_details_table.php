@@ -13,12 +13,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('detail_transactions', function (Blueprint $table) {
+        Schema::create('goc_details', function (Blueprint $table) {
             $table->id();
-            $table->string('transactin_id');
-            $table->string('payment_amount');
+            $table->string('status');
+            $table->string('merchantId');
             $table->string('payment_method');
-            $table->dateTime('payment_date');
+            $table->string('trxId');
+            $table->string('channelId');
+            $table->string('amount');
+            $table->string('currency');
+            $table->string('paidAmount');
+            $table->string('paidCurrency');
+            $table->string('referenceId');
+            $table->string('sign');
             $table->timestamps();
         });
     }
@@ -30,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detail_transactions');
+        Schema::dropIfExists('goc_details');
     }
 };
