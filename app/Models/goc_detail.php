@@ -5,9 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DetailTransaction extends Model
+class goc_detail extends Model
 {
     use HasFactory;
-
-    protected $guarded = [];
 }

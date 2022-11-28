@@ -15,27 +15,27 @@ class TransactionController extends Controller
 
     protected $data = array();
 
-    public function notify(Request $request)
-    {
-        Log::critical('Critical error', $request->all());
-        Log::info('info', ['data' => $request->all()]);
-        Log::error('error', ['data' => $request->all()]);
-        Log::warning('warning', ['data' => $request->all()]);
+    // public function notify(Request $request)
+    // {
+    //     Log::critical('Critical error', $request->all());
+    //     Log::info('info', ['data' => $request->all()]);
+    //     Log::error('error', ['data' => $request->all()]);
+    //     Log::warning('warning', ['data' => $request->all()]);
 
-        Transaction::create([
-            'Transaction_id' => Str::uuid(),
-            'game_id' => $request->game_id,
-            'method_payment' => $request->method_payment,
-            'product_name' => $request->product_name,
-            'email' => $request->email,
-            'amount' => $request->amount,
-            'status' => $request->status
-        ]);
+    //     Transaction::create([
+    //         'Transaction_id' => Str::uuid(),
+    //         'game_id' => $request->game_id,
+    //         'method_payment' => $request->method_payment,
+    //         'product_name' => $request->product_name,
+    //         'email' => $request->email,
+    //         'amount' => $request->amount,
+    //         'status' => $request->status
+    //     ]);
 
-        EventsTransaction::dispatch($request->all());
+    //     EventsTransaction::dispatch($request->all());
 
-        return response()->json($request->all());
-    }
+    //     return response()->json($request->all());
+    // }
 
     public function index(Request $request)
     {

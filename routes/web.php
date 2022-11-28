@@ -12,6 +12,7 @@ use App\Http\Controllers\cms\CategoryController;
 use App\Http\Controllers\cms\NavigationController;
 use App\Http\Controllers\cms\UserAccessController;
 use App\Http\Controllers\cms\TransactionController;
+// use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,11 @@ use App\Http\Controllers\cms\TransactionController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// Route::get('/', function () {
+//     return view('request');
+// });
+
 // auth
 
 Route::get('/administrator/login', [AuthController::class, 'index'])->name('login');
@@ -104,6 +110,4 @@ Route::middleware(['auth', 'access'])->group(function () {
 
 
     Route::get('/administrator/transaction', [TransactionController::class, 'index'])->name('cms.transaction');
-    // notification
-    Route::post('/administrator/transaction/notify', [TransactionController::class, 'notify']);
 });
