@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\GameController as ApiGameController;
 use App\Http\Controllers\api\PaymentController as ApiPaymentController;
+use App\Http\Controllers\api\TransactionController as ApiTransactionController;
 
 use App\Events\Transaction as EventsTransaction;
 
@@ -30,6 +31,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/allpayment', [ApiPaymentController::class, 'getAllPayment']);
 
 
+    Route::post('/transaction', [ApiTransactionController::class, 'transaction']);
 
     Route::post('/transaction/notify', function (Request $request) {
         Log::critical('Critical error', $request->all());
