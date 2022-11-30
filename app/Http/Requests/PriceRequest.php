@@ -24,10 +24,14 @@ class PriceRequest extends FormRequest
     public function rules()
     {
         return [
+            "ppi" => 'required',
+            "currency" => 'required',
             "game" => 'required',
             "payment" => 'required',
-            "price_name" => 'required|string',
-            "price" => "required|numeric"
+            "currency" => 'required',
+            "name" => 'required',
+            "amount" => "required|numeric",
+            "price" => 'required|numeric'
         ];
     }
 }

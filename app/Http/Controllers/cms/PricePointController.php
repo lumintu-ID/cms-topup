@@ -25,7 +25,7 @@ class PricePointController extends Controller
 
         try {
             PricePoint::create([
-                'id_price_point' => Str::uuid(),
+                'id' => Str::uuid(),
                 'price_point' => $request->price_point
             ]);
 
@@ -56,7 +56,7 @@ class PricePointController extends Controller
     public function update(PricePointRequest $request)
     {
         try {
-            $pricepoint = PricePoint::where('id_price_point', $request->id)->get();
+            $pricepoint = PricePoint::where('id', $request->id)->get();
 
             if (count($pricepoint) <= 0) {
                 $notif = array(
@@ -67,7 +67,7 @@ class PricePointController extends Controller
                 return redirect()->back()->with($notif);
             };
 
-            PricePoint::where('id_price_point', $request->id)->update([
+            PricePoint::where('id', $request->id)->update([
                 'price_point' => $request->price_point
             ]);
 
@@ -96,7 +96,7 @@ class PricePointController extends Controller
     public function destroy(Request $request)
     {
         try {
-            $pricepoint = PricePoint::where('id_price_point', $request->id)->get();
+            $pricepoint = PricePoint::where('id', $request->id)->get();
 
             if (count($pricepoint) <= 0) {
                 $notif = array(
@@ -107,7 +107,7 @@ class PricePointController extends Controller
                 return redirect()->back()->with($notif);
             };
 
-            PricePoint::where('id_price_point', $request->id)->delete();
+            PricePoint::where('id', $request->id)->delete();
 
             $notif = array(
                 'message' => 'Success Delete Price Point ID',

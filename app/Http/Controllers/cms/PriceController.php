@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\PriceRequest;
 use App\Http\Controllers\Controller;
+use App\Models\Country;
+use App\Models\PricePoint;
 use App\Repository\Price\PriceImplement;
 
 class PriceController extends Controller
@@ -29,10 +31,13 @@ class PriceController extends Controller
         $title = "Price List";
 
         $data = $this->priceImplement->getAll();
+
         $game = GameList::all();
         $payment = Payment::all();
+        $ppi = PricePoint::all();
+        $country = Country::all();
 
-        return view('cms.pages.price.index', compact('game', 'payment', 'data', 'title'));
+        return view('cms.pages.price.index', compact('game', 'payment', 'ppi', 'country', 'data', 'title'));
     }
 
     /**
@@ -44,6 +49,7 @@ class PriceController extends Controller
     public function store(PriceRequest $request)
     {
         try {
+            // dd($request);
             $this->priceImplement->Create($request);
 
             $notif = array(
