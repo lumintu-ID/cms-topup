@@ -1,0 +1,145 @@
+/*=================== Section Games Info =============== */
+
+.games-info {
+ 
+}
+
+.games-info > .row {
+  margin: 0;
+  padding-bottom: .5rem;
+  border-bottom: 3px solid #040726;
+}
+
+.games-info__image {
+  /* height: 5rem;
+  width: 5rem; */
+  /* background-color: #fff; */
+  /* border-radius: 10px; */
+}
+
+
+.games-info__title {
+  margin-bottom: .2rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.games-info__body p {
+  font-size: .6rem;
+  font-style: italic;
+}
+
+.games-info__image img {
+  width: 100%;
+}
+
+.games-info__text {
+  font-size: .7rem;
+}
+
+.games-info__button {
+  /* border-bottom: 1px solid #040726; */
+}
+
+.games-info__button a.button__primary {
+  /* min-height: unset; */
+}
+
+/*=================== Section User Player =============== */
+
+.section-player {
+}
+
+
+.input-form__player > *,
+.input-form__country > * {
+  font-size: .8rem;
+}
+
+.input-form__player > .form-control:focus,
+.input-form__country > .form-select:focus {
+  border-color: #ff9000;
+  outline: 1px;
+  box-shadow: 0 0 0 0.25rem #ff910049;
+}
+
+/*=================== Section Payment List =============== */
+
+.section-payment-list {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  /* margin: 0 .5rem; */
+}
+
+.section-payment-list .row {
+  padding-bottom: 2rem;
+  border-bottom: 3px solid #040726;
+}
+
+
+.payment-list__items {
+  padding: .5rem 1rem;
+  background-color: rgba(255, 255, 255, 0.641);
+  /* background-color: #fff; */
+  /* background-color: #979797; */
+  border-radius: 3px;
+}
+
+.payment-list__items img {
+  height: 2.5rem;
+}
+
+.section-amount-list {
+  padding: 0 .5rem 1.5rem;
+}
+
+.amount-price__wrap {
+  background-color: #fff;
+  border-radius: 3px;
+  font-size: .8rem;
+}
+
+
+
+/*=================== Section Total Payment =============== */
+
+.section-total-payment {
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  color: #fff;
+  background-color: #040726;
+}
+
+.payment-list__items img {
+  max-width: 100%;
+}
+
+
+.total-payment__header {
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.total-payment__nominal {
+  padding: .3rem 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #040726;
+  background-color: #fff;
+}
+
+.total-payment__footer > .button__primary {
+  min-width: 7.5rem;
+}
+
+.back-to-home {
+  min-height: 10rem;
+  padding-top: 1rem;
+}
+
+.back-to-home > .col {
+  padding: 1rem;
+  border-top: 3px solid #040726;
+  /* background-color: yellow; */
+}
