@@ -13,7 +13,12 @@ use App\Http\Controllers\cms\NavigationController;
 use App\Http\Controllers\cms\PricePointController;
 use App\Http\Controllers\cms\UserAccessController;
 use App\Http\Controllers\cms\TransactionController;
+
 // use Illuminate\Http\Request;
+
+/* ============ Frontend Controller ============ */ 
+use App\Http\Controllers\frontend\HomeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -26,11 +31,9 @@ use App\Http\Controllers\cms\TransactionController;
 |
 */
 
-Route::get('/', function () {
-    return view('request');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// auth
+
 
 Route::get('/administrator/login', [AuthController::class, 'index'])->name('login');
 Route::post('/administrator/login', [AuthController::class, 'login'])->name('auth.login');
