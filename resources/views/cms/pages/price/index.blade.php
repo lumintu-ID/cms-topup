@@ -6,6 +6,11 @@
 
 <button type="button" class="btn btn-block btn-gray-800 mb-3" data-bs-toggle="modal" data-bs-target="#add" onclick="add()">Add</button>
 
+<form method="POST" action="{{ route('cms.price.export') }}" enctype="multipart/form-data">
+    @csrf
+    <input type="file" id="myFile" name="file">
+    <input type="submit" class="btn btn-block btn-gray-800 mb-3">
+</form>
 
 @if ($errors->any())
     <div class="p-3">
