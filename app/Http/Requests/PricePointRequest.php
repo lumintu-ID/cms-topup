@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PriceRequest extends FormRequest
+class PricePointRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,14 +24,7 @@ class PriceRequest extends FormRequest
     public function rules()
     {
         return [
-            "ppi" => 'required',
-            "currency" => 'required',
-            "game" => 'required',
-            "payment" => 'required',
-            "currency" => 'required',
-            "name" => 'required',
-            "amount" => "required|numeric",
-            "price" => 'required|numeric'
+            'price_point' => 'required|string'
         ];
     }
 }

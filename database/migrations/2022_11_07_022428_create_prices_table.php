@@ -17,8 +17,12 @@ return new class extends Migration
             $table->uuid('price_id');
             $table->string('payment_id');
             $table->string('game_id');
-            $table->string('title_price');
+            $table->string('price_point_id');
+            $table->string('country_id');
+            $table->string('name');
+            $table->integer('amount');
             $table->integer('price');
+            $table->integer('is_active');
             $table->timestamps();
         });
     }

@@ -10,6 +10,7 @@ use App\Http\Controllers\cms\CountryController;
 use App\Http\Controllers\cms\PaymentController;
 use App\Http\Controllers\cms\CategoryController;
 use App\Http\Controllers\cms\NavigationController;
+use App\Http\Controllers\cms\PricePointController;
 use App\Http\Controllers\cms\UserAccessController;
 use App\Http\Controllers\cms\TransactionController;
 // use Illuminate\Http\Request;
@@ -25,9 +26,9 @@ use App\Http\Controllers\cms\TransactionController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('request');
-// });
+Route::get('/', function () {
+    return view('request');
+});
 
 // auth
 
@@ -110,4 +111,11 @@ Route::middleware(['auth', 'access'])->group(function () {
 
 
     Route::get('/administrator/transaction', [TransactionController::class, 'index'])->name('cms.transaction');
+
+
+
+    Route::get('/administrator/pricepoint', [PricePointController::class, 'index'])->name('cms.pricepoint');
+    Route::post('/administrator/pricepoint', [PricePointController::class, 'store'])->name('cms.pricepoint.store');
+    Route::patch('/administrator/pricepoint', [PricePointController::class, 'update'])->name('cms.pricepoint.update');
+    Route::delete('/administrator/pricepoint', [PricePointController::class, 'destroy'])->name('cms.pricepoint.delete');
 });

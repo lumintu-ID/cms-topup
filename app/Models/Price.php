@@ -23,4 +23,14 @@ class Price extends Model
     {
         return $this->belongsTo(Payment::class, 'payment_id');
     }
+
+    public function pricepoint()
+    {
+        return $this->belongsTo(PricePoint::class, 'price_point_id');
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id');
+    }
 }

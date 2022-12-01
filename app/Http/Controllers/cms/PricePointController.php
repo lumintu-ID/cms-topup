@@ -2,58 +2,35 @@
 
 namespace App\Http\Controllers\cms;
 
-use App\Models\Price;
-use App\Models\Payment;
-use App\Models\GameList;
+use App\Models\PricePoint;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Http\Requests\PriceRequest;
 use App\Http\Controllers\Controller;
-use App\Models\Country;
-use App\Models\PricePoint;
-use App\Repository\Price\PriceImplement;
+use App\Http\Requests\PricePointRequest;
 
-class PriceController extends Controller
+class PricePointController extends Controller
 {
-
-    protected $priceImplement;
-    public function __construct(PriceImplement $priceImplement)
-    {
-        $this->priceImplement = $priceImplement;
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $title = "Price List";
+        $title = 'Price Point List';
 
-        $data = $this->priceImplement->getAll();
+        $data = PricePoint::all();
 
-        $game = GameList::all();
-        $payment = Payment::all();
-        $ppi = PricePoint::all();
-        $country = Country::all();
-
-        return view('cms.pages.price.index', compact('game', 'payment', 'ppi', 'country', 'data', 'title'));
+        return view('cms.pages.pricepoint.index', compact('title', 'data'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(PriceRequest $request)
+
+    public function store(PricePointRequest $request)
     {
+
         try {
-            // dd($request);
-            $this->priceImplement->Create($request);
+            PricePoint::create([
+                'id' => Str::uuid(),
+                'price_point' => $request->price_point
+            ]);
 
             $notif = array(
-                'message' => 'Success Create Price',
+                'message' => 'Success Create Price Point ID',
                 'alert-info' => 'success'
             );
 
@@ -76,24 +53,26 @@ class PriceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(PriceRequest $request)
+    public function update(PricePointRequest $request)
     {
         try {
-            $price = $this->priceImplement->getId($request->id);
+            $pricepoint = PricePoint::where('id', $request->id)->get();
 
-            if (!$price) {
+            if (count($pricepoint) <= 0) {
                 $notif = array(
-                    'message' => 'Update Price Failed',
+                    'message' => 'Update Price Point ID Failed',
                     'alert-info' => 'warning'
                 );
 
                 return redirect()->back()->with($notif);
             };
 
-            $this->priceImplement->update($request->id, $request);
+            PricePoint::where('id', $request->id)->update([
+                'price_point' => $request->price_point
+            ]);
 
             $notif = array(
-                'message' => 'Success Update Price',
+                'message' => 'Success Update Price Point ID',
                 'alert-info' => 'success'
             );
 
@@ -117,21 +96,21 @@ class PriceController extends Controller
     public function destroy(Request $request)
     {
         try {
-            $price = $this->priceImplement->getId($request->id);
+            $pricepoint = PricePoint::where('id', $request->id)->get();
 
-            if (!$price) {
+            if (count($pricepoint) <= 0) {
                 $notif = array(
-                    'message' => 'Update Price Failed',
+                    'message' => 'Update Price Point ID Failed',
                     'alert-info' => 'warning'
                 );
 
                 return redirect()->back()->with($notif);
             };
 
-            $this->priceImplement->delete($request->id);
+            PricePoint::where('id', $request->id)->delete();
 
             $notif = array(
-                'message' => 'Success Delete Price',
+                'message' => 'Success Delete Price Point ID',
                 'alert-info' => 'success'
             );
 
