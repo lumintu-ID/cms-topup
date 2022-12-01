@@ -149,7 +149,7 @@ class PriceController extends Controller
     }
 
 
-    public function import()
+    public function import(Request $request)
     {
         try {
             Excel::import(new PriceImport, request()->file('file'));

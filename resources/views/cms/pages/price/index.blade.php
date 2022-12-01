@@ -6,7 +6,7 @@
 
 <button type="button" class="btn btn-block btn-gray-800 mb-3" data-bs-toggle="modal" data-bs-target="#add" onclick="add()">Add</button>
 
-<form method="POST" action="{{ route('cms.price.export') }}" enctype="multipart/form-data">
+<form method="POST" action="{{ route('cms.price.import') }}" enctype="multipart/form-data">
     @csrf
     <input type="file" id="myFile" name="file">
     <input type="submit" class="btn btn-block btn-gray-800 mb-3">
