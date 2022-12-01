@@ -13,8 +13,6 @@ use App\Http\Controllers\cms\NavigationController;
 use App\Http\Controllers\cms\PricePointController;
 use App\Http\Controllers\cms\UserAccessController;
 use App\Http\Controllers\cms\TransactionController;
-use Illuminate\Http\Request;
-
 // use Illuminate\Http\Request;
 
 /*
@@ -108,13 +106,7 @@ Route::middleware(['auth', 'access'])->group(function () {
     Route::patch('/administrator/price', [PriceController::class, 'update'])->name('cms.price.update');
     Route::delete('/administrator/price', [PriceController::class, 'destroy'])->name('cms.price.delete');
 
-    // Route::post('/administrator/price/import', [PriceController::class, 'import'])->name('cms.price.import');
-
-    Route::post('/administrator/price/import', function (Request $request) {
-        dd($request);
-        Excel::import(new PriceImport, $request->files());
-    })->name('cms.price.import');
-
+    Route::post('/administrator/price/import', [PriceController::class, 'import'])->name('cms.price.import');
 
     Route::get('/administrator/logout', [AuthController::class, 'logout'])->name('logout');
 
