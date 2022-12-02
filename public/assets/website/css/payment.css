@@ -1,13 +1,10 @@
 /*=================== Section Games Info =============== */
 
-.games-info {
- 
-}
 
 .games-info > .row {
   margin: 0;
   padding-bottom: .5rem;
-  border-bottom: 3px solid #040726;
+  border-bottom: 1px solid #040726;
 }
 
 .games-info__image {
@@ -59,8 +56,8 @@
 .input-form__player > .form-control:focus,
 .input-form__country > .form-select:focus {
   border-color: #ff9000;
-  outline: 1px;
-  box-shadow: 0 0 0 0.25rem #ff910049;
+  outline: .1rem;
+  box-shadow: 0 0 0 0.20rem #ff91004f;
 }
 
 /*=================== Section Payment List =============== */
@@ -73,7 +70,7 @@
 
 .section-payment-list .row {
   padding-bottom: 2rem;
-  border-bottom: 3px solid #040726;
+  border-bottom: 1px solid #040726;
 }
 
 
@@ -83,6 +80,12 @@
   /* background-color: #fff; */
   /* background-color: #979797; */
   border-radius: 3px;
+  cursor: pointer;
+}
+
+.payment-list__items:hover {
+  background-color: #ffffffd8;
+  outline: 3px solid #979696;
 }
 
 .payment-list__items img {
@@ -97,6 +100,16 @@
   background-color: #fff;
   border-radius: 3px;
   font-size: .8rem;
+  cursor: pointer;
+}
+
+.amount-price__wrap:hover {
+  outline: .1rem solid #717171;
+}
+
+
+.amount-price__wrap input[type="checkbox"]:focus {
+  box-shadow: none;
 }
 
 

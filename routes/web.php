@@ -18,6 +18,7 @@ use App\Http\Controllers\cms\TransactionController;
 
 /* ============ Frontend Controller ============ */ 
 use App\Http\Controllers\frontend\HomeController;
+use App\Http\Controllers\frontend\PaymentController as PaymentFrontend;
 
 
 /*
@@ -32,7 +33,9 @@ use App\Http\Controllers\frontend\HomeController;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
+Route::get('/payment/list', [PaymentFrontend::class, 'getListPayment'])->name('payment.list-payment');
+Route::get('/payment/{slug}', [PaymentFrontend::class, 'index'])->name('payment');
+Route::post('/payment', [PaymentFrontend::class, 'doCheckout'])->name('payment.checkout');
 
 
 Route::get('/administrator/login', [AuthController::class, 'index'])->name('login');

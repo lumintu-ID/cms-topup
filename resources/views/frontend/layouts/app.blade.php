@@ -10,8 +10,9 @@
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ asset('assets/website/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/website/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/website/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/website/css/payment.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/website/css/responsive.css') }}">
 
   </head>
@@ -22,6 +23,7 @@
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <script src="" async defer></script>
+    <script src="{{ asset('assets/website/js/jquery-3.5.1.slim.min.js') }}"></script>
+    @yield('js-utilities')
   </body>
 </html>
