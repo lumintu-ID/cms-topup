@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('price_points', function (Blueprint $table) {
-            $table->uuid('id_price_point');
+            $table->uuid('id');
             $table->string('price_point');
             $table->timestamps();
         });

@@ -10,7 +10,7 @@ class PriceImplement implements PriceRepository
 {
     public function getAll()
     {
-        $data = Price::with('game', 'payment')->get();
+        $data = Price::with('game', 'payment', 'pricepoint')->get();
         return $data;
     }
 
@@ -20,8 +20,12 @@ class PriceImplement implements PriceRepository
             'price_id' => Str::uuid(),
             'game_id' => $request['game'],
             'payment_id' => $request['payment'],
-            'title_price' => $request['price_name'],
-            'price' => $request['price']
+            'price_point_id' => $request['ppi'],
+            'country_id' => $request['currency'],
+            'name' => $request['name'],
+            'amount' => $request['amount'],
+            'price' => $request['price'],
+            'is_active' => 1
         ]);
 
         return;
@@ -40,8 +44,11 @@ class PriceImplement implements PriceRepository
         Price::where('price_id', $id)->update([
             'game_id' => $request['game'],
             'payment_id' => $request['payment'],
-            'title_price' => $request['price_name'],
-            'price' => $request['price']
+            'price_point_id' => $request['ppi'],
+            'country_id' => $request['currency'],
+            'name' => $request['name'],
+            'amount' => $request['amount'],
+            'price' => $request['price'],
         ]);
 
         return;

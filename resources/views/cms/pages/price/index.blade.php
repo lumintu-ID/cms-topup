@@ -6,6 +6,11 @@
 
 <button type="button" class="btn btn-block btn-gray-800 mb-3" data-bs-toggle="modal" data-bs-target="#add" onclick="add()">Add</button>
 
+<form action="{{ route('cms.price.import') }}" method="post" enctype="multipart/form-data">
+    @csrf
+    <input type="file" id="myFile" name="file">
+    <input type="submit" class="btn btn-block btn-gray-800 mb-3">
+</form>
 
 @if ($errors->any())
     <div class="p-3">
@@ -41,6 +46,7 @@
                 <th class="border-0 rounded-start">No</th>
                 <th class="border-0">Payment</th>
                 <th class="border-0">Game</th>
+                <th class="border-0">Name</th>
                 <th class="border-0">Price</th>
                 <th class="border-0">Action</th>
             </tr>
@@ -54,7 +60,10 @@
                     {{ $price->game->game_title }}
                 </td>
                 <td>
-                   {{ $price->title_price .' - '. $price->price }}
+                    {{ $price->amount.' '.$price->name }}
+                </td>
+                <td>
+                    {{ $price->price.' '.$price->country->currency }}
                 </td>
                 <td>
                     <button data-bs-toggle="modal" data-bs-target="#add" onclick="update({{ $price }})"
@@ -71,9 +80,9 @@
                                     @csrf
                                     @method('delete')
                                     <div class="modal-body row">
-                                        <h4>Are you sure delete this Payment?</h4>
+                                        <h4>Are you sure delete this Price?</h4>
                                         <p>Payment : {{ $price->payment->name_channel }}</p>
-                                        <p>Name : {{ $price->title_price.' - '.$price->price }}</p>
+                                        <p>Name : {{ $price->amount.' '.$price->name.' - '.$price->price.' '.$price->country->currency }}</p>
                                         <input type="hidden" name="id" value="{{ $price->price_id }}">
                                     </div>
                                     <div class="modal-footer">
@@ -115,6 +124,16 @@
                     </div>
 
                     <div class="col-md-12 mb-3">
+                        <label class="my-1 me-2" for="game">Select Currency</label>
+                        <select class="form-select" name="currency" id="currency" aria-label="Default select example" required>
+                            <option selected>Select Currency</option>
+                            @foreach ($country as $currency)
+                                <option value="{{ $currency->country_id }}">{{ $currency->currency }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
                         <label class="my-1 me-2" for="payment">Select Payment</label>
                         <select class="form-select" name="payment" id="payment" aria-label="Default select example" required>
                             <option selected>Select Payment</option>
@@ -123,12 +142,31 @@
                             @endforeach
                         </select>
                     </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="my-1 me-2" for="ppi">Select PPI</label>
+                        <select class="form-select" name="ppi" id="ppi" aria-label="Default select example" required>
+                            <option selected>Select PPI</option>
+                            @foreach ($ppi as $ppi)
+                                <option value="{{ $ppi->id }}">{{ $ppi->price_point }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                   
                     
                     <div class="col-md-12 mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Name</label>
-                        <input type="text" name="price_name" value="{{ old('price_name') }}" class="form-control" id="price_name"
-                            placeholder="price name" required>
+                        <label for="exampleFormControlInput1" class="form-label">Name Currency</label>
+                        <input type="text" name="name" value="{{ old('name') }}" class="form-control" id="name"
+                            placeholder="Name" required>
                     </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Amount</label>
+                        <input type="number" name="amount" value="{{ old('amount') }}" class="form-control" id="amount"
+                            placeholder="amount" required>
+                    </div>
+
                     <div class="col-md-12 mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Price</label>
                         <input type="number" name="price" value="{{ old('price') }}" class="form-control" id="price"
@@ -156,25 +194,42 @@
         $('#methods').append(method);
         $('#methods').append(id);
 
-        $('#price_name').val(data.title_price)
-        $('#price').val(data.price)
-        $('#payment').val(data.payment_id)
         $('#game').val(data.game_id)
-        
+        $('#currency').val(data.country_id)
+        $('#payment').val(data.payment_id)
+        $('#ppi').val(data.price_point_id)
+        $('#name').val(data.name)
+        $('#amount').val(data.amount)
+        $('#price').val(data.price)
+
         $('#modal-title-form').html('Update Price')
         $('#btn-modal-form').html('Update')
     }
     function add() {
         $('#methods').empty()
         $('#url').attr('action', "{{ route('cms.price.store') }}");
-        $('#price_name').val('')
-        $('#price').val('')
+
         $('#game').val('')
         $('#game').val('Select Game')
         $('#game').prop('disabled', false)
+
+        $('#currency').val('')
+        $('#currency').val('Select Currency')
+        $('#currency').prop('disabled', false)
+
         $('#payment').val('')
         $('#payment').val('Select Payment')
         $('#payment').prop('disabled', false)
+
+        $('#ppi').val('')
+        $('#ppi').val('Select PPI')
+        $('#ppi').prop('disabled', false)
+
+        $('#name').val('')
+        $('#amount').val('')
+        $('#price').val('')
+       
+       
         $('#modal-title-form').html('Create Price')
         $('#btn-modal-form').html('Create')
     }

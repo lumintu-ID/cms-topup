@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\cms;
 
 use App\Models\Price;
+use App\Models\Country;
 use App\Models\Payment;
 use App\Models\GameList;
+use App\Models\PricePoint;
 use Illuminate\Support\Str;
+use App\Imports\PriceImport;
 use Illuminate\Http\Request;
 use App\Http\Requests\PriceRequest;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Repository\Price\PriceImplement;
 
 class PriceController extends Controller
@@ -29,10 +33,13 @@ class PriceController extends Controller
         $title = "Price List";
 
         $data = $this->priceImplement->getAll();
+
         $game = GameList::all();
         $payment = Payment::all();
+        $ppi = PricePoint::all();
+        $country = Country::all();
 
-        return view('cms.pages.price.index', compact('game', 'payment', 'data', 'title'));
+        return view('cms.pages.price.index', compact('game', 'payment', 'ppi', 'country', 'data', 'title'));
     }
 
     /**
@@ -44,6 +51,7 @@ class PriceController extends Controller
     public function store(PriceRequest $request)
     {
         try {
+
             $this->priceImplement->Create($request);
 
             $notif = array(
@@ -126,6 +134,28 @@ class PriceController extends Controller
 
             $notif = array(
                 'message' => 'Success Delete Price',
+                'alert-info' => 'success'
+            );
+
+            return redirect()->back()->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
+                'alert-info' => 'warning'
+            );
+
+            return redirect()->back()->with($notif);
+        }
+    }
+
+
+    public function import(Request $request)
+    {
+        try {
+            Excel::import(new PriceImport, request()->file('file'));
+
+            $notif = array(
+                'message' => 'Success Import Price',
                 'alert-info' => 'success'
             );
 

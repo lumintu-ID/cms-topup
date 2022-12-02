@@ -9,6 +9,6 @@ class PricePoint extends Model
 {
     use HasFactory;
     protected $keyType = "string";
-    protected $primary = "id_price_point";
+    protected $primary = "id";
     protected $guarded = [];
 }

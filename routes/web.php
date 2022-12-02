@@ -112,6 +112,8 @@ Route::middleware(['auth', 'access'])->group(function () {
     Route::patch('/administrator/price', [PriceController::class, 'update'])->name('cms.price.update');
     Route::delete('/administrator/price', [PriceController::class, 'destroy'])->name('cms.price.delete');
 
+    Route::post('/administrator/price/import', [PriceController::class, 'import'])->name('cms.price.import');
+
     Route::get('/administrator/logout', [AuthController::class, 'logout'])->name('logout');
 
 

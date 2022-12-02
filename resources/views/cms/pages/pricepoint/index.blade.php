@@ -65,7 +65,7 @@
                                     <div class="modal-body row">
                                         <h4>Are you sure delete this Price Point?</h4>
                                         <p>Name : {{ $ppi->price_point }}</p>
-                                        <input type="hidden" name="id" value="{{ $ppi->id_price_point }}">
+                                        <input type="hidden" name="id" value="{{ $ppi->id }}">
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-secondary" id="btn-modal">Delete</button>
@@ -117,7 +117,7 @@
     function update(data) {
         $('#url').attr('action', "{{ route('cms.price.update') }}");
         method = '<input id="mtd" type="hidden" name="_method" value="PATCH">'
-        id = `<input id="id" type="hidden" name="id" value="${data.id_price_point}">`
+        id = `<input id="id" type="hidden" name="id" value="${data.id}">`
         $('#methods').append(method);
         $('#methods').append(id);
 
