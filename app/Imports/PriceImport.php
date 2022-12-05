@@ -20,7 +20,6 @@ class PriceImport implements ToModel, WithHeadingRow
      */
     public function model(array $row)
     {
-        // dd($row);
         $price_point_id = 'test';
         $game_id = 'test';
         $country_id = 'test';
@@ -28,31 +27,40 @@ class PriceImport implements ToModel, WithHeadingRow
 
         if ($row['price_point_id'] != null) {
 
-            $price_point = PricePoint::select('id', 'price_point')->where('price_point', $row['price_point_id'])->first();
-            $price_point_id = $price_point->id;
+            $price_point = PricePoint::where('price_point', $row['price_point_id'])->get();
+            if (count($price_point) > 0) {
+                $price_point_id = $price_point[0]->id;
+            };
         };
 
         // dd($price_point_id);
 
 
         if ($row['gameid'] != null) {
-            $game = GameList::select('id', 'game_id')->where('game_id', $row['gameid'])->first();
-            $game_id = $game->id;
+            $game = GameList::where('game_id', $row['gameid'])->get();
+            if (count($game) > 0) {
+                $game_id = $game[0]->id;
+            };
         };
-
+        // dd($game_id);
 
 
         if ($row['currency'] != null) {
-            $currency = Country::select('country_id', 'currency')->where('currency', $row['currency'])->first();
-            $country_id = $currency->country_id;
+            $currency = Country::where('currency', $row['currency'])->get();
+            if (count($currency) > 0) {
+                $country_id = $currency[0]->country_id;
+            };
         };
-
+        // dd($country_id);
 
 
         if ($row['channelid'] != null) {
-            $payment = Payment::select('payment_id', 'channel_id')->where('channel_id', $row['channelid'])->first();
-            $payment_id = $payment->payment_id;
+            $payment = Payment::where('channel_id', $row['channelid'])->get();
+            if (count($payment) > 0) {
+                $payment_id = $payment[0]->payment_id;
+            };
         };
+        // dd($payment_id);
 
         if ($game_id != null && $payment_id != null && $price_point_id !=  null && $country_id != null && $row['name'] != null && $row['amount'] != null && $row['price'] != null) {
             return new Price([
