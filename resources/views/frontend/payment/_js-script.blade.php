@@ -49,7 +49,7 @@
               <div class="col">
                 <div class="payment-list__items" data-payment="${data.payment.payment_id}">
                   <input type="radio" id="${data.payment.payment_id}" name="radio-button-payment" value="${data.payment.payment_id}">
-                  <img src="${data.payment.logo_channel}" title="${data.payment.name_channel}" alt="${data.payment.name_channel}" onerror="this.src='${baseUrl}/cover/1669259128_fol-games-image.png'">
+                  <img src="${data.payment.logo_channel}" title="${data.payment.name_channel}" alt="${data.payment.name_channel}" onerror="this.src='${baseUrl}/image/payment-icon.png'">
                   ${data.payment.name_channel}
                 </div>
               </div>
