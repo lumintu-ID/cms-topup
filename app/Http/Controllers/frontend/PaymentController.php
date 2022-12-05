@@ -22,6 +22,7 @@ class PaymentController extends Controller
 
     public function doCheckout(Request $request) 
     {
+        dd($request->input());
         return 'do checkout';
     }
 

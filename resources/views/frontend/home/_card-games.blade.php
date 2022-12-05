@@ -1,5 +1,5 @@
 @foreach ($games as $game)
-<div class="col-6 col-md-3 col-lg-4 col-xl-3 text-center px-lg-5">
+<div class="col-6 col-sm-3 col-md-4 col-xl-3 text-center px-lg-5">
   <a href="{{ route('payment', $game->slug_game) }}">
     <div class="games__card">
       <div class="games-card__body">

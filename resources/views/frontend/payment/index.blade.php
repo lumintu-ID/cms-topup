@@ -35,8 +35,25 @@
   </div>
 </section>
 
-{{-- <form name="formPurchase" action="{{ route('payment.checkout') }}" method="post"> --}}
+{{-- <form name="formPurchase" action="test.php" method="post"> --}}
+<form action="{{ route('payment.checkout') }}" method="post">
 @csrf
+<input type="text" name="merchantId" placeholder="merchantId">
+<input type="text" name="trxId" placeholder="trxId">
+<input type="text" name="trxDateTime" placeholder="trxDateTime">
+<input type="text" name="channelId" placeholder="channelId">
+<input type="text" name="amount" placeholder="amount">
+<input type="text" name="currency" placeholder="currency">
+<input type="text" name="returnUrl" placeholder="returnUrl">
+<br>
+<input type="text" name="userId" placeholder="userId">
+<input type="text" name="name" placeholder="Name User">
+<input type="text" name="email" placeholder="Email">
+<input type="text" name="phone" placeholder="Phone">
+<br>
+<input type="text" name="sign" placeholder="sign">
+<br>
+SHA256(merchantId + trxId + trxDateTime + channelId + amount + currency + hashKey)
 <section class="section-player container-fluid container-lg">
   @include('frontend.payment._player-input')
 </section>
@@ -54,20 +71,25 @@
     </div>
     <div class="col-12 col-md-8 col-lg-6">
       <div class="total-payment__body col text-center">
-        <div class="total-payment__nominal col py-lg-3">50.000</div>
+        <div class="total-payment__nominal col py-lg-3"></div>
       </div>
     </div>
     <div class="col-12 col-md-8">
       <div class="total-payment__footer col d-flex justify-content-center">
-        <button class="button__primary">konfirmasi</button>
+        <button type="submit" class="button__primary">konfirmasi</button>
       </div>
     </div>
   </div>
 </section>
-{{-- </form> --}}
+</form>
 <div class="back-to-home container-fluid container-lg">
   <div class="col d-flex justify-content-center p-5">
     <a href="/index.html" class="button__secondary">kembali ke beranda</a>
+  </div>
+</div>
+<div class="back-to-home container-fluid container-lg">
+  <div class="col d-flex justify-content-center p-5">
+    <button class="button__secondary">Change action</button>
   </div>
 </div>
 @endsection
