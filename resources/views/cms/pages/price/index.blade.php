@@ -1,3 +1,17 @@
+<?php 
+
+function rupiah($number, $currency){
+	if ($currency == "IDR") {
+        $result = number_format($number,2,',','.');
+	    return $result;
+    };
+	
+    return $number;
+}
+ 
+?>
+
+
 @extends('cms.layouts.index')
 
 @extends('cms.addons.css')
@@ -63,7 +77,7 @@
                     {{ $price->amount.' '.$price->name }}
                 </td>
                 <td>
-                    {{ $price->price.' '.$price->country->currency }}
+                    {{ $price->country->currency.' '.rupiah($price->price, $price->country->currency) }}
                 </td>
                 <td>
                     <button data-bs-toggle="modal" data-bs-target="#add" onclick="update({{ $price }})"
