@@ -1,0 +1,191 @@
+/* // X-Small devices (portrait phones, less than 576px) */
+/* // No media query for `xs` since this is the default in Bootstrap */
+
+/* // Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) { 
+ 
+}
+
+/* // Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+
+  .header__navbar .navbar-brand {
+    font-size: 1.5rem;
+  }
+
+  section.header__hero > .container-lg {
+    height: 15rem;
+    padding-bottom: 2rem;
+  }
+
+  .games-header__title,
+  .promo-info-header__title,
+  .support-header__title {
+    border-bottom-width: 2px;
+    font-size: 1.5rem;
+  }
+
+  a.button__primary,
+  button.button__primary {
+    width: 10rem;
+    font-size: .8rem;
+  }
+
+  .games-info > .row {
+    /* padding-bottom: 4rem; */
+  }
+
+  .games-info__button a.button__primary {
+    max-width: 10rem;
+  }
+
+  .promo-card__video iframe {
+    min-height: 12rem;
+  }
+
+  .promo-video-card__title {
+    padding-top: .2rem;
+    font-size: 1rem;
+  }
+
+  .promo-info-news {
+    min-height: 11rem;
+  }
+
+  .promo-info-news__thumbnail {
+    min-height: 10rem;
+  }
+
+  .promo-info-news__title {
+    font-size: .7rem;
+  }
+
+  .support__container {
+    padding: .5rem;
+  }
+
+  .footer__text {
+    font-size: .8rem;
+  }
+
+  /* ================== TOPUP PAGE ===================== */
+
+  .games__card {
+    /* min-width: 14rem; */
+    min-height: 20rem;
+  }
+
+  .games-info__title {
+    font-size: 2rem;
+  }
+
+  .games-info__body > p {
+    font-size: .8rem;
+  }
+
+  .games-card-footer__text {
+    font-size: 1.1rem;
+  }
+
+  .input-form__player > *,
+  .input-form__country > * {
+    font-size: 1rem;
+  }
+
+}
+
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  a.button__primary,
+  a.button__secondary,
+  button.button__primary {
+    min-width: unset;
+    min-height: unset;
+  }
+
+
+  .promo-card__video iframe {
+    min-height: 16rem;
+  }
+
+  .promo-video-card__title {
+    font-size: 1.3rem;
+  }
+
+  .promo-info-news {
+    min-height: 13rem;
+  }
+
+  .promo-info-news__thumbnail {
+    min-height: 11rem;
+  }
+
+  .promo-info-news__title {
+    font-size: 1rem;
+  }
+
+  .promo-info-news__descriptions {
+    font-size: .7rem;
+  }
+
+  .input-form__player > *,
+  .input-form__country > * {
+    font-size: 1.1rem;
+  }
+}
+
+/* // X-Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { 
+
+  section.header__hero > .container-lg {
+    height: 17rem;
+    /* padding-bottom: 2rem; */
+  }
+
+  /*=================== Section Promo Info =============== */
+  .promo-card__video iframe {
+    min-height: 25rem;
+  }
+
+  .promo-info-news {
+    min-height: 17.3rem;
+  }
+
+  .promo-info-news__title {
+    font-size: 1.2rem;
+  }
+
+  .promo-info-news__descriptions {
+    font-size: .9rem;
+  }
+  
+
+  /*=================== Section Support =============== */
+
+  .support__hero {
+    min-height: 15rem;
+  }
+
+  .support__container {
+    padding: .8rem;
+  }
+
+  .support-item__image {
+
+  }
+
+  .support-item__text {
+    font-size: 1rem;
+  }
+
+  .footer__text {
+    font-size: .9rem;
+  }
+}
+
+/* // XX-Large devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) { 
+  .promo-info-news__thumbnail {
+    min-height: 14rem;
+  }
+}
