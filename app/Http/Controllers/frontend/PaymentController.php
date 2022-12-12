@@ -23,7 +23,22 @@ class PaymentController extends Controller
     public function doCheckout(Request $request) 
     {
         dd($request->input());
-        return 'do checkout';
+
+        // Http::asForm()->post('https://pay.goc.id/', [
+        //     "merchantId" => "Esp5373790",
+        //     "trxId" => "454126606313320104",
+        //     "trxDateTime" => "2022-12-07T07:51:48+07",
+        //     "channelId" => 63,
+        //     "amount" => 5000,
+        //     "currency" => "IDR",
+        //     "returnUrl" => "http://127.0.0.1:8000/",
+        //     "userId" => "647762653360703474",
+        //     "phone" => "081240157378",
+        //     "sign" => '807b6e0ccf27513263944443d3f038efe8410a44f0672fb85b5fac75acba495c',
+            
+        // ]);
+
+        return 'Do Checkout';
     }
 
     public function getListPayment(Request $request)
@@ -34,6 +49,19 @@ class PaymentController extends Controller
         dd($payment);
 
         return ;
+    }
+
+    public function generate(Request $request)
+    {   
+        $data = [
+            "merchantId" => "Esp5373790",
+            "trxId" => "454126606313320104",
+            "trxDateTime" => "2022-12-07T07:51:48+07",
+            "returnUrl" => "http://127.0.0.1:8000/",
+            "sign" => '807b6e0ccf27513263944443d3f038efe8410a44f0672fb85b5fac75acba495c',
+        ];
+        $dataGenerate[] = $data;
+        return response()->json($dataGenerate);
     }
 }
 
