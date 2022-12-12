@@ -34,7 +34,7 @@ class ApiImplement implements ApiRepository
     {
         $Id_GOC = "Esp5373790";
         $Id_Unipin = "bcd3a3a3-4c68-419e-bd79-91d8678faf04";
-        $Id_GV = "70";
+        $Id_GV = "1138";
 
         $notif_Unipin = url('/api/v1/transaction/notify');
 
