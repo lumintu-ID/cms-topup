@@ -36,24 +36,9 @@
 </section>
 
 {{-- <form name="formPurchase" action="test.php" method="post"> --}}
-<form action="{{ route('payment.checkout') }}" method="post" id="formCheckout">
+<form action="{{ route('payment.checkout') }}" method="get" id="formCheckout">
 @csrf
-{{-- <input type="text" name="merchantId" placeholder="merchantId"> --}}
-{{-- <input type="text" name="trxId" placeholder="trxId"> --}}
-{{-- <input type="text" name="trxDateTime" placeholder="trxDateTime"> --}}
-{{-- <input type="text" name="channelId" placeholder="channelId"> --}}
-{{-- <input type="text" name="amount" placeholder="amount"> --}}
-<input type="text" name="currency" placeholder="currency">
-<input type="text" name="returnUrl" placeholder="returnUrl">
-<br>
-{{-- <input type="text" name="userId" placeholder="userId"> --}}
-{{-- <input type="text" name="name" placeholder="Name User">
-<input type="text" name="email" placeholder="Email"> --}}
-<input type="text" name="phone" placeholder="Phone">
-<br>
-{{-- <input type="text" name="sign" placeholder="sign"> --}}
-<br>
-{{-- SHA256(merchantId + trxId + trxDateTime + channelId + amount + currency + hashKey) --}}
+
 <section class="section-player container-fluid container-lg">
   @include('frontend.payment._player-input')
 </section>

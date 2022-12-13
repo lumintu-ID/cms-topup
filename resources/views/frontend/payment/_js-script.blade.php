@@ -1,6 +1,6 @@
 <script>
-  'use strict'
-  const merchantId = 'Esp5373790';
+  'use strict';
+  // const merchantId = 'Esp5373790';
   let urlCheckout; 
   let dataPayment; 
   let country = null;
@@ -12,9 +12,8 @@
   let phoneUser = '081240157378';
   let channelId;
   let currency = 'IDR';
-  let returnUrl = 'http://127.0.0.1:8000/';
-  const gocpayHaskey = 'jqji815m748z0ql560982426ca0j70qk02411d2no6u94qgdf58js2jn596s99si';
-  const email = 'testuserid@gmail.com';
+  let returnUrl = window.location.href;
+
   const attrPayment = {
     goc: {
       idPlayer: 'userId',
@@ -41,7 +40,6 @@
       type: "text",
       class: 'form-control',
       placeholder: 'ID USER',
-      
     }), $("<button />").text("Check").addClass("input-group-text").attr({
       id: "btnCheckId",
       type: "button",
@@ -67,26 +65,13 @@
         console.log(data.data);
         nameUser = data.data.username;
         emailUser = data.data.email;
-        
         if($("#formCheckout").find("#userName").length <= 0) {
-          console.log('username')
-          const userInput = document.createElement("input");
-          userInput.setAttribute("id", "userName");
-          userInput.setAttribute("name", attrPayment.goc.name);
-          userInput.value = nameUser;
-          userInput.hidden = true;
-          $("#formCheckout").append(userInput);
+          createElementInput({ id: 'userName', name: attrPayment.goc.name, value: nameUser });
         } else {
           $("#userName").val(nameUser);
         };
         if($("#formCheckout").find("#emailUser").length <= 0) {
-          console.log('email');
-          const emailInput = document.createElement("input");
-          emailInput.setAttribute("id", "emailUser");
-          emailInput.setAttribute("name", attrPayment.goc.email);
-          emailInput.value = emailUser;
-          emailInput.hidden = true;
-          $("#formCheckout").append(emailInput);
+          createElementInput({ id: 'emailUser', name: 'email', value: emailUser });
         } else {
           $("#emailUser").val(emailUser);
         };
@@ -126,8 +111,7 @@
               <div class="col">
                 <div class="payment-list__items" data-payment="${data.payment.payment_id}">
                   <input type="radio" id="${data.payment.payment_id}" name="radio-button-payment" value="${data.payment.payment_id}">
-                  <img src="${data.payment.logo_channel}" title="${data.payment.name_channel}" alt="${data.payment.name_channel}" onerror="this.src='${baseUrl}/image/payment-icon.png'">
-                  ${data.payment.name_channel}
+                  <img src="${data.payment.logo_channel}" title="${data.payment.name_channel}" alt="${data.payment.name_channel}">
                 </div>
               </div>
             `);
@@ -136,20 +120,15 @@
             $(this).children().prop("checked", true);
             $("#idPlayer").attr("name", attrPayment.goc.idPlayer)
             const priceList = dataPayment.find(({payment}) => payment.payment_id == this.dataset.payment );
-            channelId = priceList.payment.channel_id;
+            channelId = priceList.payment.channelId;
             if($("#formCheckout").find("#channelId").length <= 0) {
-              const channelIdInput = document.createElement("input");
-              channelIdInput.setAttribute("id", "channelId");
-              channelIdInput.setAttribute("name", attrPayment.goc.channelName);
-              channelIdInput.value = channelId;
-              $("#formCheckout").append(channelIdInput);
+              createElementInput({ id:'channelId', name: attrPayment.goc.channelName, value: channelId });
             } else {
-              console.log('avaliable');
               $("#channelId").val(channelId);
             };
             
             urlCheckout = priceList.payment.url;
-            // $('#formCheckout').attr('action', urlCheckout);
+            $('#formCheckout').attr('action', urlCheckout);
 
             // console.log(priceList)
             $(".price-list").empty();
@@ -169,28 +148,17 @@
             $(".amount-price__wrap").click(function() {
               $(this).children(".amount-price__name-item").children().prop("checked", true)
               amount = parseInt($(this).children('.amount-price__price').text());
-              $('input[name="amount"]').val(amount);
               $(".total-payment__nominal").text(amount);
-
-              const plainSign = merchantId[0].value + trxId[0].value + datetrx + channelId + amount + currency + gocpayHaskey;
-              // console.log(plainSign);
-
+              
               if($("#formCheckout").find("#amountInput").length <= 0) {
-                console.log('create amount input');
-                const amountInput = document.createElement("input");
-                amountInput.setAttribute("id", "amountInput");
-                amountInput.setAttribute("name", 'amount');
-                amountInput.value = amount;
-                // amountInput.hidden = true;
+                createElementInput({ id:'amountInput', name:'amount', value: amount });
                 $("#formCheckout").append(amountInput);
               } else {
-                console.log('update amount input');
-                
                 $("#amountInput").val(amount);
               };
-              $('input[name="sign"]').val(plainSign);
+              // $('input[name="sign"]').val(plainSign);
             });
-          });
+          }); 
         })
         .catch((error) => {
           $(".payment-list").empty();
@@ -205,32 +173,44 @@
     });
 
     
-    $('input[name="merchantId"]').val(merchantId);
+    // $('input[name="merchantId"]').val(merchantId);
     
     const trxId = $('input[name="trxId"]').val(Math.random().toString(8).slice(2));
     $('input[name="trxDateTime"]').val(datetrx);
     $('input[name="phone"]').val(phoneUser);
-    $('input[name="currency"]').val(currency);
-    $('input[name="returnUrl"]').val(returnUrl);
-    
+    // $('input[name="currency"]').val(currency);
+    // $('input[name="returnUrl"]').val(returnUrl);
   
-    $(".button__primary").click(function(event) {
+    $(".button__primary").click(async function(event) {
       event.preventDefault();
-      // setTimeout(function() {
-      //   $('#formCheckout').submit();
-      //   console.log("melakuakan submit");
-      // }, 3000);
-
-      createElementInput('signInput', 'sign' );
-      createElementInput('merchantInput', 'merchantId', merchantId );
-      createElementInput('trxIdInput', 'trxId', 'TRX' );
-      createElementInput('trxDateTimeInput', 'trxDateTime', 'Trx Date Time' );
-      
-      // console.log('Submit');
+      // await fetch(`${baseUrl}/dev/payment/generate?amount=${amount}&channelId=${channelId}`)
+      await fetch(`${baseUrl}/dev/payment/generategv?amount=${amount}&channelId=${channelId}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        createElementInput({ id: 'merchantInput', name: 'merchantid', value: data.data.merchantId });
+        createElementInput({ id: 'productInput', name: 'product', value: data.data.product });
+        createElementInput({ id: 'customInput', name: 'custom', value: data.data.trxId });
+        createElementInput({ id: 'signInput', name: 'signature', value: data.data.sign });
+        createElementInput({ id: 'urlInput', name: 'custom_redirect', value: returnUrl });
+        // createElementInput({ id: 'trxIdInput', name: 'trxId', value: data.data.trxId });
+        // createElementInput({ id: 'trxDateTimeInput', name: 'trxDateTime', value: data.data.trxDateTime });
+        // createElementInput({ id: 'merchantInput', name: 'merchantId', value: data.data.merchantId });
+        // createElementInput({ id: 'signInput', name: 'sign', value: data.data.sign });
+        // setTimeout(function() {
+        //   $('#formCheckout').submit();
+        // }, 1000);
+        $('#formCheckout').submit();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     });
   });
 
-  function createElementInput(id, name, value) {
+  const createElementInput = ({ id, name, value }) => {
     if($("#formCheckout").find("#" + id).length <= 0) {
       const elmentInput = document.createElement("input");
       elmentInput.setAttribute("id", id);
