@@ -7,6 +7,7 @@
     let player;
 
     $("#idPlayer").val(Math.random().toString(8).slice(2));
+    $("#idGameInpt").val(idGame);
 
     $("#btnClearId").hide();
     $("#btnCheckId").click(async function() {
@@ -26,6 +27,7 @@
         $("#btnClearId").show();
         $(".modal-body #idPlayer").val($("#idPlayer").val());
         $(".modal-body #playerName").val(player.username);
+        $(".modal-body #emailInpt").val(player.email);
       });
     });
 

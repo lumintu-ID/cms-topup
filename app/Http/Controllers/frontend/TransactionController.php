@@ -16,8 +16,9 @@ use App\Http\Requests\TransactionRequest;
 
 class TransactionController extends Controller
 {
-    public function transaction(TransactionRequest $request)
-    {
+    public function transaction(Request $request)
+    {   
+        dd($request->all());
 
         DB::beginTransaction();
         try {

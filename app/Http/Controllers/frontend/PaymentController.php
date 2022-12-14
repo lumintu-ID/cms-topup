@@ -24,6 +24,7 @@ class PaymentController extends Controller
 
     public function confirmation(Request $request) 
     {
+        dd($request->all());
         return view('frontend.payment.confirmation');
     }
 
