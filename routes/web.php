@@ -131,4 +131,6 @@ Route::middleware(['auth', 'access'])->group(function () {
     Route::delete('/administrator/pricepoint', [PricePointController::class, 'destroy'])->name('cms.pricepoint.delete');
 });
 
+
+// checkout
 Route::post('/transaction', [FrontendTransactionController::class, 'transaction']);
