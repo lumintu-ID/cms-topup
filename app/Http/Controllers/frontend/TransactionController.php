@@ -83,7 +83,6 @@ class TransactionController extends Controller
             );
 
             return redirect()->back()->with($notif);
-            ], Response::HTTP_OK);
         } catch (\Throwable $th) {
 
             DB::rollback();

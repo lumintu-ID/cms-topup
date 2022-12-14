@@ -27,16 +27,6 @@ class PaymentController extends Controller
         return view('frontend.payment.confirmation');
     }
 
-    public function getListPayment(Request $request)
-    {
-        $countryId = 'f1f834b4-8b02-431c-a8cd-493e0944b5e2';
-        $payment = Payment::select('payment_id', 'category_id', 'country_id', 'channel_id', 'name_channel', 'logo_channel', 'url')->where('country_id', $countryId)->first()->makeHidden(['created_at','updated_at' ]);
-
-        dd($payment);
-
-        return ;
-    }
-
     public function generate(Request $request)
     {   
         $merchantId = "Esp5373790";
