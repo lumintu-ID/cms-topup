@@ -32,62 +32,20 @@ class ApiImplement implements ApiRepository
 
     public function priceList($payment, $gameId)
     {
-        $Id_GOC = "Esp5373790";
-        $Id_Unipin = "bcd3a3a3-4c68-419e-bd79-91d8678faf04";
-        $Id_GV = "1138";
-
-        $notif_Unipin = url('/api/v1/transaction/notify');
-
         $data = [];
         $result = [];
         $priceData = [];
         foreach ($payment as $pay) {
-            $price = Price::where('payment_id', $pay->payment_id)->where('game_id', $gameId)->orderBy('price', 'asc')->get();
-            if ($pay->channel_id == "GV") {
+            $price = Price::select('price_id', 'payment_id', 'game_id', 'name', 'amount', 'price')->where('payment_id', $pay->payment_id)->where('game_id', $gameId)->orderBy('price', 'asc')->get();
+            $p = array(
+                "payment_id" => $pay->payment_id,
+                "country_id" => $pay->country_id,
+                "channelId" => $pay->channel_id,
+                "name_channel" => $pay->name_channel,
+                "logo_channel" => url('/image/' . $pay->logo_channel),
+                "url"   => $pay->url,
+            );
 
-                $p = array(
-                    "merchanId" => $Id_GV,
-
-                    "payment_id" => $pay->payment_id,
-                    // "category_id" => $pay->category_id,
-                    "country_id" => $pay->country_id,
-                    "channelId" => $pay->channel_id,
-                    "name_channel" => $pay->name_channel,
-                    "logo_channel" => url('/image/' . $pay->logo_channel),
-                    "url"   => $pay->url,
-                    "created_at" => $pay->created_at,
-                    "updated_at" => $pay->updated_at
-                );
-            } else if ($pay->channel_id == "ID_KLIKBCA") {
-                $p = array(
-                    "guid" => $Id_Unipin,
-                    "urlAck" => $notif_Unipin,
-
-                    "payment_id" => $pay->payment_id,
-                    // "category_id" => $pay->category_id,
-                    "country_id" => $pay->country_id,
-                    "channel" => $pay->channel_id,
-                    "name_channel" => $pay->name_channel,
-                    "logo_channel" => url('/image/' . $pay->logo_channel),
-                    "url"   => $pay->url,
-                    "created_at" => $pay->created_at,
-                    "updated_at" => $pay->updated_at
-                );
-            } else {
-                $p = array(
-                    "merchanId" => $Id_GOC,
-
-                    "payment_id" => $pay->payment_id,
-                    // "category_id" => $pay->category_id,
-                    "country_id" => $pay->country_id,
-                    "channelId" => $pay->channel_id,
-                    "name_channel" => $pay->name_channel,
-                    "logo_channel" => url('/image/' . $pay->logo_channel),
-                    "url"   => $pay->url,
-                    "created_at" => $pay->created_at,
-                    "updated_at" => $pay->updated_at
-                );
-            }
 
 
             $data["payment"] = $p;
