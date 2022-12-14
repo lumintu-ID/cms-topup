@@ -62,8 +62,10 @@ class TransactionController extends Controller
                 return redirect()->back()->with($notif);
             };
 
+            $invoice = "INV-" . str_random(12);
+
             Transaction::create([
-                'invoice' => $request->trxId,
+                'invoice' => $invoice,
                 'game_id' => $request->game_id,
                 'id_Player' => $request->player_id,
                 'method_payment' => $request->payment_id,
@@ -83,7 +85,6 @@ class TransactionController extends Controller
             );
 
             return redirect()->back()->with($notif);
-            ], Response::HTTP_OK);
         } catch (\Throwable $th) {
 
             DB::rollback();
