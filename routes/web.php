@@ -16,10 +16,10 @@ use App\Http\Controllers\cms\TransactionController;
 
 // use Illuminate\Http\Request;
 
-/* ============ Frontend Controller ============ */ 
+/* ============ Frontend Controller ============ */
 use App\Http\Controllers\frontend\HomeController;
 use App\Http\Controllers\frontend\PaymentController as PaymentFrontend;
-
+use App\Http\Controllers\frontend\TransactionController as FrontendTransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -126,3 +126,7 @@ Route::middleware(['auth', 'access'])->group(function () {
     Route::patch('/administrator/pricepoint', [PricePointController::class, 'update'])->name('cms.pricepoint.update');
     Route::delete('/administrator/pricepoint', [PricePointController::class, 'destroy'])->name('cms.pricepoint.delete');
 });
+
+
+// checkout
+Route::post('/transaction', [FrontendTransactionController::class, 'transaction']);

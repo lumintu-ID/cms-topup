@@ -10,7 +10,7 @@ class Transaction extends Model
     use HasFactory;
 
     protected $keyType = 'string';
-    protected $primary = 'transaction_id';
+    protected $primary = 'invoice';
 
     protected $guarded = [];
 }

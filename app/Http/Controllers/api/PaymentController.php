@@ -44,7 +44,10 @@ class PaymentController extends Controller
 
             $result = $this->apiImplement->priceList($payment, $dataGame->id);
 
-            Log::info('Success Get Payment List', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Success Get Payment List with id game ' . $game . ' and country id ' . $country]);
+            Log::info('Success Get Payment List', [
+                'DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Success Get Payment List with id game ' . $game . ' and country id ' . $country,
+                'Result' => $result
+            ]);
 
             return \response()->json([
                 'code' => Response::HTTP_OK,
@@ -61,39 +64,4 @@ class PaymentController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
     }
-
-    // public function getAllPayment()
-    // {
-    //     try {
-
-    //         $payment = Payment::select('payment_id', 'name_channel')->get();
-
-    //         if (count($payment) == 0) {
-    //             Log::warning('Get Payment List Not Found', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | WARN ' . ' | data not found ']);
-
-    //             return response()->json([
-    //                 'code' => 404,
-    //                 'status' => 'NOT_FOUND',
-    //                 'error' => 'Data Not Found',
-    //             ], 404);
-    //         };
-
-
-    //         Log::info('Success Get Payment List', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Success Get all payment']);
-
-    //         return \response()->json([
-    //             'code' => Response::HTTP_OK,
-    //             'status' => 'OK',
-    //             'message' => 'Success Get Payment List',
-    //             'data' => $payment
-    //         ], Response::HTTP_OK);
-    //     } catch (\Throwable $th) {
-    //         Log::error('Error Get Payment List', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | ERR ' . ' | Error Get Payment List']);
-    //         return \response()->json([
-    //             'code' => Response::HTTP_BAD_REQUEST,
-    //             'status' => 'BAD_REQUEST',
-    //             'error' => 'BAD REQUEST',
-    //         ], Response::HTTP_BAD_REQUEST);
-    //     }
-    // }
 }
