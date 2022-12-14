@@ -22,13 +22,9 @@ class PaymentController extends Controller
         return view('frontend.payment.index', compact('countries', 'dataGame'));
     }
 
-    public function doCheckout(Request $request) 
+    public function confirmation(Request $request) 
     {
-      
-        dd($request->input());
-
-
-        return 'Do Checkout';
+        return view('frontend.payment.confirmation');
     }
 
     public function getListPayment(Request $request)
