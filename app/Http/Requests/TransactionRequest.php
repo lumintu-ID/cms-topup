@@ -24,7 +24,6 @@ class TransactionRequest extends FormRequest
     public function rules()
     {
         return [
-            'trxId' => 'required',
             'email' => 'required|email',
             'game_id' => 'required',
             'payment_id' => 'required',
