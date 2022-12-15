@@ -5,13 +5,23 @@ namespace App\Http\Controllers\frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Country;
 use App\Models\GameList;
-use App\Models\Payment;
+
+use App\Services\Frontend\Invoice\InvoiceService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
+
 class PaymentController extends Controller
 {
+    protected $invoiceService;
+
+    public function __construct(InvoiceService $invoiceService)
+    {
+        $this->invoiceService = $invoiceService;
+        
+    }
+
     public function index(Request $request)
     {   
         $slug = $request->slug;
@@ -23,9 +33,11 @@ class PaymentController extends Controller
     }
 
     public function confirmation(Request $request) 
-    {
-        dd($request->all());
-        return view('frontend.payment.confirmation');
+    {  
+        if(!$request->query('invoice')) return dd('not found');
+        $data = $this->invoiceService->getInvoice($request->query('invoice')); 
+        // dd($data);       
+        return view('frontend.payment.confirmation', compact('data'));
     }
 
     public function generate(Request $request)
