@@ -4,7 +4,10 @@ namespace App\Http\Controllers\cms;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+
+use App\Events\Transaction as EventsTransaction;
 
 class TransactionController extends Controller
 {
@@ -29,5 +32,57 @@ class TransactionController extends Controller
 
             return redirect()->back()->with($notif);
         }
+    },
+
+    public function notify(Request $request)
+    {
+        $trx = null;
+        $status = null;
+        if (isset($request->trxId)) {
+
+            // GOC ;
+
+            Log::critical('Critical error', $request);
+            Log::info('info', ['data' => $request]);
+            Log::error('error', ['data' => $request]);
+            Log::warning('warning', ['data' => $request]);
+    
+            EventsTransaction::dispatch($request);
+            
+            if ($request->status == 100) {
+                $status = 1;
+            }else{
+                $status = 2;
+            };
+
+            $trx = Transaction::where('invoice', $request->trxId)->update([
+                'status' => $status
+            ]);
+
+            return 'OK';
+
+        }else{
+
+            // gov
+
+            Log::critical('Critical error', $request);
+            Log::info('info', ['data' => $request]);
+            Log::error('error', ['data' => $request]);
+            Log::warning('warning', ['data' => $request]);
+    
+            EventsTransaction::dispatch($request);
+    
+            if ($request->status == "SUCCESS") {
+                $status = 1;
+            }else{
+                $status = 2;
+            };
+
+            $trx = Transaction::where('invoice', $request->custom)->update([
+                'status' => $status
+            ]);
+
+            return 'OK';
+        };
     }
 }

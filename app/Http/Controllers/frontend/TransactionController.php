@@ -7,9 +7,8 @@ use App\Models\Price;
 use App\Models\Payment;
 use App\Models\GameList;
 use App\Models\Transaction;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -62,6 +61,9 @@ class TransactionController extends Controller
                 
                 return redirect()->back()->with($notif);
             };
+
+            $invoice = "INV-" . Str::random(12);
+
             
             $invoice = "INV-" . Str::random(12);
             
