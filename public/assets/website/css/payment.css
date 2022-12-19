@@ -158,8 +158,8 @@
 }
 
 .box-invoice {
-  /* width: 100%;
-  height: 100%; */
+  /* width: 100%; */
+  /* height: 100%; */
   margin: .5rem;
   
   border-radius: .5rem;
@@ -186,4 +186,8 @@
   padding: 1rem;
   background-color: #022047;
   color: #ffffff;
+}
+
+.box-invoice-header__label {
+  letter-spacing: 2px;
 }

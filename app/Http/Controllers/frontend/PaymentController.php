@@ -19,14 +19,12 @@ class PaymentController extends Controller
     public function __construct(InvoiceService $invoiceService)
     {
         $this->invoiceService = $invoiceService;
-        
     }
 
     public function index(Request $request)
     {   
         $slug = $request->slug;
         $dataGame = GameList::select('id', 'game_id', 'game_title', 'cover')->where('slug_game', $slug)->first();
-        
         $countries = Country::all();
 
         return view('frontend.payment.index', compact('countries', 'dataGame'));
@@ -35,9 +33,11 @@ class PaymentController extends Controller
     public function confirmation(Request $request) 
     {  
         if(!$request->query('invoice')) return dd('not found');
-        $data = $this->invoiceService->getInvoice($request->query('invoice')); 
-        // dd($data);       
-        return view('frontend.payment.confirmation', compact('data'));
+
+        $invoice = $this->invoiceService->getInvoice($request->query('invoice')); 
+        // dd($invoice);
+            
+        return view('frontend.payment.confirmation', compact('invoice'));
     }
 
     public function generate(Request $request)

@@ -22,6 +22,9 @@
             Email <input type="text" name="email" id="emailInpt" >
           </div>
           <div class="row">
+            Amount: <input type="text" name="amount" id="amountInpt">
+          </div>
+          <div class="row">
             Price <input type="text" name="price" id="price" >
             ID Price <input type="text" name="price_id" id="priceId" >
           </div>

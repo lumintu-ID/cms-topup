@@ -68,6 +68,7 @@
           $(".payment-list__items").click(function() {
             $(this).children().prop("checked", true);
             const priceList = dataPayment.find(({payment}) => payment.payment_id == this.dataset.payment );
+            console.log(priceList);
             $(".price-list").empty();
             $(".modal-body #paymentId").val(priceList.payment.payment_id);
             $(".modal-body #payment").val(priceList.payment.name_channel);
@@ -77,7 +78,7 @@
                   <div class="amount-price__wrap d-flex justify-content-between p-2" data-priceid="${data.price_id}">
                     <div class="amount-price__name-item">
                       <input type="radio" id="${data.price_id}" name="price-id" value="${data.price_id}">
-                      Stone
+                      ${data.amount} ${data.name}
                     </div>
                     <div class="amount-price__price" id="price">${data.price}</div>
                   </div>
@@ -87,9 +88,11 @@
             $(".amount-price__wrap").click(function() {
               $(this).children(".amount-price__name-item").children().prop("checked", true);
               const priceId = $(this).children(".amount-price__name-item").children('input').val();
+              const amount = $(this).children(".amount-price__name-item").text();
               const price = parseInt($(this).children(".amount-price__price").text());
               $(".total-payment__nominal").text(price);
               $(".modal-body #price").val(price);
+              $(".modal-body #amountInpt").val(amount);
               $(".modal-body #priceId").val(priceId);
               $(".modal-body #totalPayment").val(price);
             });
