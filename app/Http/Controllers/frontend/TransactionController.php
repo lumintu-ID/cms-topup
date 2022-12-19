@@ -7,6 +7,7 @@ use App\Models\Price;
 use App\Models\Payment;
 use App\Models\GameList;
 use App\Models\Transaction;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -62,16 +63,16 @@ class TransactionController extends Controller
                 return redirect()->back()->with($notif);
             };
 
-            $invoice = "INV-" . str_random(12);
+            $invoice = "INV-" . Str::random(12);
 
             Transaction::create([
                 'invoice' => $invoice,
                 'game_id' => $request->game_id,
                 'id_Player' => $request->player_id,
                 'method_payment' => $request->payment_id,
-                'price_id' => $request->payment_id,
+                'price_id' => $request->price_id,
                 'email' => $request->email,
-                'total_price' => $price->amount,
+                'total_price' => $price[0]->price,
                 'status' => 1
             ]);
 
