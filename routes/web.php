@@ -33,13 +33,9 @@ use App\Http\Controllers\frontend\TransactionController as FrontendTransactionCo
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/payment/list', [PaymentFrontend::class, 'getListPayment'])->name('payment.list-payment');
 Route::get('/payment/{slug}', [PaymentFrontend::class, 'index'])->name('payment');
-// Route::post('/payment', [PaymentFrontend::class, 'doCheckout'])->name('payment.checkout');
-Route::get('/payment', [PaymentFrontend::class, 'doCheckout'])->name('payment.checkout');
-Route::get('/dev/payment/generate', [PaymentFrontend::class, 'generate'])->name('dev.generate');
-Route::get('/dev/payment/generategv', [PaymentFrontend::class, 'generategv'])->name('dev.generate');
-
+// Route::post('/confirmation', [PaymentFrontend::class, 'confirmation'])->name('payment.confirmation');
+Route::post('/transaction', [FrontendTransactionController::class, 'transaction'])->name('payment.confirmation');
 
 Route::get('/administrator/login', [AuthController::class, 'index'])->name('login');
 Route::post('/administrator/login', [AuthController::class, 'login'])->name('auth.login');
@@ -132,5 +128,4 @@ Route::middleware(['auth', 'access'])->group(function () {
 });
 
 
-// checkout
-Route::post('/transaction', [FrontendTransactionController::class, 'transaction']);
+
