@@ -58,7 +58,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/allpayment', [ApiPaymentController::class, 'getAllPayment']);
 
 
-    Route::post('/transaction/notify', [TransactionController::class, 'notify'])
+    Route::post('/transaction/notify', [TransactionController::class, 'notify']);
 
     // Route::post('/transaction/notify', function (Request $request) {
     //     Log::critical('Critical error', $request->all());
