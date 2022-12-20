@@ -14,12 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->string('transaction_id');
+            $table->string('invoice');
             $table->string('game_id');
+            $table->string('id_Player');
             $table->string('method_payment');
-            $table->string('product_name');
+            $table->string('price_id');
             $table->string('email');
-            $table->integer('amount');
+            $table->integer('total_price');
             $table->integer('status');
             $table->timestamps();
         });

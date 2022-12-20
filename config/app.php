@@ -196,6 +196,10 @@ return [
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        
+        // Frontend Service Provider
+        App\Providers\Frontend\GeneralServiceProvider::class,
+        App\Providers\Frontend\InvoiceServiceProvider::class,
 
     ],
 

@@ -10,7 +10,22 @@ class Transaction extends Model
     use HasFactory;
 
     protected $keyType = 'string';
-    protected $primary = 'transaction_id';
+    protected $primary = 'invoice';
 
     protected $guarded = [];
+
+    public function game()
+    {
+        return $this->belongsTo(GameList::class, 'game_id');
+    }
+
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class, 'method_payment');
+    }
+
+    public function pricepoint()
+    {
+        return $this->belongsTo(PricePoint::class, 'price_point_id');
+    }
 }

@@ -13,7 +13,13 @@ use App\Http\Controllers\cms\NavigationController;
 use App\Http\Controllers\cms\PricePointController;
 use App\Http\Controllers\cms\UserAccessController;
 use App\Http\Controllers\cms\TransactionController;
+
 // use Illuminate\Http\Request;
+
+/* ============ Frontend Controller ============ */
+use App\Http\Controllers\frontend\HomeController;
+use App\Http\Controllers\frontend\PaymentController as PaymentFrontend;
+use App\Http\Controllers\frontend\TransactionController as FrontendTransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,11 +32,10 @@ use App\Http\Controllers\cms\TransactionController;
 |
 */
 
-Route::get('/', function () {
-    return view('request');
-});
-
-// auth
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/payment/{slug}', [PaymentFrontend::class, 'index'])->name('payment');
+Route::get('/confirmation', [PaymentFrontend::class, 'confirmation'])->name('payment.confirmation');
+Route::post('/transaction', [FrontendTransactionController::class, 'transaction'])->name('payment.transaction');
 
 Route::get('/administrator/login', [AuthController::class, 'index'])->name('login');
 Route::post('/administrator/login', [AuthController::class, 'login'])->name('auth.login');
@@ -121,3 +126,6 @@ Route::middleware(['auth', 'access'])->group(function () {
     Route::patch('/administrator/pricepoint', [PricePointController::class, 'update'])->name('cms.pricepoint.update');
     Route::delete('/administrator/pricepoint', [PricePointController::class, 'destroy'])->name('cms.pricepoint.delete');
 });
+
+
+

@@ -1,0 +1,391 @@
+/* abu bg: #dcdcdc
+biru dongker: #040726
+merah : #ff0800
+orange #ff9000 */
+
+
+@font-face {
+  font-family: 'Lemon Milk';
+  src: url('/assets/website/fonts/lemon-milk/lemonmilk-regular.otf');
+}
+
+@font-face {
+  font-family: 'Lemon Milk Bold';
+  src: url('/assets/website/fonts/lemon-milk/lemonmilks-bold.otf');
+}
+
+:root {
+  --hero-height: 10rem;
+  --padding-bottom-hero: 1rem;
+
+  --swiper-navigation-color: rgba(255, 255, 255, 0.733);
+}
+
+body {
+  /* background-color: #1840B7; */
+  background-color: #dcdcdc;
+  font-family: 'Lemon Milk';
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: unset;
+  color: unset;
+}
+
+a:hover {
+  color: unset;
+}
+
+nav.header__navbar {
+  background-color: #040726;
+}
+
+.header__navbar .navbar-brand {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+
+/*=================== Section Header Hero =============== */
+
+section.header__hero {
+  background-image: linear-gradient(to bottom, #040726 90%, #dcdcdc);
+}
+
+section.header__hero > .container-lg {
+  height: 10rem;
+  padding-bottom: 1rem;
+  /* background-color: #ff9000; */
+  overflow: hidden;
+}
+
+
+
+.header__hero img {
+  max-height: 100%;
+  width: 100%;
+  /* object-fit: fill; */
+  object-fit: cover;
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+  padding-bottom: 100rem;
+}
+
+.swiper-pagination,
+.swiper-button-prev,
+.swiper-button-next,
+.swiper-scrollbar {
+  color: var(--swiper-navigation-color);
+}
+
+.swiper-pagination-bullet-active,
+.swiper-scrollbar-drag {
+  background-color: var(--swiper-navigation-color) !important;
+}
+
+/* ===================== General and Multiple Setting ====================== */
+
+.section-games,
+section.promo-info,
+section.support {
+  min-height: 15rem;
+}
+
+.section-games,
+section.promo-info,
+section.support {
+  padding-top: 1rem;
+}
+
+.games-header__title,
+.promo-info-header__title,
+.support-header__title {
+  margin: 1rem 0;
+  padding-bottom: .1rem;
+  border-bottom: 1px solid #FE0801;
+  font-family: 'Lemon Milk Bold';
+  font-size: 1.1rem;
+}
+
+/*=================== Section Games =============== */
+
+.section-games > .row {
+  padding: 0 .5rem;
+}
+
+.games__card {
+  display: flex;
+  flex-direction: column;
+  background-color: #ff9000;
+  height: 100%;
+  min-height: 13rem;
+  /* max-width: 13rem; */
+  /* padding: .1rem; */
+  border-radius: 3px;
+  outline: 1px solid red;
+  overflow: hidden;
+}
+
+.games__card > a {
+  color: unset;
+  text-decoration: none;
+}
+
+.games__card:hover {
+  box-shadow: 0 0 1rem #888888;
+  
+}
+
+.games-card__body {
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  flex: 1;
+  background-color: #fff;
+}
+
+.games-card__body img {
+  height: auto;
+  width: 100%;
+}
+
+.games-card__footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 2rem;
+  padding: .5rem;
+  text-align: center;
+  background-color: #ff9000;
+}
+
+.games-card-footer__text {
+  font-size: .7rem;
+  font-weight: 600;
+}
+
+.games > .row:last-child {
+  padding: 0 .5rem;
+}
+
+/*=================== Section Promo Info =============== */
+
+.promo-card__video {
+  display: flex;
+  justify-content: center;
+  outline: 1px solid #ff9000;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.promo-card__video iframe {
+  width: 100%;
+  min-height: 10.5rem;
+}
+
+.promo-video-card__title {
+  font-family: 'Lemon Milk Bold';
+  font-size: .8rem;
+}
+
+.promo-info-news {
+  display: flex;
+  flex-direction: column;
+  min-height: 10rem;
+  /* justify-content: space-between; */
+}
+
+.promo-info-news__thumbnail {
+  display: flex;
+  flex: 1;
+  min-height: 6rem;
+  background-color: #040726;
+  outline: 1px solid #ff9000;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.promo-info-news__thumbnail img{
+  max-width: 100%;
+  min-height: 100%;
+}
+
+
+
+.promo-info-news__title {
+  margin-bottom: .3rem;
+  font-size: .7rem;
+  font-weight: bold;
+}
+
+.promo-info-news__descriptions{
+  /* flex: 1; */
+  font-size: .6rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* number of lines to show */
+}
+
+.promo-info__body > .row:last-child {
+  padding: 0 .5rem;
+}
+
+.wrap-news {
+  display: flex;
+  flex-direction: column;
+  height: 11.5rem;
+}
+
+.news-thumbnail {
+  flex: 1;
+  background-color: blue;
+}
+
+.body-news {
+  /* flex: 0; */
+  background-color: violet;
+}
+
+/*=================== Section Support =============== */
+
+.support {
+  padding-bottom: 5rem;
+}
+
+.support__hero {
+  margin-bottom: 1rem;
+  min-height: 10rem;
+  background-color: #fff;
+}
+
+.support__container {
+  padding: .3rem;
+  border-radius: 3px;
+  background-color: rgb(0, 0, 0);
+  /* border: .1rem solid #ff9000; */
+  overflow: hidden;
+}
+
+.support a {
+  text-decoration: none;
+}
+
+a > .support__container:hover {
+  /* color: #000; */
+  background-color: rgba(0, 0, 0, 0.922);
+  outline: 2px solid rgb(0, 0, 0);
+  /* box-shadow: 1px 1px 5rem #888888; */
+  box-shadow: 0 0 1rem #888888;
+}
+
+.support__items {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.support-item__image {
+  display: flex;
+  /* min-width: 100%; */
+  min-width: 2.5rem;
+  height: 2rem;
+  padding: .2rem;
+  /* flex: 1; */
+  /* background-color: #FE0801; */
+}
+
+
+.support-item__image img {
+  /* width: 100%; */
+}
+
+.support-item__text {
+  display: flex;
+  flex: 1;
+  padding: .2rem;
+  font-size: .7rem;
+  color: #fff;
+  letter-spacing: .15rem;
+}
+
+.support__hero img {
+  /* width: 100%; */
+}
+
+footer {
+  margin-top: 2rem;
+  padding: 1rem 0 2rem;
+  border-top: 1px solid #040726;
+}
+
+.footer__text {
+  font-size: .6rem;
+}
+
+
+/*=================== Utilities =============== */
+
+a.button__primary,
+a.button__secondary,
+button.button__primary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  width: 100%;
+}
+
+a.button__secondary {
+  width: 12rem;
+}
+
+.button__primary,
+.button__secondary {
+  /* width: 7.5rem; */
+  padding: .5rem 1rem;
+  color: #fff;
+  font-family: 'Lemon Milk Bold';
+  font-size: .7rem;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  /* border: 1px solid transparent; */
+  border: 0;
+  cursor: pointer;
+}
+
+.button__primary {
+  background-color: #FE0801;
+  outline: 2px solid #fe090172;
+}
+
+.button__secondary {
+  min-width: 7rem;
+  background-color: #040726;
+}
+
+.button__primary:hover {
+  color: #FE0801;
+  background-color: #fff;
+  outline: 1px solid #ff9000;
+  /* border: 1px solid #ff9000; */
+}
+
+.button__secondary:hover {
+  color: #040726;
+  background-color: #fff;
+  outline: 1px solid #040726;
+}
+
+
+
+
+
