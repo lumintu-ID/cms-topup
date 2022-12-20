@@ -32,7 +32,7 @@ class TransactionController extends Controller
 
             return redirect()->back()->with($notif);
         }
-    },
+    }
 
     public function notify(Request $request)
     {
@@ -46,12 +46,12 @@ class TransactionController extends Controller
             Log::info('info', ['data' => $request]);
             Log::error('error', ['data' => $request]);
             Log::warning('warning', ['data' => $request]);
-    
+
             EventsTransaction::dispatch($request);
-            
+
             if ($request->status == 100) {
                 $status = 1;
-            }else{
+            } else {
                 $status = 2;
             };
 
@@ -60,8 +60,7 @@ class TransactionController extends Controller
             ]);
 
             return 'OK';
-
-        }else{
+        } else {
 
             // gov
 
@@ -69,12 +68,12 @@ class TransactionController extends Controller
             Log::info('info', ['data' => $request]);
             Log::error('error', ['data' => $request]);
             Log::warning('warning', ['data' => $request]);
-    
+
             EventsTransaction::dispatch($request);
-    
+
             if ($request->status == "SUCCESS") {
                 $status = 1;
-            }else{
+            } else {
                 $status = 2;
             };
 
