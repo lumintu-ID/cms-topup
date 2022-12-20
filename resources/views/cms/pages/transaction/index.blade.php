@@ -49,10 +49,10 @@
         <tbody>
             @foreach ($data as $data)
             <tr>
-                <td>{{ $data->transaction_id }}</td>
+                <td>{{ $data->invoice }}</td>
                 <td>{{ $data->email }}</td>
-                <td>{{ $data->product_name }}</td>
-                <td>{{ $data->amount }}</td>
+                <td>{{ $data->game->game_title }}</td>
+                <td>{{ $data->total_price }}</td>
                 <td>
                     @if ($data->status == 1)
                         <span class="fw-bold text-warning">Due</span>

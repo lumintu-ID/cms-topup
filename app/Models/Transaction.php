@@ -13,4 +13,19 @@ class Transaction extends Model
     protected $primary = 'invoice';
 
     protected $guarded = [];
+
+    public function game()
+    {
+        return $this->belongsTo(GameList::class, 'game_id');
+    }
+
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class, 'method_payment');
+    }
+
+    public function pricepoint()
+    {
+        return $this->belongsTo(PricePoint::class, 'price_point_id');
+    }
 }
