@@ -32,7 +32,7 @@ class TransactionController extends Controller
 
             return redirect()->back()->with($notif);
         }
-    },
+    }
 
     public function notify(Request $request)
     {

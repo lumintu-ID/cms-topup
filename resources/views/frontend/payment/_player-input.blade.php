@@ -12,7 +12,7 @@
         <option value='' selected>Negara</option>
         <option disabled></option>
         @foreach ($countries as $data)
-        <option value="{{ $data->country_id }}">{{ $data->country }}</option>
+        <option value="{{ $data['id'] }}">{{ $data['country'] }}</option>
         @endforeach
       </select>
     </div>

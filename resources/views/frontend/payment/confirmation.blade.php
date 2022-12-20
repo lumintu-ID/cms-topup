@@ -4,60 +4,20 @@
     <div class="row justify-content-center">
       <div class="col-12 col-sm-10 col-md-4 p-0">
         <div class="box-invoice">
-          {{-- @isset($invoice)
-              
-          @endisset --}}
-
-          {{-- {{ dd($invoice) }} --}}
-
-          <form action="{{ $data['payment']['url'] }}" method="" id="formInvoice">
-            <div class="box-invoice__body">
-              @foreach ($invoice as $item)
-              @foreach ($item as $key => $value)
-                <div class="row row-cols-1 row-cols-sm-2 py-2">
-                  <div class="col-6"> Game : </div>
-                  <div class="col-6 text-end">{{ $value }}</div>
-                </div>
-              
-              
-                @endforeach
-              @endforeach
-              
-              {{-- <div id="elementAttribute" data-element-input="{{ $data['payment'] }}"></div> --}}
-            </div>
-            <hr>
-            <div class="box-invoice__footer row d-flex justify-content-center">
-              <div class="col-8 col-md-6 p-3 d-flex justify-content-center">
-                <button type="submit" class="button__primary">Pay Now</button>
-              </div>
-            </div>
-          </form>
-
-          @if ($invoice)
-
-            @foreach ($invoice as $item)
-              @foreach ($item as $key => $value)
-            
-             
-              @endforeach
-
-          
-            @endforeach
-              
-          {{-- @foreach ($invoice as $data)
+          @if ($data)
             <div class="box-invoice__header d-flex justify-content-center">
               <div class="col-lg-12 text-center">
-                  <h2>Invoice</h2>
-                  <div class="box-invoice-header__label">
-                    {{ $data['invoice']['invoice'] }}
-                  </div>
+                <h2>Invoice</h2>
+                <div class="box-invoice-header__label">
+                  {{ $data['invoice']['invoice'] }}
+                </div>
               </div>
             </div>
-            <form action="{{ $data['payment']['url'] }}" method="" id="formInvoice">
+            <form id="formInvoice">
               <div class="box-invoice__body">
                 <div class="row row-cols-1 row-cols-sm-2 py-2">
                   <div class="col-6"> Game : </div>
-                  <div class="col-6 text-end">{{ $data['game']['game_title'] }}</div>
+                  <div class="col-6 text-end"> {{ $data['game']['game_title'] }} </div>
                 </div>
                 <div class="row row-cols-1 row-cols-sm-2 py-2 ">
                   <div class="col-6"> User ID : </div>
@@ -65,11 +25,13 @@
                 </div>
                 <div class="row row-cols-1 row-cols-sm-2 py-2">
                   <div class="col-6"> Amount : </div>
-                  <div class="col-6 text-end"> {{ $data['price']['amount'] }} {{ $data['price']['name'] }} </div>
+                  <div class="col-6 text-end"> 
+                    {{ $data['payment']['amount'] }} {{ $data['payment']['name'] }}
+                  </div>
                 </div>
                 <div class="row row-cols-1 row-cols-sm-2 py-2">
                   <div class="col-6"> Price : </div>
-                  <div class="col-6 text-end"> {{ $data['price']['price'] }} </div>
+                  <div class="col-6 text-end"> {{ $data['payment']['price'] }} </div>
                 </div>
                 <div class="row row-cols-1 row-cols-sm-2 py-2">
                   <div class="col-6"> Method Payment : </div>
@@ -83,7 +45,7 @@
                   <div class="col-6"> Total Payment : </div>
                   <div class="col-6 text-end"> {{ $data['invoice']['total_price'] }} </div>
                 </div>
-                <div id="elementAttribute" data-element-input="{{ $data['payment'] }}"></div>
+                <div id="elementAttribute" data-element-input="{{ $data['attribute'] }}"></div>
               </div>
               <hr>
               <div class="box-invoice__footer row d-flex justify-content-center">
@@ -92,7 +54,6 @@
                 </div>
               </div>
             </form>
-          @endforeach --}}
           @else
             data tidak ada
           @endif
@@ -107,53 +68,32 @@
   <script>
     $(document).ready(function(){
       const payment = $("#elementAttribute").data("element-input");
-      console.log(payment);
-      
-      for (const key in payment.elmentAttribute) {
-        if (Object.hasOwnProperty.call(payment.elmentAttribute, key)) {
-          const element = payment.elmentAttribute[key];
+      for (const key in payment) {
+        if (Object.hasOwnProperty.call(payment, key)) {
+          const element = payment[key];
           if(Object.keys(element) == 'methodAction') {
-            $("#formInvoice").attr('method', element[Object.keys(element)]);
+            $("#formInvoice").attr({
+              'method': element[Object.keys(element)],
+              'action': payment[0].urlAction,
+            });
           }
-          if(Object.keys(element) != 'methodAction') {
+          if(Object.keys(element) != 'methodAction' && Object.keys(element) != 'urlAction') {
             createElementInput({ 
-              // id: String(Object.keys(element)),
-              // name: element[Object.keys(element)],
               name: String(Object.keys(element)),
               value: element[Object.keys(element)]
             });
           }
         }
       }
+
     });
-
-    
-    // const createElementInput = ({ id, name, value }) => {
-    //   if ($("#formCheckout").find("#" + id).length <= 0) {
-    //     const elmentInput = document.createElement("input");
-    //     elmentInput.setAttribute("id", id);
-    //     elmentInput.setAttribute("name", name);
-    //     elmentInput.setAttribute("placeholder", name);
-    //     elmentInput.value = value || `Value ${name} not avaliable`;
-    //     $("#formInvoice").append(elmentInput);
-    //     return;
-    //   } else {
-    //     $("#" + id).val(value);
-    //     console.log('element input sudah ada');
-    //     return;
-    //   }
-
-    //   return;
-    // }
-    
-      const createElementInput = ({ name, value }) => {
-        const elmentInput = document.createElement("input");
-        elmentInput.setAttribute("name", name);
-        elmentInput.setAttribute("placeholder", value);
-        // elmentInput.hidden = true;
-        elmentInput.value = value || `Value ${name} not avaliable`;
-        $("#formInvoice").append(elmentInput);
-        return;
-      }
+    const createElementInput = ({ name, value }) => {
+      const elmentInput = document.createElement("input");
+      elmentInput.setAttribute("name", name);
+      elmentInput.hidden = true;
+      elmentInput.value = value || `Value ${name} not avaliable`;
+      $("#formInvoice").append(elmentInput);
+      return;
+    }
   </script>
 @endsection

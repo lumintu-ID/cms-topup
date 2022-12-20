@@ -63,9 +63,6 @@ class TransactionController extends Controller
             };
 
             $invoice = "INV-" . Str::random(12);
-
-            
-            $invoice = "INV-" . Str::random(12);
             
             Transaction::create([
                 'invoice' => $invoice,
@@ -98,7 +95,6 @@ class TransactionController extends Controller
             
             return redirect()->back()->with($notif);
         }
-
         
     }
 }
