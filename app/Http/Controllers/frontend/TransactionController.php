@@ -14,10 +14,14 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TransactionRequest;
 
+
+use App\Events\Transaction as EventsTransaction;
+
 class TransactionController extends Controller
 {
     public function transaction(Request $request)
     {
+
 
         DB::beginTransaction();
         try {
@@ -63,6 +67,10 @@ class TransactionController extends Controller
             };
 
             $invoice = "INV-" . Str::random(12);
+
+
+            EventsTransaction::dispatch($request->email);
+
 
             Transaction::create([
                 'invoice' => $invoice,

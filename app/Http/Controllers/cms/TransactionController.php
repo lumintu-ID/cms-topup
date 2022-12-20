@@ -39,12 +39,7 @@ class TransactionController extends Controller
     {
         $trx = null;
         $status = null;
-        Log::critical('Critical error', $request->all);
-        Log::info('info', ['data' => $request->all]);
-        Log::error('error', ['data' => $request->all]);
-        Log::warning('warning', ['data' => $request->all]);
-        EventsTransaction::dispatch($request->all);
-        if (isset($request->trxId)) {
+        if ($request->trxId) {
 
             // GOC ;
 
