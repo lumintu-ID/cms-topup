@@ -50,6 +50,16 @@ class InvoiceServiceImplement implements InvoiceService
         ];
         return json_encode($dataAttribute);
       break;
+      case 'UNIPIN':
+        $methodAction = 'POST';
+        $guid = "9b42a14d-a986-40a9-b4cc-354be6aea6db";
+        $secret = "w56kbwxuxh3heka3";
+        $dataAttribute = [
+          ['urlAction' => $dataPayment['url']],
+          ['methodAction' => $methodAction],
+          
+        ];
+        
         
       default:
         $methodAction = 'POST';

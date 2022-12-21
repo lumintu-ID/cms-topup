@@ -5,6 +5,7 @@
     const baseUrl = window.location.origin;
     const idGame = document.getElementsByClassName('games-info__body')[0].dataset.id;
     let player;
+    $(".total-payment__nominal").text(0);
 
     $("#idPlayer").val(Math.random().toString(8).slice(2));
     $("#idGameInpt").val(idGame);
@@ -60,7 +61,7 @@
               <div class="col">
                 <div class="payment-list__items" data-payment="${data.payment.payment_id}">
                   <input type="radio" id="${data.payment.payment_id}" name="payment-id" value="${data.payment.payment_id}">
-                  <img src="${data.payment.logo_channel}" title="${data.payment.name_channel}" alt="${data.payment.name_channel}">
+                  <img src="${data.payment.logo_channel}" title="${data.payment.name_channel}" alt="${data.payment.name_channel}" class="ps-2">
                 </div>
               </div>
             `);
