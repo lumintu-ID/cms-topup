@@ -17,21 +17,31 @@ class InvoiceServiceImplement implements InvoiceService
   public function getInvoice($id) 
   {
     $dataTransaction = $this->invoiceRepository->getTransactionById($id);
+    $dataPayment = $this->invoiceRepository->getDetailPrice($dataTransaction->price_id)->toArray();
+    $codePayment =  $this->invoiceRepository->getNameCodePayment($dataPayment['code_payment']);
+
     $result['invoice'] = $dataTransaction->toArray();
     $result['game'] = $this->invoiceRepository->getGameInfo($dataTransaction->game_id);
-    $result['payment'] = $this->invoiceRepository->getDetailPrice($dataTransaction->price_id)->toArray(); 
+    $result['payment'] = $dataPayment;
+    $result['payment']['namePayment'] = $codePayment;
     $result['payment']['invoice'] = $dataTransaction->invoice;
     $result['payment']['email'] = $dataTransaction->email;
+    
     $result['attribute'] = $this->getPaymentAttribute($result['payment']);
+
+    dd($result);
     
     return $result;
   }
 
   private function getPaymentAttribute(array $dataPayment = null)
   {
+    // dd($dataPayment['namePayment']);
     if(empty($dataPayment)) return 'data is null';
+
+    $urlReturn = 'http://127.0.0.1:8000/';
     
-    switch (Str::upper($dataPayment['channel_id'])) {
+    switch (Str::upper($dataPayment['namePayment'])) {
       case 'GV':
         $merchantId = "1138";
         $mercahtKey = '947f512d9b86b517a0070d5a';
@@ -44,22 +54,33 @@ class InvoiceServiceImplement implements InvoiceService
           ['custom' => $dataPayment['invoice']],
           ['product' => $dataPayment['amount'].' '.$dataPayment['name']],
           ['amount' => $dataPayment['price']],
-          ['custom_redirect' => 'http://127.0.0.1:8000/'],
+          ['custom_redirect' => $urlReturn],
           ['email' => $dataPayment['email']],
           ['signature' => $sign],
         ];
         return json_encode($dataAttribute);
       break;
+
       case 'UNIPIN':
         $methodAction = 'POST';
         $guid = "9b42a14d-a986-40a9-b4cc-354be6aea6db";
-        $secret = "w56kbwxuxh3heka3";
+        $secretKey = "w56kbwxuxh3heka3";
+        $currency = "IDR";
+        $reference =  $dataPayment['invoice'];
+        $urlAck = "";
+        $denominations = $dataPayment['amount'].' '.$dataPayment['name'];
+        $signature = hash('sha256', $guid.$reference.$urlAck.$currency.$denominations.$secretKey);
         $dataAttribute = [
           ['urlAction' => $dataPayment['url']],
           ['methodAction' => $methodAction],
-          
+          ['denominations' => $dataPayment['amount'].' '.$dataPayment['name']],
+          ['urlReturn' => $urlReturn],
+          ['signature' => $signature],
         ];
-        
+
+
+        return json_encode($dataAttribute);
+      break;
         
       default:
         $methodAction = 'POST';
@@ -78,7 +99,7 @@ class InvoiceServiceImplement implements InvoiceService
           ['channelId' => $dataPayment['channel_id']],
           ['amount' => $dataPayment['price']],
           ['currency' => $currency],
-          ['returnUrl' => 'http://127.0.0.1:8000/'],
+          ['returnUrl' => $urlReturn],
           ['name' => 'name'],
           ['email' => $dataPayment['email']],
           ['phone' => (int)$phone],

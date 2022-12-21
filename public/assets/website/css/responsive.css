@@ -93,6 +93,12 @@
     font-size: 1rem;
   }
 
+  .payment-list__items img {
+    /* max-width: inherit; */
+    /* width: auto; */
+    height: 100%;
+  }
+
 }
 
 /* // Large devices (desktops, 992px and up) */
