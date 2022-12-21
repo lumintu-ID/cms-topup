@@ -61,10 +61,10 @@ Route::prefix('v1')->group(function () {
     Route::post('/transaction/notify', [TransactionController::class, 'notify']);
 
     // Route::post('/transaction/notify', function (Request $request) {
-    //     Log::critical('Critical error', $request->all());
-    //     Log::info('info', ['data' => $request->all()]);
-    //     Log::error('error', ['data' => $request->all()]);
-    //     Log::warning('warning', ['data' => $request->all()]);
+    //     // Log::critical('Critical error', $request->all());
+    //     Log::info('info', ['data' => $request]);
+    //     Log::error('error', ['data' => $request]);
+    //     Log::warning('warning', ['data' => $request]);
 
     //     EventsTransaction::dispatch($request->all());
 

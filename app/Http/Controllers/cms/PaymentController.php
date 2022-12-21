@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\PaymentRequest;
 use App\Http\Requests\PaymentUpdateRequest;
+use App\Models\Code_payment;
 use App\Repository\Country\CountryImplement;
 use App\Repository\Payment\PaymentImplement;
 use App\Repository\Category\CategoryImplement;
@@ -61,8 +62,11 @@ class PaymentController extends Controller
             $data = $this->paymentImplement->getAll();
             $category = $this->categoryImplement->getAll();
             $country = $this->countryImplement->getAll();
+            $code_pay = Code_payment::get();
 
-            return view('cms.pages.payment.index', compact('title', 'data', 'country', 'category'));
+
+
+            return view('cms.pages.payment.index', compact('title', 'data', 'country', 'category', 'code_pay'));
         } catch (\Throwable $th) {
             $notif = array(
                 'message' => 'Internal Server Error',
@@ -90,6 +94,7 @@ class PaymentController extends Controller
                 'country_id' => $request->country,
                 'channel_id' => $request->channel_id,
                 'name_channel' => $request->name,
+                'code_payment' => $request->code_payment,
                 'url' => $request->url,
                 'logo_channel' => $this->_upload($request->file('thumbnail'))
             ]);
@@ -136,6 +141,7 @@ class PaymentController extends Controller
                 'country_id' => $request->country,
                 'channel_id' => $request->channel_id,
                 'name_channel' => $request->name,
+                'code_payment' => $request->code_payment,
                 'url' => $request->url,
                 'logo_channel' => (!$request->file('thumbnail')) ? $payment->logo_channel : $this->_upload($request->file('thumbnail'))
             ]);
