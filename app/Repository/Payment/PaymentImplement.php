@@ -9,7 +9,7 @@ class PaymentImplement implements PaymentRepository
 {
     public function getAll()
     {
-        $data = Payment::with('category', 'country')->orderBy('category_id')->get();
+        $data = Payment::with('category', 'country', 'code_pay')->orderBy('category_id')->get();
 
         return $data;
     }

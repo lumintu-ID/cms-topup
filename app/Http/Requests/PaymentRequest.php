@@ -29,6 +29,7 @@ class PaymentRequest extends FormRequest
             'category' => 'required',
             'country' => 'required',
             'channel_id' => 'required',
+            'code_payment' => 'required',
             'thumbnail' => 'required|file|image|mimes:jpeg,png,jpg|max:1048'
         ];
     }

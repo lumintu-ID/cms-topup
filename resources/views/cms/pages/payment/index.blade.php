@@ -42,6 +42,7 @@
                 <th class="border-0">Thumbnail</th>
                 <th class="border-0">Name</th>
                 <th class="border-0">Category</th>
+                <th class="border-0">Payment Category</th>
                 <th class="border-0">Country</th>
                 <th class="border-0">Action</th>
             </tr>
@@ -57,6 +58,7 @@
                     {{ $pay->name_channel }}
                 </td>
                 <td>{{ $pay->category->category }}</td>
+                <td>{{ $pay->code_pay->code_payment }}</td>
                 <td>
                    {{ $pay->country->country .' - '. $pay->country->currency }}
                 </td>
@@ -135,6 +137,15 @@
                         </select>
                     </div>
                     <div class="col-md-12 mb-3">
+                        <label class="my-1 me-2" for="code_payment">Select Payment Code</label>
+                        <select class="form-select" name="code_payment" id="code_payment" aria-label="Default select example" required>
+                            <option selected>Select Payment Code</option>
+                            @foreach ($code_pay as $code_pay)
+                                <option value="{{ $code_pay->id }}">{{ $code_pay->code_payment }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-12 mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Name</label>
                         <input type="text" name="name" value="{{ old('name') }}" class="form-control" id="name"
                             placeholder="name" required>
@@ -180,6 +191,8 @@
         $('#url-payment').val(data.url)
      
         $('#category').val(data.category_id)
+
+        $('#code_payment').val(data.code_payment)
         
         $('#modal-title-form').html('Update Payment')
         $('#btn-modal-form').prop('value', 'Update');
@@ -198,6 +211,10 @@
         $('#url-payment').val('')
         $('#category').val('Select Category')
         $('#category').prop('disabled', false)
+
+
+        $('#code_payment').val('Select Payment Code')
+        $('#code_payment').prop('disabled', false)
 
         $('#modal-title-form').html('Add Payment')
         $('#btn-modal-form').prop('value', 'Create');
