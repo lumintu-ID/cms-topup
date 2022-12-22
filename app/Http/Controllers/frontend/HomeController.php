@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\frontend;
 
 use App\Http\Controllers\Controller;
-use App\Models\GameList;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Event\ViewEvent;
+use App\Repository\Frontend\GeneralRepository;
 
 class HomeController extends Controller
 {
+    public function __construct(GeneralRepository $generalRepository)
+    {
+        $this->generalRepository = $generalRepository;
+    }
+
     public function index()
     {   
-        $games = GameList::all();
+        $games = $this->generalRepository->getAllDataGame();
+
         return view('frontend.home.index', compact('games'));
     }
 }
