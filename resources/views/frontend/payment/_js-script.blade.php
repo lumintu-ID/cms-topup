@@ -6,10 +6,8 @@
     const idGame = document.getElementsByClassName('games-info__body')[0].dataset.id;
     let player;
     $(".total-payment__nominal").text(0);
-
     $("#idPlayer").val(Math.random().toString(8).slice(2));
     $("#idGameInpt").val(idGame);
-
     $("#btnClearId").hide();
     $("#btnCheckId").click(async function() {
       await fetch(`${baseUrl}/api/v1/player`)
@@ -41,7 +39,6 @@
 
     $(".input-form__country .form-select").change(async function() {
       const country = this.value;
-      console.log(country);
       if(country) {
         await fetch(`${baseUrl}/api/v1/payment?country=${country}&game_id=${idGame}`)
         .then((response) => {

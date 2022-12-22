@@ -23,25 +23,21 @@ class InvoiceServiceImplement implements InvoiceService
     $result['invoice'] = $dataTransaction->toArray();
     $result['game'] = $this->invoiceRepository->getGameInfo($dataTransaction->game_id);
     $result['payment'] = $dataPayment;
-    $result['payment']['namePayment'] = $codePayment;
+    $result['payment']['name_payment'] = $codePayment;
     $result['payment']['invoice'] = $dataTransaction->invoice;
     $result['payment']['email'] = $dataTransaction->email;
-    
-    $result['attribute'] = $this->getPaymentAttribute($result['payment']);
+    $result['attribute'] = $this->getPaymentAttribute($result['payment'], $result['game']);
 
-    dd($result);
-    
     return $result;
   }
 
-  private function getPaymentAttribute(array $dataPayment = null)
+  private function getPaymentAttribute(array $dataPayment = null, array $dataGame = null)
   {
-    // dd($dataPayment['namePayment']);
     if(empty($dataPayment)) return 'data is null';
 
-    $urlReturn = 'http://127.0.0.1:8000/';
+    $urlReturn = route('home');
     
-    switch (Str::upper($dataPayment['namePayment'])) {
+    switch (Str::upper($dataPayment['name_payment'])) {
       case 'GV':
         $merchantId = "1138";
         $mercahtKey = '947f512d9b86b517a0070d5a';
@@ -63,33 +59,43 @@ class InvoiceServiceImplement implements InvoiceService
 
       case 'UNIPIN':
         $methodAction = 'POST';
-        $guid = "9b42a14d-a986-40a9-b4cc-354be6aea6db";
-        $secretKey = "w56kbwxuxh3heka3";
-        $currency = "IDR";
+        $guid = '9b42a14d-a986-40a9-b4cc-354be6aea6db';
+        $secretKey = 'w56kbwxuxh3heka3';
+        $currency = 'IDR';
         $reference =  $dataPayment['invoice'];
-        $urlAck = "";
-        $denominations = $dataPayment['amount'].' '.$dataPayment['name'];
+        $urlAck = 'https://esi-paymandashboard.azurewebsites.net/api/v1/transaction/notify';
+        $denominations = json_encode($dataPayment['amount'].' '.$dataPayment['name']);
         $signature = hash('sha256', $guid.$reference.$urlAck.$currency.$denominations.$secretKey);
         $dataAttribute = [
           ['urlAction' => $dataPayment['url']],
           ['methodAction' => $methodAction],
-          ['denominations' => $dataPayment['amount'].' '.$dataPayment['name']],
+          ['guid' => $guid],
+          ['reference' => $reference],
+          ['urlAck' => $urlAck],
           ['urlReturn' => $urlReturn],
+          ['denominations[]' => json_encode([
+              'amount' => strval($dataPayment['amount']),
+              'description' => $dataPayment['name']
+            ])
+          ],
+          ['currency' => $currency],
+          ['channel' => $dataPayment['channel_id']],
+          ['remark' => $dataGame['game_title']],
           ['signature' => $signature],
         ];
-
 
         return json_encode($dataAttribute);
       break;
         
-      default:
+      case 'GOC':
         $methodAction = 'POST';
         $merchantId = "Esp5373790";
         $haskey = 'jqji815m748z0ql560982426ca0j70qk02411d2no6u94qgdf58js2jn596s99si';
         $trxDateTime= \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('Y-m-d\TH:i:s')."+07";
         $currency = "IDR";
         $sign = hash('sha256', $merchantId.$dataPayment['invoice'].$trxDateTime.$dataPayment['channel_id'].$dataPayment['price'].$currency.$haskey);
-        $phone = '0865765898999';
+        $phone = '08777535648447';
+        // $phone = '082119673390';
         $dataAttribute = [
           ['urlAction' => $dataPayment['url']],
           ['methodAction' => $methodAction],
@@ -102,7 +108,7 @@ class InvoiceServiceImplement implements InvoiceService
           ['returnUrl' => $urlReturn],
           ['name' => 'name'],
           ['email' => $dataPayment['email']],
-          ['phone' => (int)$phone],
+          ['phone' => $phone],
           ['userId' => 'userId'],
           ['sign' => $sign],
         ];

@@ -15,14 +15,6 @@
     <link rel="stylesheet" href="{{ asset('assets/website/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/website/css/payment.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/website/css/responsive.css') }}">
-    {{-- <style>
-      body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-    </style> --}}
-
   </head>
   <body>
     
