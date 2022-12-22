@@ -87,13 +87,13 @@
             });
             $(".amount-price__wrap").click(function() {
               $(this).children(".amount-price__name-item").children().prop("checked", true);
-              const priceId = $(this).children(".amount-price__name-item").children('input').val();
-              const amount = $(this).children(".amount-price__name-item").text();
+              // const priceId = $(this).children(".amount-price__name-item").children('input').val();
+              // const amount = $(this).children(".amount-price__name-item").text();
               const price = parseInt($(this).children(".amount-price__price").text());
               $(".total-payment__nominal").text(price);
               $(".modal-body #price").val(price);
-              $(".modal-body #amountInpt").val(amount);
-              $(".modal-body #priceId").val(priceId);
+              $(".modal-body #amountInpt").val($(this).children(".amount-price__name-item").text());
+              $(".modal-body #priceId").val($(this).children(".amount-price__name-item").children('input').val());
               $(".modal-body #totalPayment").val(price);
             });
           }); 
