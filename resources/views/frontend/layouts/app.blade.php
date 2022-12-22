@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ESIPAYMENT</title>
-    <meta name="description" content="">
+    <meta name="description" content="esipayment">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
     <link rel="stylesheet" href="{{ asset('assets/website/css/bootstrap.min.css') }}">

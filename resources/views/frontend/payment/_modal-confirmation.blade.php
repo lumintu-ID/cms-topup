@@ -9,8 +9,9 @@
         @csrf
         <div class="modal-body">
           *Pastikan username dan ID sudah benar.
-          <div class="row">
-            Game ID <input type="text" name="game_id" id="idGameInpt" >
+          <div class="row" id="nameGame">
+            Game: 
+            <input type="text" name="game_id" id="idGameInpt" >
           </div>
           <div class="row">
             Player ID <input type="text" name="player_id" id="idPlayer" >

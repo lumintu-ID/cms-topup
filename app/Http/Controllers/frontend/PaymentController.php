@@ -42,6 +42,11 @@ class PaymentController extends Controller
             dd($th);
         }
     }
+
+    public function test(Request $request)
+    {
+        dd($request->all());
+    }
     
     
 }
