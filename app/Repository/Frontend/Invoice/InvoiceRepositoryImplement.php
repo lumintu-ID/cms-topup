@@ -2,6 +2,7 @@
 
 namespace App\Repository\Frontend\Invoice;
 
+use App\Models\Code_payment;
 use App\Models\GameList;
 use App\Models\Price;
 use App\Models\Transaction;
@@ -48,9 +49,16 @@ class InvoiceRepositoryImplement implements InvoiceRepository
       'price',
       'name',
       'amount',
+      'code_payment',
       'category_id',
       'url')
     ->where('price_id', $id)->first();
     return $data;
+  }
+
+  public function getNameCodePayment(string $id)
+  {
+    $data = Code_payment::select('code_payment')->where('id', $id)->first()->toArray();
+    return $data['code_payment'];
   }
 } 

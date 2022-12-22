@@ -27,7 +27,7 @@ class PaymentController extends Controller
             
             return view('frontend.payment.index', compact('countries', 'dataGame'));
         } catch (\Throwable $th) {
-            // dd($th);
+            dd($th);
         }
     }
 
@@ -37,8 +37,6 @@ class PaymentController extends Controller
             if(!$request->query('invoice')) return dd('not found');
             $data = $this->invoiceService->getInvoice($request->query('invoice'));
             
-            // dd($data);
-
             return view('frontend.payment.confirmation', compact('data'));
         } catch (\Throwable $th) {
             dd($th);
