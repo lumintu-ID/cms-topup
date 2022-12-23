@@ -18,6 +18,17 @@ function rupiah($number, $currency){
 
 @section('content')
 
+
+<div class="float-end">
+    <div class="mb-2">
+        PPN : 15.000
+    </div>
+
+    <button type="button" class="btn btn-block btn-gray-800 mb-3" data-bs-toggle="modal" data-bs-target="#setPPN" onclick="setPPN()">Set PPN</button>
+</div>
+
+
+
 <button type="button" class="btn btn-block btn-gray-800 mb-3" data-bs-toggle="modal" data-bs-target="#add" onclick="add()">Add</button>
 
 <form action="{{ route('cms.price.import') }}" method="post" enctype="multipart/form-data">
@@ -25,6 +36,9 @@ function rupiah($number, $currency){
     <input type="file" id="myFile" name="file">
     <input type="submit" class="btn btn-block btn-gray-800 mb-3">
 </form>
+  
+
+
 
 @if ($errors->any())
     <div class="p-3">

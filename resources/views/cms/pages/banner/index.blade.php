@@ -38,33 +38,33 @@
     <table id="myTable" class="table table-centered table-nowrap mb-0 rounded">
         <thead class="thead-light">
             <tr>
-                <th class="border-0 rounded-start">No</th>
-                <th class="border-0">Navigation</th>
-                <th class="border-0">Url</th>
+                <th class="border-0 rounded-start">#</th>
+                <th class="border-0">Banner</th>
                 <th class="border-0">Status</th>
                 <th class="border-0">Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($data as $navigation)
+            @foreach ($data as $item)
                 <tr>
-                    <td><p class="text-primary fw-bold">{{ $loop->iteration }}</p> </td>
-                    <td>{{ $navigation->navigation }}</td>
-                    <td>{{ $navigation->url }}</td>
+                    <td><p class="text-primary fw-bold">{{ $loop->iteration }}</p></td>
                     <td>
-                        @if ($navigation->is_active == 1)
-                            <span class="badge bg-success">Enable</span>
-                        @else
-                            <span class="badge bg-primary">Disable</span>
-                        @endif
+                        <img src="{{ url('/banner/'.$item->banner) }}" alt="thumbnail" style="width: 400px">
                     </td>
                     <td>
-                        @if ($navigation->is_active == 1)
-                            <a href="{{ route('cms.navigation.status', $navigation->nav_id) }}" class="btn btn-sm btn-primary">Disabled</a>
+                        @if ($item->is_active == 1)
+                            <span class="badge bg-success">Is Active</span>
                         @else
-                            <a href="{{ route('cms.navigation.status', $navigation->nav_id) }}" class="btn btn-sm btn-success">Enabled</a>
+                            <span class="badge bg-primary">Not Active</span>
+                        @endif 
+                    </td>
+                    <td>
+                        @if ($item->is_active == 1)
+                            <a href="{{ route('cms.banner.status', $item->id_banner) }}" class="btn btn-sm btn-primary">Disabled</a>
+                        @else
+                            <a href="{{ route('cms.banner.status', $item->id_banner) }}" class="btn btn-sm btn-success">Enabled</a>
                         @endif
-                        <button data-bs-toggle="modal" data-bs-target="#add" onclick="update({{ $navigation }})"
+                        <button data-bs-toggle="modal" data-bs-target="#add" onclick="update({{ $item }})"
                             class="btn btn-sm btn-info">Update</button>
                         
                         <button data-bs-toggle="modal" data-bs-target="#delete-{{ $loop->iteration }}" class="btn btn-sm btn-warning">Delete</button>
@@ -72,15 +72,18 @@
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h2 class="h6 modal-title" id="modal-title">Add Navigation</h2>
+                                        <h2 class="h6 modal-title" id="modal-title">Delete Banner</h2>
                                     </div>
-                                    <form id="url" action="{{ route('cms.navigation.delete') }}" method="post">
+                                    <form id="url" action="{{ route('cms.banner.delete') }}" method="post">
                                         @csrf
                                         @method('delete')
                                         <div class="modal-body row">
-                                            <h4>Are you sure delete this post?</h4>
-                                            <p>{{ $navigation->navigation }}</p>
-                                            <input type="hidden" name="id" value="{{ $navigation->nav_id }}">
+                                            <h4>Are you sure delete this Banner?</h4>
+                                           
+                                                <img src="{{ url('/banner/'.$item->banner) }}" alt="thumbnail" style="width: 100%">
+                                         
+                                          
+                                            <input type="hidden" name="id" value="{{ $item->id_banner }}">
                                         </div>
                                         <div class="modal-footer">
                                             <button type="submit" class="btn btn-secondary" id="btn-modal">Delete</button>
@@ -92,7 +95,10 @@
                         </div>
                     </td>
                 </tr>
+         
             @endforeach
+
+          
         </tbody>
     </table>
 </div>
@@ -102,41 +108,26 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="h6 modal-title" id="modal-title-form">Add Navigation</h2>
+                <h2 class="h6 modal-title" id="modal-title-form">Add Banner</h2>
             </div>
-            <form id="url" action="{{ route('cms.navigation.store') }}" method="post">
+            <form id="url" action="{{ route('cms.banner.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div id="methods">
                     
                 </div>
                 <div class="modal-body row">
+                  
                     <div class="col-md-12 mb-3">
-                        <label class="my-1 me-2" for="country">Select Label</label>
-                        <select class="form-select" name="label" id="label" aria-label="Default select example" required>
-                            <option selected="">Select Label</option>
-                            <option value="1">Home</option>
-                            <option value="2">Config</option>
-                            <option value="3">Setting</option>
-                        </select>
+                        <label for="exampleFormControlInput1" class="form-label">Banner</label>
+                        <div id="thumb" class="text-center mb-5">
+                        </div>
+                        <input type="file" name="banner" value="{{ old('banner') }}" class="form-control" id="banner"
+                            placeholder="Banner" required>
                     </div>
-                    <div class="col-md-12 mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Name</label>
-                        <input type="text" name="name" value="{{ old('name') }}" class="form-control" id="name"
-                            placeholder="navigation" required>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Url</label>
-                        <input type="text" class="form-control" name="url" value="{{ old('url') }}"
-                            id="url-navigation" placeholder="/example-link" required>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">icon</label>
-                        <input type="text" class="form-control" name="icon" value="{{ old('icon') }}"
-                            id="icon" placeholder="icon" required>
-                    </div>
+                   
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-secondary" id="btn-modal-form">Create</button>
+                    <input id="btn-modal-form" type="submit" value="Create" class="btn btn-secondary">
                     <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -145,32 +136,30 @@
 </div>
 <!-- End of Modal Content -->
 
-
 <script>
     function update(data) {
-        $('#url').attr('action', "{{ route('cms.navigation.update') }}");
+        console.log(data)
+        $('#banner').removeAttr('required');
+        $('#thumb').empty()
+        $('#methods').empty()
+        $('#url').attr('action', "{{ route('cms.banner.update') }}");
         method = '<input id="mtd" type="hidden" name="_method" value="PATCH">'
-        id = `<input id="id" type="hidden" name="id" value="${data.nav_id}">`
+        id = `<input id="id" type="hidden" name="id" value="${data.id_banner}">`
+        thumb = `<img src="{{ url('/banner') }}/${data.banner}" alt="banner" style="width: 450px">`
         $('#methods').append(method);
         $('#methods').append(id);
-        $('#modal-title-form').html('Update Navigation')
-        $('#btn-modal-form').html('Update')
-        $('#name').val(data.navigation)
-        $('#icon').val(data.icon)
-        $('#url-navigation').val(data.url)
-        $('#label').val(data.id_label)
+
+        $('#thumb').append(thumb);
+        $('#modal-title-form').html('Update Banner')
+        $('#btn-modal-form').prop('value', 'Update');
     }
     function add() {
+        $('#banner').attr('required', 'required');
+        $('#thumb').empty()
         $('#methods').empty()
-        $('#url').attr('action', "{{ route('cms.navigation.store') }}");
-        $('#name').val('')
-        $('#icon').val('')
-        $('#url-navigation').val('')
-        $('#label').val('')
-        $('#label').val('Select Label')
-        $('#label').prop('disabled', false)
-        $('#modal-title-form').html('Create Navigation')
-        $('#btn-modal-form').html('Create')
+        $('#url').attr('action', "{{ route('cms.banner.store') }}");
+        $('#modal-title-form').html('Add Banner')
+        $('#btn-modal-form').prop('value', 'Create');
     }
     function delet(data) {
         $('#id').val(data.id)

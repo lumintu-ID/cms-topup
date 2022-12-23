@@ -148,7 +148,7 @@ class UserAccessController extends Controller
     }
 
 
-    public function access($id)
+    public function access($id = null)
     {
         try {
             $title = "List User Access";

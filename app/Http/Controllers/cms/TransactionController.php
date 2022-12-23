@@ -39,21 +39,50 @@ class TransactionController extends Controller
     {
         $trx = null;
         $status = null;
-        Log::critical('Critical error', $request->all);
-        Log::info('info', ['data' => $request->all]);
-        Log::error('error', ['data' => $request->all]);
-        Log::warning('warning', ['data' => $request->all]);
-        EventsTransaction::dispatch($request->all);
-        if (isset($request->trxId)) {
+
+        Log::critical('Critical error', $request->all());
+        Log::info('info', ['data' => $request->all()]);
+        Log::error('error', ['data' => $request->all()]);
+        Log::warning('warning', ['data' => $request->all()]);
+
+
+        if ($request->data) {
+            // GV
+
+            $dataXML = $request->data;
+            $xmlObject = simplexml_load_string($dataXML);
+
+            $json = json_encode($xmlObject);
+            $phpArray = json_decode($json, true);
+
+            Log::critical('Critical error', $phpArray);
+            Log::info('info', ['data' => $phpArray]);
+            Log::error('error', ['data' => $phpArray]);
+            Log::warning('warning', ['data' => $phpArray]);
+
+            EventsTransaction::dispatch($phpArray);
+
+            if ($phpArray->status == "SUCCESS") {
+                $status = 1;
+            } else {
+                $status = 2;
+            };
+
+            $trx = Transaction::where('invoice', $phpArray->custom)->update([
+                'status' => $status
+            ]);
+
+            return 'OK';
+        } else {
 
             // GOC ;
 
-            Log::critical('Critical error', $request);
-            Log::info('info', ['data' => $request]);
-            Log::error('error', ['data' => $request]);
-            Log::warning('warning', ['data' => $request]);
+            Log::critical('Critical error', $request->all());
+            Log::info('info', ['data' => $request->all()]);
+            Log::error('error', ['data' => $request->all()]);
+            Log::warning('warning', ['data' => $request->all()]);
 
-            EventsTransaction::dispatch($request);
+            EventsTransaction::dispatch($request->all());
 
             if ($request->status == 100) {
                 $status = 1;
@@ -67,28 +96,5 @@ class TransactionController extends Controller
 
             return 'OK';
         };
-        // else {
-
-        //     // gov
-
-        //     Log::critical('Critical error', $request);
-        //     Log::info('info', ['data' => $request]);
-        //     Log::error('error', ['data' => $request]);
-        //     Log::warning('warning', ['data' => $request]);
-
-        //     EventsTransaction::dispatch($request);
-
-        //     if ($request->status == "SUCCESS") {
-        //         $status = 1;
-        //     } else {
-        //         $status = 2;
-        //     };
-
-        //     $trx = Transaction::where('invoice', $request->custom)->update([
-        //         'status' => $status
-        //     ]);
-
-        //     return 'OK';
-        // };
     }
 }

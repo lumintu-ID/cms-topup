@@ -109,7 +109,6 @@ class GameController extends Controller
 
 
             GameList::where('id', $request->id)->update([
-                'id' => Str::uuid(),
                 'game_id' => $request->game_id,
                 'slug_game' => Str::slug($request->game_title),
                 'game_title' => $request->game_title,

@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Country;
+use App\Models\Category;
+use App\Models\Code_payment;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Payment extends Model
 {
@@ -23,5 +26,10 @@ class Payment extends Model
     public function country()
     {
         return $this->belongsTo(Country::class, 'country_id');
+    }
+
+    public function code_pay()
+    {
+        return $this->belongsTo(Code_payment::class, 'code_payment');
     }
 }

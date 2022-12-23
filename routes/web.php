@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\ServerCreated;
+use App\Http\Controllers\cms\BannerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\cms\AuthController;
 use App\Http\Controllers\cms\GameController;
@@ -110,22 +111,28 @@ Route::middleware(['auth', 'access'])->group(function () {
     Route::post('/administrator/price', [PriceController::class, 'store'])->name('cms.price.store');
     Route::patch('/administrator/price', [PriceController::class, 'update'])->name('cms.price.update');
     Route::delete('/administrator/price', [PriceController::class, 'destroy'])->name('cms.price.delete');
-
     Route::post('/administrator/price/import', [PriceController::class, 'import'])->name('cms.price.import');
 
+
+    // set PPN
+
+    // logout
     Route::get('/administrator/logout', [AuthController::class, 'logout'])->name('logout');
 
-
-
+    // transaction
     Route::get('/administrator/transaction', [TransactionController::class, 'index'])->name('cms.transaction');
 
-
-
+    // price point
     Route::get('/administrator/pricepoint', [PricePointController::class, 'index'])->name('cms.pricepoint');
     Route::post('/administrator/pricepoint', [PricePointController::class, 'store'])->name('cms.pricepoint.store');
     Route::patch('/administrator/pricepoint', [PricePointController::class, 'update'])->name('cms.pricepoint.update');
     Route::delete('/administrator/pricepoint', [PricePointController::class, 'destroy'])->name('cms.pricepoint.delete');
+
+
+    // banner
+    Route::get('/administrator/banner', [BannerController::class, 'index'])->name('cms.banner');
+    Route::post('/administrator/banner', [BannerController::class, 'store'])->name('cms.banner.store');
+    Route::patch('/administrator/banner', [BannerController::class, 'update'])->name('cms.banner.update');
+    Route::delete('/administrator/banner', [BannerController::class, 'destroy'])->name('cms.banner.delete');
+    Route::get('/administrator/banner/{id}', [BannerController::class, 'changeStatus'])->name('cms.banner.status');
 });
-
-
-
