@@ -4,9 +4,11 @@ namespace App\Http\Controllers\cms;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
+
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-
 use App\Events\Transaction as EventsTransaction;
 
 class TransactionController extends Controller
@@ -37,6 +39,7 @@ class TransactionController extends Controller
 
     public function notify(Request $request)
     {
+
         $trx = null;
         $status = null;
 
@@ -45,56 +48,64 @@ class TransactionController extends Controller
         Log::error('error', ['data' => $request->all()]);
         Log::warning('warning', ['data' => $request->all()]);
 
+        try {
 
-        if ($request->data) {
-            // GV
+            if ($request->data) {
+                // GV
 
-            $dataXML = $request->data;
-            $xmlObject = simplexml_load_string($dataXML);
+                $dataXML = $request->data;
+                $xmlObject = simplexml_load_string($dataXML);
 
-            $json = json_encode($xmlObject);
-            $phpArray = json_decode($json, true);
+                $json = json_encode($xmlObject);
+                $phpArray = json_decode($json, true);
 
-            Log::critical('Critical error', $phpArray);
-            Log::info('info', ['data' => $phpArray]);
-            Log::error('error', ['data' => $phpArray]);
-            Log::warning('warning', ['data' => $phpArray]);
+                Log::info('info', ['data' => $phpArray]);
+                // Log::error('error', ['data' => $phpArray['status']]);
+                // Log::warning('warning', ['data' => $phpArray['custom']]);
+                EventsTransaction::dispatch($phpArray['custom']);
 
-            EventsTransaction::dispatch($phpArray);
 
-            if ($phpArray->status == "SUCCESS") {
-                $status = 1;
+                if ($phpArray['status'] == "SUCCESS") {
+                    $status = 2;
+                    Log::info('Success Transaction Paid', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Success Transaction Paid with GV Invoice ' . $phpArray['custom']]);
+                } else {
+                    $status = 1;
+                    Log::info('Cancel Transaction Paid', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Cancel Transaction Paid with GV Invoice ' . $phpArray['custom']]);
+                };
+
+                $trx = Transaction::where('invoice', $phpArray['custom'])->update([
+                    'status' => $status
+                ]);
             } else {
-                $status = 2;
+
+                // GOC ;
+
+                Log::info('info', ['data' => $request->all()]);
+                EventsTransaction::dispatch($request->trxId);
+
+                if ($request->status == 100) {
+                    $status = 2;
+                    Log::info('Success Transaction Paid', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Success Transaction Paid with GOC Invoice ' . $request->trxId]);
+                } else {
+
+                    $status = 0;
+                    Log::info('Cancel Transaction Paid', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Cancel Transaction Paid with GOC Invoice ' . $request->trxId]);
+                };
+
+                $trx = Transaction::where('invoice', $request->trxId)->update([
+                    'status' => $status
+                ]);
             };
 
-            $trx = Transaction::where('invoice', $phpArray->custom)->update([
-                'status' => $status
-            ]);
+            return "OK";
+        } catch (\Throwable $th) {
+            Log::error('Error Notify TopUp Transaction ', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | ERR ' . ' | Error Notify TopUp Transaction']);
 
-            return 'OK';
-        } else {
-
-            // GOC ;
-
-            Log::critical('Critical error', $request->all());
-            Log::info('info', ['data' => $request->all()]);
-            Log::error('error', ['data' => $request->all()]);
-            Log::warning('warning', ['data' => $request->all()]);
-
-            EventsTransaction::dispatch($request->all());
-
-            if ($request->status == 100) {
-                $status = 1;
-            } else {
-                $status = 2;
-            };
-
-            $trx = Transaction::where('invoice', $request->trxId)->update([
-                'status' => $status
-            ]);
-
-            return 'OK';
-        };
+            return \response()->json([
+                'code' => Response::HTTP_BAD_REQUEST,
+                'status' => 'BAD_REQUEST',
+                'error' => 'BAD REQUEST',
+            ], Response::HTTP_BAD_REQUEST);
+        }
     }
 }
