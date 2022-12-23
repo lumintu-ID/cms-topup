@@ -3,11 +3,14 @@
 
   $(document).ready(function(){
     const baseUrl = window.location.origin;
-    const idGame = document.getElementsByClassName('games-info__body')[0].dataset.id;
+    const dataGame = JSON.parse(document.getElementsByClassName('games-info__body')[0].dataset.game);
+    console.log(dataGame);
+    // $(".modal-body #nameGame").text('giudgaoa');
+    // console.log($(".modal-body #nameGame").text());
     let player;
     $(".total-payment__nominal").text(0);
     $("#idPlayer").val(Math.random().toString(8).slice(2));
-    $("#idGameInpt").val(idGame);
+    $("#idGameInpt").val(dataGame.id);
     $("#btnClearId").hide();
     $("#btnCheckId").click(async function() {
       await fetch(`${baseUrl}/api/v1/player`)
@@ -40,7 +43,7 @@
     $(".input-form__country .form-select").change(async function() {
       const country = this.value;
       if(country) {
-        await fetch(`${baseUrl}/api/v1/payment?country=${country}&game_id=${idGame}`)
+        await fetch(`${baseUrl}/api/v1/payment?country=${country}&game_id=${dataGame.id}`)
         .then((response) => {
           if(response.status === 404) {
             $(".payment-list").empty();

@@ -59,25 +59,25 @@ class InvoiceServiceImplement implements InvoiceService
 
       case 'UNIPIN':
         $methodAction = 'POST';
+        $devGuid = 'bcd3a3a3-4c68-419e-bd79-91d8678faf04';
+        $devSecretKey = 'ntcaud5ehoe8ryci';
         $guid = '9b42a14d-a986-40a9-b4cc-354be6aea6db';
         $secretKey = 'w56kbwxuxh3heka3';
         $currency = 'IDR';
         $reference =  $dataPayment['invoice'];
         $urlAck = 'https://esi-paymandashboard.azurewebsites.net/api/v1/transaction/notify';
-        $denominations = json_encode($dataPayment['amount'].' '.$dataPayment['name']);
-        $signature = hash('sha256', $guid.$reference.$urlAck.$currency.$denominations.$secretKey);
+        $denominations = $dataPayment['price'].$dataPayment['amount'].' '.$dataPayment['name'];
+        $signature = hash('sha256', $devGuid.$reference.$urlAck.$currency.$denominations.$devSecretKey);
         $dataAttribute = [
+          // ['urlAction' => route('payment.test')],
           ['urlAction' => $dataPayment['url']],
           ['methodAction' => $methodAction],
-          ['guid' => $guid],
+          ['guid' => $devGuid],
           ['reference' => $reference],
           ['urlAck' => $urlAck],
           ['urlReturn' => $urlReturn],
-          ['denominations[]' => json_encode([
-              'amount' => strval($dataPayment['amount']),
-              'description' => $dataPayment['name']
-            ])
-          ],
+          ['denominations[0][amount]' => $dataPayment['price']],
+          ['denominations[0][description]' => $dataPayment['amount'].' '.$dataPayment['name']],
           ['currency' => $currency],
           ['channel' => $dataPayment['channel_id']],
           ['remark' => $dataGame['game_title']],

@@ -14,6 +14,7 @@
               </div>
             </div>
             <form id="formInvoice">
+              @csrf
               <div class="box-invoice__body">
                 <div class="row row-cols-1 row-cols-sm-2 py-2">
                   <div class="col-6"> Game : </div>

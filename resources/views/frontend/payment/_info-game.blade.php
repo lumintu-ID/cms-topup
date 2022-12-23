@@ -7,8 +7,8 @@
         </div>
       </div>
       <div class="col-8 col-sm-7 col-md-8 ps-0 pt-2 pt-md-3">
-        <div class="games-info__body" data-id="{{ $dataGame->id }}">
-          <h2 class="games-info__title">{{ $dataGame->game_title }}</h2>
+        <div class="games-info__body" data-game="{{ $dataGame }}">
+          <h2 class="games-info__title">{{ $dataGame->title }} </h2>
         </div>
       </div>
     </div>
