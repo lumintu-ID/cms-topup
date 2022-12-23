@@ -45,7 +45,7 @@ class PaymentController extends Controller
 
     public function test(Request $request)
     {
-        dd($request->all());
+        dd(json_encode($request->all()));
     }
     
     

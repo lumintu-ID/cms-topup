@@ -66,21 +66,18 @@ class InvoiceServiceImplement implements InvoiceService
         $currency = 'IDR';
         $reference =  $dataPayment['invoice'];
         $urlAck = 'https://esi-paymandashboard.azurewebsites.net/api/v1/transaction/notify';
-        $denominations = json_encode($dataPayment['amount'].' '.$dataPayment['name']);
+        $denominations = $dataPayment['price'].$dataPayment['amount'].' '.$dataPayment['name'];
         $signature = hash('sha256', $devGuid.$reference.$urlAck.$currency.$denominations.$devSecretKey);
         $dataAttribute = [
-          ['urlAction' => route('payment.test')],
-          // ['urlAction' => $dataPayment['url']],
+          // ['urlAction' => route('payment.test')],
+          ['urlAction' => $dataPayment['url']],
           ['methodAction' => $methodAction],
           ['guid' => $devGuid],
           ['reference' => $reference],
           ['urlAck' => $urlAck],
           ['urlReturn' => $urlReturn],
-          ['denominations[]' => json_encode([
-              'amount' => strval($dataPayment['price']),
-              'description' => $dataPayment['amount'].' '.$dataPayment['name']
-            ])
-          ],
+          ['denominations[0][amount]' => $dataPayment['price']],
+          ['denominations[0][description]' => $dataPayment['amount'].' '.$dataPayment['name']],
           ['currency' => $currency],
           ['channel' => $dataPayment['channel_id']],
           ['remark' => $dataGame['game_title']],

@@ -91,7 +91,7 @@
     const createElementInput = ({ name, value }) => {
       const elmentInput = document.createElement("input");
       elmentInput.setAttribute("name", name);
-      elmentInput.hidden = true;
+      // elmentInput.hidden = true;
       elmentInput.value = value || `Value ${name} not avaliable`;
       $("#formInvoice").append(elmentInput);
       return;
