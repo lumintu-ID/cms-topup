@@ -3,12 +3,14 @@
 
   $(document).ready(function(){
     const baseUrl = window.location.origin;
-    const idGame = document.getElementsByClassName('games-info__body')[0].dataset.id;
+    const dataGame = JSON.parse(document.getElementsByClassName('games-info__body')[0].dataset.game);
+    console.log(dataGame);
+    // $(".modal-body #nameGame").text('giudgaoa');
+    // console.log($(".modal-body #nameGame").text());
     let player;
-
+    $(".total-payment__nominal").text(0);
     $("#idPlayer").val(Math.random().toString(8).slice(2));
-    $("#idGameInpt").val(idGame);
-
+    $("#idGameInpt").val(dataGame.id);
     $("#btnClearId").hide();
     $("#btnCheckId").click(async function() {
       await fetch(`${baseUrl}/api/v1/player`)
@@ -40,9 +42,8 @@
 
     $(".input-form__country .form-select").change(async function() {
       const country = this.value;
-      console.log(country);
       if(country) {
-        await fetch(`${baseUrl}/api/v1/payment?country=${country}&game_id=${idGame}`)
+        await fetch(`${baseUrl}/api/v1/payment?country=${country}&game_id=${dataGame.id}`)
         .then((response) => {
           if(response.status === 404) {
             $(".payment-list").empty();
@@ -60,7 +61,7 @@
               <div class="col">
                 <div class="payment-list__items" data-payment="${data.payment.payment_id}">
                   <input type="radio" id="${data.payment.payment_id}" name="payment-id" value="${data.payment.payment_id}">
-                  <img src="${data.payment.logo_channel}" title="${data.payment.name_channel}" alt="${data.payment.name_channel}">
+                  <img src="${data.payment.logo_channel}" title="${data.payment.name_channel}" alt="${data.payment.name_channel}" class="ps-2">
                 </div>
               </div>
             `);
@@ -87,13 +88,16 @@
             });
             $(".amount-price__wrap").click(function() {
               $(this).children(".amount-price__name-item").children().prop("checked", true);
-              const priceId = $(this).children(".amount-price__name-item").children('input').val();
-              const amount = $(this).children(".amount-price__name-item").text();
+<<<<<<< HEAD
+              // const priceId = $(this).children(".amount-price__name-item").children('input').val();
+              // const amount = $(this).children(".amount-price__name-item").text();
+=======
+>>>>>>> frontend
               const price = parseInt($(this).children(".amount-price__price").text());
               $(".total-payment__nominal").text(price);
               $(".modal-body #price").val(price);
-              $(".modal-body #amountInpt").val(amount);
-              $(".modal-body #priceId").val(priceId);
+              $(".modal-body #amountInpt").val($(this).children(".amount-price__name-item").text());
+              $(".modal-body #priceId").val($(this).children(".amount-price__name-item").children('input').val());
               $(".modal-body #totalPayment").val(price);
             });
           }); 

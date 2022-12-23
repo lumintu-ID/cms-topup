@@ -14,6 +14,7 @@
               </div>
             </div>
             <form id="formInvoice">
+              @csrf
               <div class="box-invoice__body">
                 <div class="row row-cols-1 row-cols-sm-2 py-2">
                   <div class="col-6"> Game : </div>
@@ -90,7 +91,7 @@
     const createElementInput = ({ name, value }) => {
       const elmentInput = document.createElement("input");
       elmentInput.setAttribute("name", name);
-      elmentInput.hidden = true;
+      // elmentInput.hidden = true;
       elmentInput.value = value || `Value ${name} not avaliable`;
       $("#formInvoice").append(elmentInput);
       return;

@@ -7,22 +7,14 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
-    <meta name="description" content="">
+    <title>ESIPAYMENT</title>
+    <meta name="description" content="esipayment">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
     <link rel="stylesheet" href="{{ asset('assets/website/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/website/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/website/css/payment.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/website/css/responsive.css') }}">
-    <style>
-      body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-    </style>
-
   </head>
   <body>
     

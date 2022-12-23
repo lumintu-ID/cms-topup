@@ -26,7 +26,8 @@
   }
 
   a.button__primary,
-  button.button__primary {
+  button.button__primary,
+  button.button__cancel {
     width: 10rem;
     font-size: .8rem;
   }
@@ -92,13 +93,20 @@
     font-size: 1rem;
   }
 
+  .payment-list__items img {
+    /* max-width: inherit; */
+    /* width: auto; */
+    height: 100%;
+  }
+
 }
 
 /* // Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
   a.button__primary,
   a.button__secondary,
-  button.button__primary {
+  button.button__primary,
+  button.button__cancel {
     min-width: unset;
     min-height: unset;
   }
