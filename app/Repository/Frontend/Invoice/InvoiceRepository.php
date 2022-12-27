@@ -8,4 +8,5 @@ interface InvoiceRepository
   public function getGameInfo(string $gameId);
   public function getDetailPrice(string $priceId);
   public function getNameCodePayment(string $codePayment);
+  public function getAllDataPpn();
 }

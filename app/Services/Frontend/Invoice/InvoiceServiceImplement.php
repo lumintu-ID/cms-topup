@@ -24,11 +24,19 @@ class InvoiceServiceImplement implements InvoiceService
     $result['game'] = $this->invoiceRepository->getGameInfo($dataTransaction->game_id);
     $result['payment'] = $dataPayment;
     $result['payment']['name_payment'] = $codePayment;
+    $result['payment']['ppn'] = $this->invoiceRepository->getAllDataPpn()[0]['ppn'];
     $result['payment']['invoice'] = $dataTransaction->invoice;
     $result['payment']['email'] = $dataTransaction->email;
     $result['attribute'] = $this->getPaymentAttribute($result['payment'], $result['game']);
-
+    
     return $result;
+  }
+
+  private function grandTotal($price)
+  {
+    $ppn = $this->invoiceRepository->getAllDataPpn();
+    $total = $price + $ppn;
+    return $total;
   }
 
   private function getPaymentAttribute(array $dataPayment = null, array $dataGame = null)

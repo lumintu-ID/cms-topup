@@ -321,7 +321,7 @@ a > .support__container:hover {
 
 footer {
   margin-top: 2rem;
-  padding: 1rem 0 2rem;
+  padding: 1rem;
   border-top: 1px solid #040726;
 }
 
@@ -334,6 +334,7 @@ footer {
 
 a.button__primary,
 a.button__secondary,
+button.button__cancel,
 button.button__primary {
   display: flex;
   justify-content: center;
