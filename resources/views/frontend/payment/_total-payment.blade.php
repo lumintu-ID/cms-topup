@@ -9,7 +9,7 @@
   </div>
   <div class="col-12 col-md-8">
     <div class="total-payment__footer col d-flex justify-content-center">
-      <button class="button__primary" data-bs-toggle="modal" data-bs-target="#detailPaymentModal">konfirmasi</button>
+      <button class="button__primary" id="btnConfirm" data-bs-toggle="modal" data-bs-target="#detailPaymentModal" disabled>konfirmasi</button>
     </div>
   </div>
 </div>

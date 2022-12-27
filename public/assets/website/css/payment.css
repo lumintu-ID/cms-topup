@@ -128,9 +128,6 @@
   background-color: #040726;
 }
 
-
-
-
 .total-payment__header {
   font-size: 1rem;
   font-weight: bold;
@@ -193,4 +190,17 @@
 
 .box-invoice-header__label {
   letter-spacing: 2px;
+}
+
+
+/*=================== Modal/Popup Confirm Payment =============== */
+
+.checkout-confirm {
+
+}
+
+.checkout-confirm__info {
+  font-family: var(--bs-font-sans-serif);
+  font-size: .7rem;
+  font-style: italic;
 }

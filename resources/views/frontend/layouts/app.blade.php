@@ -15,11 +15,21 @@
     <link rel="stylesheet" href="{{ asset('assets/website/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/website/css/payment.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/website/css/responsive.css') }}">
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+      main {
+        flex: 1;
+      }
+    </style>
   </head>
   <body>
-    
     @include('frontend.partials.header')
-    @yield('content')
+    <main>
+      @yield('content')
+    </main>
     @include('frontend.partials.footer')
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>

@@ -4,6 +4,7 @@ namespace App\Repository\Frontend\Invoice;
 
 use App\Models\Code_payment;
 use App\Models\GameList;
+use App\Models\Ppn;
 use App\Models\Price;
 use App\Models\Transaction;
 
@@ -60,5 +61,11 @@ class InvoiceRepositoryImplement implements InvoiceRepository
       ->first()
       ->toArray();
     return $data['code_payment'];
+  }
+
+  public function getAllDataPpn()
+  {
+    $data = Ppn::select('id_ppn as id','ppn')->get()->toArray();
+    return $data;
   }
 } 
