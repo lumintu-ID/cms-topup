@@ -5,11 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class History extends Model
+class TransactionDetail extends Model
 {
     use HasFactory;
-
-    protected $keyType = "string";
-    protected $primaryKey = "history_id";
-    protected $guarded = [];
 }

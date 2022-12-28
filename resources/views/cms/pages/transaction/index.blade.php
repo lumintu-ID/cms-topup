@@ -64,7 +64,8 @@
                 </td>
                 <td>{{ $data->created_at }}</td>
                 <td>
-                    
+                    <button data-bs-toggle="modal" data-bs-target="#Detail" onclick="Detail({{ $data }})"
+                    class="btn btn-sm btn-info">Detail</button>     
                 </td>
             </tr>
             @endforeach
@@ -73,7 +74,60 @@
 </div>
 
 
-
+<!-- Modal Detail -->
+<div class="modal fade" id="Detail" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="h6 modal-title" id="modal-title-form">Detail Transaction</h2>
+                <div class="text-center">
+                    INVOICE : INV-58IVmQGiIzpT
+                </div>
+            </div>
+                <div class="modal-body row">
+                    <div class="row row-cols-1 row-cols-sm-2 py-2">
+                        <div class="col-6"> Paid Date : </div>
+                        <div class="col-6 text-end"> 2 april 2022 </div>
+                    </div>
+                    <div class="row row-cols-1 row-cols-sm-2 py-2">
+                        <div class="col-6"> Game : </div>
+                        <div class="col-6 text-end"> Fight Of Legends </div>
+                      </div>
+                      <div class="row row-cols-1 row-cols-sm-2 py-2 ">
+                        <div class="col-6"> User ID : </div>
+                        <div class="col-6 text-end"> 13123123adsa </div>
+                      </div>
+                      <div class="row row-cols-1 row-cols-sm-2 py-2">
+                        <div class="col-6"> Amount : </div>
+                        <div class="col-6 text-end"> 
+                          2 Stones
+                        </div>
+                      </div>
+                      <div class="row row-cols-1 row-cols-sm-2 py-2">
+                        <div class="col-6"> PPI :</div>
+                        <div class="col-6 text-end"> Price Point Id 100K </div>
+                      </div>
+                      <div class="row row-cols-1 row-cols-sm-2 py-2">
+                        <div class="col-6"> Method Payment : </div>
+                        <div class="col-6 text-end"> BNI </div>
+                      </div>
+                      <div class="row row-cols-1 row-cols-sm-2 py-2">
+                        <div class="col-6"> Total Payment : </div>
+                        <div class="col-6 text-end"> Rp 100.000 </div>
+                      </div>
+                      <div class="row row-cols-1 row-cols-sm-2 py-2">
+                        <div class="col-6"> Status : </div>
+                        <div class="col-6 text-end"> Success </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input id="btn-modal-form" type="submit" value="Create" class="btn btn-secondary">
+                    <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
+                </div>
+        </div>
+    </div>
+</div>
+<!-- End of Modal Content -->
 
 
 
