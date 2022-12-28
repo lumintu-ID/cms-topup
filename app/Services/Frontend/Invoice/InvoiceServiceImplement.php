@@ -28,15 +28,10 @@ class InvoiceServiceImplement implements InvoiceService
     $result['payment']['invoice'] = $dataTransaction->invoice;
     $result['payment']['email'] = $dataTransaction->email;
     $result['attribute'] = $this->getPaymentAttribute($result['payment'], $result['game']);
+
+    // dd($result);
     
     return $result;
-  }
-
-  private function grandTotal($price)
-  {
-    $ppn = $this->invoiceRepository->getAllDataPpn();
-    $total = $price + $ppn;
-    return $total;
   }
 
   private function getPaymentAttribute(array $dataPayment = null, array $dataGame = null)
@@ -76,20 +71,22 @@ class InvoiceServiceImplement implements InvoiceService
         $urlAck = 'https://esi-paymandashboard.azurewebsites.net/api/v1/transaction/notify';
         $denominations = $dataPayment['price'].$dataPayment['amount'].' '.$dataPayment['name'];
         $signature = hash('sha256', $devGuid.$reference.$urlAck.$currency.$denominations.$devSecretKey);
+        $dataParse = [
+          'guid' => $devGuid,
+          'reference' => $reference,
+          'urlAck' => $urlAck,
+          'currency' => $currency,
+          'remark' => $dataGame['game_title'],
+          'signature' => $signature,
+          'denominations' => [
+            'amount' => $dataPayment['price'],
+            'description' => $dataPayment['amount'].' '.$dataPayment['name']
+          ]
+        ];
         $dataAttribute = [
-          // ['urlAction' => route('payment.test')],
-          ['urlAction' => $dataPayment['url']],
-          ['methodAction' => $methodAction],
-          ['guid' => $devGuid],
-          ['reference' => $reference],
-          ['urlAck' => $urlAck],
-          ['urlReturn' => $urlReturn],
-          ['denominations[0][amount]' => $dataPayment['price']],
-          ['denominations[0][description]' => $dataPayment['amount'].' '.$dataPayment['name']],
-          ['currency' => $currency],
-          ['channel' => $dataPayment['channel_id']],
-          ['remark' => $dataGame['game_title']],
-          ['signature' => $signature],
+          'methodAction' => $methodAction,
+          'urlAction' => $dataPayment['url'],
+          'dataparse' => $dataParse,
         ];
 
         return json_encode($dataAttribute);

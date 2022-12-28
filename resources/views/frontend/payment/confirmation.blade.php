@@ -51,7 +51,7 @@
               <hr>
               <div class="box-invoice__footer row d-flex justify-content-center">
                 <div class="col-8 col-md-6 p-3 d-flex justify-content-center">
-                  <button type="submit" class="button__primary">Pay Now</button>
+                  <button type="submit" class="button__primary" id="btnPay">Pay Now</button>
                 </div>
               </div>
             </form>
@@ -69,25 +69,51 @@
   <script>
     $(document).ready(function(){
       const payment = $("#elementAttribute").data("element-input");
-      for (const key in payment) {
-        if (Object.hasOwnProperty.call(payment, key)) {
-          const element = payment[key];
-          if(Object.keys(element) == 'methodAction') {
-            $("#formInvoice").attr({
-              'method': element[Object.keys(element)],
-              'action': payment[0].urlAction,
-            });
-          }
-          if(Object.keys(element) != 'methodAction' && Object.keys(element) != 'urlAction') {
-            createElementInput({ 
-              name: String(Object.keys(element)),
-              value: element[Object.keys(element)]
-            });
+      if(typeof payment.dataparse === "undefined"){
+        for (const key in payment) {
+          if (Object.hasOwnProperty.call(payment, key)) {
+            const element = payment[key];
+            if(Object.keys(element) == 'methodAction') {
+              $("#formInvoice").attr({
+                'method': element[Object.keys(element)],
+                'action': payment[0].urlAction,
+              });
+            }
+            if(Object.keys(element) != 'methodAction' && Object.keys(element) != 'urlAction') {
+              createElementInput({ 
+                name: String(Object.keys(element)),
+                value: element[Object.keys(element)]
+              });
+            }
           }
         }
-      }
+      }else{
+        $("#btnPay").removeAttr('type');
+        $("#btnPay").click(async function(event) {
+          event.preventDefault();
+          let myHeaders = new Headers();
+          myHeaders.append("Content-Type", "application/json");
+          myHeaders.append('Access-Control-Allow-Origin', '*');
+          myHeaders.append('Access-Control-Allow-Methods', 'POST,PATCH,OPTIONS');
+          let requestOptions = {
+            method: payment.methodAction,
+            headers: myHeaders,
+            mode: 'cors',
+            body: JSON.stringify( payment.dataparse),
+            redirect: 'follow'
+          };
 
+          await fetch(payment.urlAction, requestOptions)
+          .then(response => response.text())
+          .then(result => console.log(result))
+          .catch(error => console.log('error', error));
+                  
+          });
+      }
     });
+    function pageRedirect() {
+      window.location.href = "http://localhost:8000";
+    } 
     const createElementInput = ({ name, value }) => {
       const elmentInput = document.createElement("input");
       elmentInput.setAttribute("name", name);
