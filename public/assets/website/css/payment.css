@@ -75,7 +75,10 @@
 
 
 .payment-list__items {
+  display: flex;
   padding: .5rem 1rem;
+  /* min-height: 3.5rem; */
+  /* max-height: 3rem; */
   background-color: rgba(255, 255, 255, 0.641);
   /* background-color: #fff; */
   /* background-color: #979797; */
@@ -89,7 +92,9 @@
 }
 
 .payment-list__items img {
-  height: 2.5rem;
+  /* max-width: inherit; */
+  /* width: auto; */
+  height: 100%;
 }
 
 .section-amount-list {
@@ -122,11 +127,6 @@
   color: #fff;
   background-color: #040726;
 }
-
-.payment-list__items img {
-  max-width: 100%;
-}
-
 
 .total-payment__header {
   font-size: 1rem;
@@ -190,4 +190,17 @@
 
 .box-invoice-header__label {
   letter-spacing: 2px;
+}
+
+
+/*=================== Modal/Popup Confirm Payment =============== */
+
+.checkout-confirm {
+
+}
+
+.checkout-confirm__info {
+  font-family: var(--bs-font-sans-serif);
+  font-size: .7rem;
+  font-style: italic;
 }

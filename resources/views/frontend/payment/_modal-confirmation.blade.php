@@ -1,44 +1,80 @@
 <div class="modal fade" id="detailPaymentModal" tabindex="-1" aria-labelledby="detailPaymentModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header box-invoice__header">
         <h5 class="modal-title" id="exampleModalLabel">Detail Pembelian</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div id="infoCaution" class="info-caution">
+        <div class="modal-body text-center">
+          <p class="info-caution__empty-all" hidden>
+            Silahkan masukan id player dan pilih jumlah item.
+          </p>
+          <p class="info-caution__empty-player" hidden>
+            Silahkan masukan id player.
+          </p>
+          <p class="info-caution__empty-item" hidden>
+            Silahkan pilih jumlah item.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="button__cancel" data-bs-dismiss="modal">Tutup</button>
+        </div>
       </div>
       <form action="{{ route('payment.transaction') }}" method="post" id="formCheckout">
         @csrf
-        <div class="modal-body">
-          *Pastikan username dan ID sudah benar.
-          <div class="row">
-            Game ID <input type="text" name="game_id" id="idGameInpt" >
+        <div class="modal-body checkout-confirm">
+          <div class="row" id="nameGame">
+            <div>
+              Game: <span></span>
+            </div>
+            <input type="text" name="game_id" hidden>
           </div>
-          <div class="row">
-            Player ID <input type="text" name="player_id" id="idPlayer" >
+          <div class="row" id="playerId">
+            <div>
+              Player ID: <span></span>
+            </div>
+            <input type="text" name="player_id" hidden>
           </div>
-          <div class="row">
-            Username <input type="text" name="username" id="playerName" >
+          <div class="row" id="playerName">
+            <div>
+              Username: <span></span>
+            </div>
+            <input type="text" name="username" hidden>
           </div>
-          <div class="row">
-            Email <input type="text" name="email" id="emailInpt" >
+          <div class="row" id="emailInpt">
+            <div>
+              Email: <span></span> 
+            </div> 
+            <input type="text" name="email" hidden>
           </div>
-          <div class="row">
-            Amount: <input type="text" name="amount" id="amountInpt">
+          <div class="row" id="amount">
+            <div>
+              Amount: <span></span>
+            </div>
+            <input type="text" name="amount" hidden>
           </div>
-          <div class="row">
-            Price <input type="text" name="price" id="price" >
-            ID Price <input type="text" name="price_id" id="priceId" >
+          <div class="row" id="price">
+            <div>
+              Price: <span></span>
+            </div>
+            <input type="text" name="price" hidden>
+            <input type="text" name="price_id" id="priceId" hidden>
           </div>
-          <div class="row">
-            Method Payment <input type="text" name="payment" id="payment" >
-            ID Payment <input type="text" name="payment_id" id="paymentId" >
+          <div class="row" id="payment">
+            <div>
+              Method Payment: <span></span>
+            </div>
+            <input type="text" name="payment" hidden>
+            <input type="text" name="payment_id" hidden>
           </div>
-          <div class="row">
-            Total Payment <input type="text" name="total" id="totalPayment" >
+          <div class="row checkout-confirm__info mt-2">
+            <p>*Pastikan ID Player dan item yang dipilih sudah sesuai.</p>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="btn btn-primary">Lanjutkan</button>
+          <button type="button" class="button__cancel" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="button__primary">Lanjutkan</button>
         </div>
       </form>
     </div>

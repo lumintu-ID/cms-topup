@@ -14,6 +14,7 @@
               </div>
             </div>
             <form id="formInvoice">
+              @csrf
               <div class="box-invoice__body">
                 <div class="row row-cols-1 row-cols-sm-2 py-2">
                   <div class="col-6"> Game : </div>
@@ -38,8 +39,8 @@
                   <div class="col-6 text-end"> {{ $data['payment']['name_channel'] }} </div>
                 </div>
                 <div class="row row-cols-1 row-cols-sm-2 py-2">
-                  <div class="col-6"> PPN : </div>
-                  <div class="col-6 text-end"> </div>
+                  <div class="col-6"> Tax/PPN : </div>
+                  <div class="col-6 text-end"> {{ $data['payment']['ppn'] }} </div>
                 </div>
                 <div class="row row-cols-1 row-cols-sm-2 py-2">
                   <div class="col-6"> Total Payment : </div>

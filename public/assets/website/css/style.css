@@ -321,7 +321,7 @@ a > .support__container:hover {
 
 footer {
   margin-top: 2rem;
-  padding: 1rem 0 2rem;
+  padding: 1rem;
   border-top: 1px solid #040726;
 }
 
@@ -334,6 +334,7 @@ footer {
 
 a.button__primary,
 a.button__secondary,
+button.button__cancel,
 button.button__primary {
   display: flex;
   justify-content: center;
@@ -348,8 +349,8 @@ a.button__secondary {
 }
 
 .button__primary,
-.button__secondary {
-  /* width: 7.5rem; */
+.button__secondary,
+.button__cancel {
   padding: .5rem 1rem;
   color: #fff;
   font-family: 'Lemon Milk Bold';
@@ -357,7 +358,6 @@ a.button__secondary {
   text-align: center;
   text-decoration: none;
   border-radius: 5px;
-  /* border: 1px solid transparent; */
   border: 0;
   cursor: pointer;
 }
@@ -372,17 +372,26 @@ a.button__secondary {
   background-color: #040726;
 }
 
+.button__cancel {
+  background-color: #DCDCDC;
+  outline: 2px solid #dcdcdc7f;
+}
+
 .button__primary:hover {
   color: #FE0801;
   background-color: #fff;
-  outline: 1px solid #ff9000;
-  /* border: 1px solid #ff9000; */
+  outline: 2px solid #fe09015f;
 }
 
 .button__secondary:hover {
   color: #040726;
   background-color: #fff;
   outline: 1px solid #040726;
+}
+
+.button__cancel:hover {
+  color: #a8a8a8;
+  background-color: #fff;
 }
 
 

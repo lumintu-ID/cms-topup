@@ -9,7 +9,12 @@ class GeneralRepositoryImplement implements GeneralRepository
 {
   public function getAllDataGame()
   {
-    return;
+    $data = GameList::select(
+      'slug_game',
+      'game_title',
+      'cover')
+    ->get();
+    return $data;
   }
   
   public function getDataGameById(string $id)
@@ -46,4 +51,6 @@ class GeneralRepositoryImplement implements GeneralRepository
     
     return $data;
   }
+  
+
 }

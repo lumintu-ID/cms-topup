@@ -8,7 +8,6 @@ use App\Models\Payment;
 use App\Models\GameList;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -16,13 +15,12 @@ use App\Http\Requests\TransactionRequest;
 
 
 use App\Events\Transaction as EventsTransaction;
+use App\Models\Ppn;
 
 class TransactionController extends Controller
 {
-    public function transaction(Request $request)
+    public function transaction(TransactionRequest $request)
     {
-
-
         DB::beginTransaction();
         try {
 
@@ -79,7 +77,7 @@ class TransactionController extends Controller
                 'method_payment' => $request->payment_id,
                 'price_id' => $request->price_id,
                 'email' => $request->email,
-                'total_price' => $price[0]->price,
+                'total_price' => $this->totalPrice($price[0]->price),
                 'status' => 1
             ]);
 
@@ -103,5 +101,13 @@ class TransactionController extends Controller
 
             return redirect()->back()->with($notif);
         }
+    }
+
+    private function totalPrice($price)
+    {   
+        $ppn = Ppn::select('id_ppn as id','ppn')->get()->toArray();
+        $totalPrice = $price + $ppn[0]['ppn'];
+        
+        return $totalPrice;
     }
 }
