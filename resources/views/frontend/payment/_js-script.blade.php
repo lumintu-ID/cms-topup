@@ -13,13 +13,19 @@
     $("#infoCaution button").click(function() {
       console.log('close modal');
       // console.log($(".info-caution__empty-all"));
-      $(".info-caution__empty-all").attr('hidden');
+      // $(".info-caution__empty-all").attr('hidden');
+      // $(".info-caution__empty-all").toggle();
     });
     
     $("#btnConfirm").prop("disabled", false);
     $("#btnConfirm").click(function() {
-      console.log($(".modal-body #playerName :input").val());
-      if(!isNaN($(".modal-body #playerName :input").val())) {
+      console.log('konfirmasi');
+      // console.log($(".modal-body #playerName :input").val());
+      // if(!isNaN($(".modal-body #playerName :input").val())) {
+      let idPlayer = false;
+      let price = true;
+
+      if(idPlayer) {
         console.log('id player hasus diisi');
         console.log($(".info-caution__empty-all"));
         $(".info-caution__empty-all").removeAttr('hidden');

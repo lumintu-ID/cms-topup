@@ -7,7 +7,7 @@
       </div>
       <div id="infoCaution" class="info-caution">
         <div class="modal-body text-center">
-          <p class="info-caution__empty-all" hidden>
+          <p class="info-caution__empty-all">
             Silahkan masukan id player dan pilih jumlah item.
           </p>
           <p class="info-caution__empty-player" hidden>
