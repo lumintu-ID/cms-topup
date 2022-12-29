@@ -59,27 +59,4 @@ Route::prefix('v1')->group(function () {
 
 
     Route::post('/transaction/notify', [TransactionController::class, 'notify']);
-
-    // Route::post('/transaction/notify', function (Request $request) {
-    //     // Log::critical('Critical error', $request->all());
-    //     Log::info('info', ['data' => $request]);
-    //     Log::error('error', ['data' => $request]);
-    //     Log::warning('warning', ['data' => $request]);
-    // $dataXML = $request->data;
-    // $xmlObject = simplexml_load_string($dataXML);
-
-    // $json = json_encode($xmlObject);
-    // $phpArray = json_decode($json, true); 
-
-    // Log::info('info', ['data' => $phpArray]);
-    // Log::error('error', ['data' => $phpArray]);
-    // Log::warning('warning', ['data' => $phpArray]);
-
-    //     EventsTransaction::dispatch($request->all());
-
-    // return 'OK';
-    //     EventsTransaction::dispatch($request->all());
-
-    //     return 'OK';
-    // });
 });
