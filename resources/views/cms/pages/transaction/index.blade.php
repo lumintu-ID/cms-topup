@@ -54,9 +54,9 @@
                 <td>{{ $data->game->game_title }}</td>
                 <td>{{ $data->total_price }}</td>
                 <td>
-                    @if ($data->status == 1)
+                    @if ($data->status == 0)
                         <span class="fw-bold text-warning">Due</span>
-                    @elseif($data->status == 2)
+                    @elseif($data->status == 1)
                         <span class="fw-bold text-success">Paid</span>
                     @else
                         <span class="fw-bold text-danger">Cancelled</span>
@@ -80,44 +80,44 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="h6 modal-title" id="modal-title-form">Detail Transaction</h2>
-                <div class="text-center">
+                <div class="text-center" id="INV">
                     INVOICE : INV-58IVmQGiIzpT
                 </div>
             </div>
                 <div class="modal-body row">
                     <div class="row row-cols-1 row-cols-sm-2 py-2">
                         <div class="col-6"> Paid Date : </div>
-                        <div class="col-6 text-end"> 2 april 2022 </div>
+                        <div class="col-6 text-end">  </div>
                     </div>
                     <div class="row row-cols-1 row-cols-sm-2 py-2">
                         <div class="col-6"> Game : </div>
-                        <div class="col-6 text-end"> Fight Of Legends </div>
+                        <div class="col-6 text-end" id="GAME"> Fight Of Legends </div>
                       </div>
                       <div class="row row-cols-1 row-cols-sm-2 py-2 ">
                         <div class="col-6"> User ID : </div>
-                        <div class="col-6 text-end"> 13123123adsa </div>
+                        <div class="col-6 text-end" id="USERID"> 13123123adsa </div>
                       </div>
                       <div class="row row-cols-1 row-cols-sm-2 py-2">
                         <div class="col-6"> Amount : </div>
                         <div class="col-6 text-end"> 
-                          2 Stones
+                         
                         </div>
                       </div>
                       <div class="row row-cols-1 row-cols-sm-2 py-2">
                         <div class="col-6"> PPI :</div>
-                        <div class="col-6 text-end"> Price Point Id 100K </div>
+                        <div class="col-6 text-end">  </div>
                       </div>
                       <div class="row row-cols-1 row-cols-sm-2 py-2">
                         <div class="col-6"> Method Payment : </div>
-                        <div class="col-6 text-end"> BNI </div>
+                        <div class="col-6 text-end" id="PAYMENT"> BNI </div>
                       </div>
                       <div class="row row-cols-1 row-cols-sm-2 py-2">
                         <div class="col-6"> Total Payment : </div>
-                        <div class="col-6 text-end"> Rp 100.000 </div>
+                        <div class="col-6 text-end" id="TTLPRICE"> Rp 100.000 </div>
                       </div>
                       <div class="row row-cols-1 row-cols-sm-2 py-2">
                         <div class="col-6"> Status : </div>
-                        <div class="col-6 text-end"> Success </div>
+                        <div class="col-6 text-end" id="STATUS"> Success </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -134,6 +134,28 @@
 <script src="/build/assets/app.61f518c6.js"></script>
 
 <script>
+
+
+    function Detail(data) {
+        console.log(data);
+        $('#INV').html(data.invoice)
+        $('#GAME').html(data.game.game_title)
+        $('#USERID').html(data.id_player)
+        $('#PAYMENT').html(data.payment.name_channel)
+        $('#TTLPRICE').html(data.total_price)
+
+        let status
+        if (data.status == 0) {
+            status = 'Due' 
+        }else if(data.status == 1){
+            status = 'Success'
+        }else{
+            status = 'Failed'
+        }
+
+        $('#STATUS').html(status)
+    }
+
 
     var data = 0;
 

@@ -23,9 +23,4 @@ class Transaction extends Model
     {
         return $this->belongsTo(Payment::class, 'method_payment');
     }
-
-    public function pricepoint()
-    {
-        return $this->belongsTo(PricePoint::class, 'price_point_id');
-    }
 }
