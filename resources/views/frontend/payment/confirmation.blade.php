@@ -69,6 +69,7 @@
   <script>
     $(document).ready(function(){
       const payment = $("#elementAttribute").data("element-input");
+      // console.log(payment);
       if(typeof payment.dataparse === "undefined"){
         for (const key in payment) {
           if (Object.hasOwnProperty.call(payment, key)) {
@@ -88,13 +89,37 @@
           }
         }
       }else{
+        // console.log($("#btnPay"));
         $("#btnPay").removeAttr('type');
         $("#btnPay").click(async function(event) {
+          // // let headers = new Headers();
+          // // headers.append('Content-Type', 'application/json');
+          // // headers.append('Accept', 'application/json');
+          // // headers.append('Access-Control-Allow-Origin', 'http://localhost:8000');
+          // // headers.append('Access-Control-Allow-Credentials', 'true');
+          // // headers.append('GET', 'POST', 'OPTIONS');
           event.preventDefault();
+          // let headers = {'Content-Type':'application/json',
+          //           'Access-Control-Allow-Origin':'*',
+          //           'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'}
+          // console.log(headers);
+          console.log(payment.dataparse);
+          console.log(JSON.stringify( payment.dataparse));
+          // // await fetch(payment.urlAction, {
+          // //   method: payment.methodAction,
+          // //   headers: headers,
+          // //   body: JSON.stringify( payment.dataparse),
+          // // })
+          // // .then((response) => {
+          // //   console.log(response);
+          // // });
+          // pageRedirect();
           let myHeaders = new Headers();
           myHeaders.append("Content-Type", "application/json");
           myHeaders.append('Access-Control-Allow-Origin', '*');
-          myHeaders.append('Access-Control-Allow-Methods', 'POST,PATCH,OPTIONS');
+          myHeaders.append('Access-Control-Allow-Methods', 'POST, PATCH, OPTIONS');
+          myHeaders.append('Access-Control-Allow-Credentials', false);
+          myHeaders.append('Access-Control-Allow-Headers', 'Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization');
           let requestOptions = {
             method: payment.methodAction,
             headers: myHeaders,
@@ -109,6 +134,7 @@
           .catch(error => console.log('error', error));
                   
           });
+        // console.log(payment.urlAction);
       }
     });
     function pageRedirect() {

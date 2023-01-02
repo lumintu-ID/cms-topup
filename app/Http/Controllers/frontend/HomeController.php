@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\frontend;
 
 use KubAT\PhpSimple\HtmlDomParser;
-
 use App\Http\Controllers\Controller;
 use App\Repository\Frontend\GeneralRepository;
 

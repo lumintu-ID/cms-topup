@@ -10,6 +10,7 @@
     <title>ESIPAYMENT</title>
     <meta name="description" content="esipayment">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer-when-downgrade" />
     {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
     <link rel="stylesheet" href="{{ asset('assets/website/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/website/css/style.css') }}">
