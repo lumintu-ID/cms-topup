@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('game_id');
             $table->string('id_Player');
             $table->string('method_payment');
+            $table->string('price_point_id');
             $table->string('price_id');
             $table->string('email');
             $table->integer('total_price');
