@@ -9,7 +9,9 @@
           </div>
           <div class="promo-info-news__body">
             <div class="promo-info-news__title pt-md-1">
-              <a href="{{ $item['url'] }}">{{ $item['title'] }}</a>
+              <a href="{{ $item['url'] }}">
+                {!! $item['title'] !!}
+              </a>
             </div>
             <div class="promo-info-news__descriptions">
               {{ $item['description'] }}

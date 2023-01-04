@@ -8,6 +8,8 @@ use App\Repository\Frontend\GeneralRepository;
 
 class HomeController extends Controller
 {
+    private $activeLink = 'home';
+    
     public function __construct(GeneralRepository $generalRepository)
     {
         $this->generalRepository = $generalRepository;
@@ -58,9 +60,22 @@ class HomeController extends Controller
     public function index()
     {
         $games = $this->generalRepository->getAllDataGame();
-
         $articles = $this->_curlArticle();
+        $activeLink = $this->activeLink;
 
-        return view('frontend.home.index', compact('games', 'articles'));
+        return view('frontend.home.index', compact('games', 'articles', 'activeLink'));
+    }
+
+    public function test()
+    {
+        try {
+            $slug = 'fight-of-legends';
+            $dataGame = $this->generalRepository->getDataGameBySlug($slug);
+            $countries = $this->generalRepository->getAllDataCountry();
+            
+            return view('frontend.test.payment', compact('countries', 'dataGame'));
+        } catch (\Throwable $th) {
+            dd($th);
+        }
     }
 }

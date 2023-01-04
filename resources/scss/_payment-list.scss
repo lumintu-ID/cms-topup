@@ -1,0 +1,46 @@
+.payment-list {
+  margin: 1rem 0;
+
+  &__items {
+    display: flex;
+    padding: .5rem 1rem;
+    background-color: rgba(255, 255, 255, 0.641);
+    border-radius: 3px;
+    cursor: pointer;
+    
+    &:hover {
+      background-color: #ffffffd8;
+      outline: 3px solid #979696;
+    }
+    
+    img {
+      height: 100%;
+    }
+  }
+}
+
+.price-list {
+  padding: 1rem .3rem;
+}
+
+.amount-price {
+  &__wrap {
+    background-color: #fff;
+    border-radius: 3px;
+    font-size: .8rem;
+    cursor: pointer;
+
+    &:hover {
+      outline: .1rem solid #717171;
+    }
+    
+    input[type=radio]:checked {
+      background-color: none !important;
+    }
+  }
+}
+
+
+
+
+

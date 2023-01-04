@@ -11,11 +11,13 @@ use Illuminate\Support\Facades\Http;
 class PaymentController extends Controller
 {
     protected $invoiceService;
+    private $activeLink = 'payment';
 
     public function __construct(InvoiceService $invoiceService, GeneralRepository $generalRepository)
     {
         $this->invoiceService = $invoiceService;
         $this->generalRepository = $generalRepository;
+
     }
 
     public function index(Request $request)
@@ -24,8 +26,9 @@ class PaymentController extends Controller
             $slug = $request->slug;
             $dataGame = $this->generalRepository->getDataGameBySlug($slug);
             $countries = $this->generalRepository->getAllDataCountry();
+            $activeLink = $this->activeLink;
             
-            return view('frontend.payment.index', compact('countries', 'dataGame'));
+            return view('frontend.payment.index', compact('countries', 'dataGame', 'activeLink'));
         } catch (\Throwable $th) {
             dd($th);
         }

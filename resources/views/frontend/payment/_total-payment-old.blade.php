@@ -1,8 +1,6 @@
-<div class="total-payment row row-cols-1 gy-3 justify-content-center">
+<div class="row row-cols-1 gy-3 justify-content-center">
   <div class="col-12 col-md-8">
-    <div class="total-payment__header col text-center">
-      Total Nominal Top Up Anda
-    </div>
+    <div class="total-payment__header col text-center">Total Nominal Top Up Anda</div>
   </div>
   <div class="col-12 col-md-8 col-lg-6">
     <div class="total-payment__body col text-center">

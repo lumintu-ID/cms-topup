@@ -6,8 +6,10 @@
           <div class="promo-card__video">
             <iframe src="https://www.youtube.com/embed/CIjmrqSnGs0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
-          <div class="promo-video-card__title">
-            Lorem ipsum dolor.
+          <div class="promo-card__video-title">
+            <a href="#">
+              Lorem ipsum dolor.
+            </a> 
           </div>
         </div>
       </div>
@@ -16,8 +18,10 @@
           <div class="promo-card__video">
             <iframe src="https://www.youtube.com/embed/hA7w4gDbTEE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
-          <div class="promo-video-card__title">
-            Lorem ipsum dolor.
+          <div class="promo-card__video-title">
+            <a href="#">
+              Lorem ipsum dolor.
+            </a> 
           </div>
         </div>
       </div>

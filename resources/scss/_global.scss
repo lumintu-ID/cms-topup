@@ -1,0 +1,152 @@
+@use "colors";
+@use "fonts";
+@import "./components/games-card";
+@import "./components/video-card";
+@import "./components/news-card";
+@import "./components/sections";
+@import "./total-payment";
+@import "./payment-list";
+
+* {
+  list-style: none;
+  // transition: .3s ease-in-out;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: colors.$color-first;
+}
+
+a {
+  color: $black;
+}
+
+main {
+  flex: 1;
+  margin: .5rem 0;
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  min-height: 20rem;
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.swiper .swiper-button-prev {
+  left: -2px;
+}
+
+.swiper .swiper-button-next {
+  right: -2px;
+}
+
+.container {
+  max-width: 1344px;
+}
+
+.support__container {
+  padding: .3rem;
+  border-radius: 3px;
+  background-color: rgb(0, 0, 0);
+  overflow: hidden;
+
+  @include media-breakpoint-up(md) {
+    padding: .5rem;
+  }
+  @include media-breakpoint-up(xl) {
+    padding: .8rem;
+  }
+}
+
+a > .support__container:hover {
+  background-color: rgba(0, 0, 0, 0.922);
+  outline: 2px solid rgb(0, 0, 0);
+  box-shadow: 0 0 1rem #888888;
+}
+
+.support__items {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.support-item__image {
+  display: flex;
+  min-width: 2.5rem;
+  height: 2rem;
+  padding: .2rem;
+}
+
+.support {
+  padding-bottom: 5rem;
+}
+
+.support__hero {
+  margin-bottom: 1rem;
+  min-height: 10rem;
+  background-color: #fff;
+}
+
+
+.support-item__text {
+  display: flex;
+  flex: 1;
+  padding: .2rem;
+  font-size: .7rem;
+  color: #fff;
+  letter-spacing: .15rem;
+  @include media-breakpoint-up(xl) {
+    font-size: 1rem;
+  }
+}
+
+footer {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-top: 1px solid #040726;
+  &__text {
+    font-size: .6rem;
+    @include media-breakpoint-up(md) {
+      font-size: .8rem;
+    }
+    @include media-breakpoint-up(xl) {
+      font-size: .9rem;
+    }
+  }
+}
+
+
+
+
+
+
+

@@ -1,0 +1,17 @@
+.total-payment {
+  &__header {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: .1s ease-in-out color;
+  }
+
+  &__nominal {
+    padding: .3rem 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #040726;
+    background-color: #fff;
+  }
+}

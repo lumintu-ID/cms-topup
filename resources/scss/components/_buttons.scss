@@ -1,0 +1,76 @@
+@use "../colors";
+@use "../fonts";
+
+.btn-esi {
+  min-width: 44px;
+  min-height: 44px;
+  padding: .3rem 1.5rem;
+  margin-bottom: .1rem;
+  border-radius: 5px;
+  text-transform: uppercase;
+  font-weight: map-get(fonts.$font-weight, bold);
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+@mixin button-esi($color) {
+  $time-effect: .2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: .5rem .1rem;
+  color: #fff;
+  font-size: .8rem;
+  text-transform: bold;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  border-radius: 5px;
+  border: 0;
+  cursor: pointer;
+  background: $color;
+  outline: 2px solid transparentize($color: $color, $amount: .5);
+  vertical-align: middle;
+  transition: $time-effect linear background-color, .1s ease-in-out color;
+
+  &:hover {
+    color: $color;
+    background-color: #fff;
+    outline: 2px solid transparentize($color: $color, $amount: .7);
+    transition: $time-effect linear background-color, .1s ease-in-out color;
+  }
+
+  @include media-breakpoint-down(sm) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  @include media-breakpoint-up(md) {
+    max-width: 10rem;
+    font-size: 1rem;
+  }
+}
+
+.button__primary {
+  @include button-esi(colors.$color-second);
+}
+.button__secondary {
+  @include button-esi(colors.$color-third);
+}
+
+.btn-fifth {
+  @extend .btn-esi;
+  color: #fff;
+  background-color: colors.$color-fifth;
+  outline: .2rem solid #0343a4;
+  transition: .2s ease-in-out transform, .3s ease-in-out color, .3s ease-in-out outline;
+
+  &:hover {
+    outline: .21rem solid colors.$color-fourth;
+    color: colors.$color-fourth;
+    transform: scale(1.05);
+    transition: .3s ease-in-out transform, .3s ease-in-out color, .3s ease-in-out outline;
+  }
+
+}

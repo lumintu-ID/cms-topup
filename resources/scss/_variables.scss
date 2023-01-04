@@ -1,0 +1,24 @@
+@use "colors";
+@use "fonts";
+
+$enable-shadows: true;
+$prefix: "esi-";
+
+// ROOT VaRIABLE
+// $body-bg: colors.$color-first;
+$body-color: #111;
+$font-family-base: fonts.$font-base;
+$primary: colors.$color-first;
+$secondary: colors.$color-second;
+$link-decoration: none;
+
+// NAVBAR VARIABLE
+$navbar-dark-color: var(--#{$prefix}white);
+$navbar-dark-brand-color: var(--#{$prefix}white);
+$navbar-dark-brand-hover-color: var(--#{$prefix}white);
+$navbar-dark-hover-color: var(--#{$prefix}white);
+$navbar-dark-active-color: colors.$color-fourth;
+$navbar-dark-toggler-icon-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#fff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+$navbar-toggler-focus-width: .1rem;
+$navbar-dark-toggler-border-color: colors.$color-fourth;
+$nav-link-padding-y: .5rem;

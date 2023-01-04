@@ -1,0 +1,49 @@
+@use "../colors";
+
+.promo-card__video {
+  display: flex;
+  justify-content: center;
+  outline: 1px solid colors.$color-fourth;
+  border-radius: 5px;
+  overflow: hidden;
+
+  &-title {
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: 1px 2px darken($color: colors.$color-first, $amount: 10);
+    cursor: pointer;
+
+    a {
+      transition: .3s ease-in-out text-shadow;
+    }
+
+    a:hover {
+      color: unset;
+      text-shadow: 1px 1px lighten($color: colors.$color-fourth, $amount: 25);
+      transition: .3s ease-in-out text-shadow;
+    }
+
+    @include media-breakpoint-up(lg) {
+      font-size: 1.3rem;
+    }
+  }
+
+  iframe {
+    width: 100%;
+    min-height: 10.5rem;
+
+    @include media-breakpoint-up(md) {
+      min-height: 12rem;
+    }
+
+    @include media-breakpoint-up(lg) {
+      min-height: 16rem;
+    }
+
+    @include media-breakpoint-up(xl) {
+      min-height: 25rem;    
+    }
+  }
+  
+}
