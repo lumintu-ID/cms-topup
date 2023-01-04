@@ -55,8 +55,19 @@
 .button__primary {
   @include button-esi(colors.$color-second);
 }
+
 .button__secondary {
   @include button-esi(colors.$color-third);
+}
+
+.button__cancel {
+  @include button-esi(colors.$color-first);
+  // background-color: #DCDCDC;
+  &:hover {
+    color: transparentize($black, .3);
+    background-color: $white;
+    outline: 2px solid transparentize($black, .9);
+  }
 }
 
 .btn-fifth {

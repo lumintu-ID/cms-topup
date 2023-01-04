@@ -10,8 +10,9 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link {{ $activeLink == 'home' ? ' active': '' }}" aria-current="page" href="{{ route('home') }}">Home</a>
-        <a class="nav-link{{ $activeLink == 'payment' ? ' active': '' }}" href="#">Game Payment</a>
+        <a class="nav-link{{ $activeLink == 'home' ? ' active': '' }}" aria-current="page" href="{{ route('home') }}">Home</a>
+        <a class="nav-link{{ $activeLink == 'games' ? ' active': '' }}" href="{{ route('games') }}">Games</a>
+        <a class="nav-link{{ $activeLink == 'payment' ? ' active': '' }}" href="{{ route('payment') }}">Payment</a>
         <a class="nav-link" href="#">News</a>
         <a class="nav-link" href="#">Community</a>
         <a class="nav-link" href="#">Support</a>

@@ -18,18 +18,21 @@ class PaymentController extends Controller
     {
         $this->_invoiceService = $invoiceService;
         $this->_generalRepository = $generalRepository;
-
     }
 
     public function index(Request $request)
     {
         try {
-            $slug = $request->slug;
-            $dataGame = $this->_generalRepository->getDataGameBySlug($slug);
-            $countries = $this->_generalRepository->getAllDataCountry();
-            $activeLink = $this->activeLink;
-            
-            return view('frontend.payment.index', compact('countries', 'dataGame', 'activeLink'));
+            if($request->slug) {
+                $slug = $request->slug;
+                $dataGame = $this->_generalRepository->getDataGameBySlug($slug);
+                $countries = $this->_generalRepository->getAllDataCountry();
+                $activeLink = $this->activeLink;
+                
+                return view('frontend.payment.index', compact('countries', 'dataGame', 'activeLink'));
+            }
+
+            return redirect()->route('home');
         } catch (\Throwable $th) {
             dd($th);
         }

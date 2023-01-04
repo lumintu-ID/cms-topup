@@ -9,10 +9,10 @@
     <div class="label-section">Voucher Game</div>
   </div>
   <div class="row gy-4 gy-md-5 py-3 py-lg-4">
-    @include('frontend.home._card-games')
+    @include('frontend._component.card-games')
   </div>
   <div class="row justify-content-center mt-3 py-5 px-3">
-    <a href="#" class="button__primary">
+    <a href="{{ route('games') }}" class="button__primary">
       Game Lainnya
     </a>
   </div>
