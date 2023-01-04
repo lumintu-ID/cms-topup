@@ -1,5 +1,6 @@
 @use "colors";
 @use "fonts";
+@import "./components/swiper";
 @import "./components/games-card";
 @import "./components/video-card";
 @import "./components/news-card";
@@ -28,47 +29,6 @@ main {
   margin: .5rem 0;
 }
 
-.swiper {
-  width: 100%;
-  height: 100%;
-}
-
-.swiper-slide {
-  min-height: 20rem;
-  text-align: center;
-  font-size: 18px;
-  background: #fff;
-
-  /* Center slide text vertically */
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  -webkit-align-items: center;
-  align-items: center;
-}
-
-.swiper-slide img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.swiper .swiper-button-prev {
-  left: -2px;
-}
-
-.swiper .swiper-button-next {
-  right: -2px;
-}
-
 .container {
   max-width: 1344px;
 }
@@ -82,6 +42,7 @@ main {
   @include media-breakpoint-up(md) {
     padding: .5rem;
   }
+
   @include media-breakpoint-up(xl) {
     padding: .8rem;
   }
@@ -111,9 +72,13 @@ a > .support__container:hover {
 }
 
 .support__hero {
+  padding: .1rem;
   margin-bottom: 1rem;
-  min-height: 10rem;
+  min-height: 5rem;
   background-color: #fff;
+  border-radius: 3px;
+  outline: 2px solid transparentize($color: colors.$color-black, $amount: .95);
+  overflow: hidden;
 }
 
 

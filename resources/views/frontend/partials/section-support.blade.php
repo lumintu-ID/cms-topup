@@ -9,7 +9,9 @@
       </div>
     </div>
     <div class="col">
-      <div class="support__hero"></div>
+      <div class="support__hero d-flex align-items-center">
+        <img src="{{ asset('assets/website/images/support-image.jpeg') }}" alt="" class="img-fluid">
+      </div>
     </div>
   </div>
 </section>

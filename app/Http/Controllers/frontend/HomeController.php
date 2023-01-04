@@ -8,13 +8,37 @@ use App\Repository\Frontend\GeneralRepository;
 
 class HomeController extends Controller
 {
-    private $activeLink = 'home';
+    private $_activeLink = 'home';
+    private $_generalRepository;
     
     public function __construct(GeneralRepository $generalRepository)
     {
-        $this->generalRepository = $generalRepository;
+        $this->_generalRepository = $generalRepository;
     }
 
+    public function index()
+    {
+        $games = $this->_generalRepository->getAllDataGame();
+        $articles = $this->_curlArticle();
+        $activeLink = $this->_activeLink;
+        $banners = $this->_generalRepository->getAllBanner();
+        // dd($banners);
+
+        return view('frontend.home.index', compact('games', 'articles', 'activeLink', 'banners'));
+    }
+
+    public function test()
+    {
+        try {
+            $slug = 'fight-of-legends';
+            $dataGame = $this->_generalRepository->getDataGameBySlug($slug);
+            $countries = $this->_generalRepository->getAllDataCountry();
+            
+            return view('frontend.test.payment', compact('countries', 'dataGame'));
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+    }
 
     private function _curlArticle()
     {
@@ -54,28 +78,6 @@ class HomeController extends Controller
             }
 
             return $article;
-        }
-    }
-
-    public function index()
-    {
-        $games = $this->generalRepository->getAllDataGame();
-        $articles = $this->_curlArticle();
-        $activeLink = $this->activeLink;
-
-        return view('frontend.home.index', compact('games', 'articles', 'activeLink'));
-    }
-
-    public function test()
-    {
-        try {
-            $slug = 'fight-of-legends';
-            $dataGame = $this->generalRepository->getDataGameBySlug($slug);
-            $countries = $this->generalRepository->getAllDataCountry();
-            
-            return view('frontend.test.payment', compact('countries', 'dataGame'));
-        } catch (\Throwable $th) {
-            dd($th);
         }
     }
 }

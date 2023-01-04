@@ -7,34 +7,34 @@ use Illuminate\Support\Str;
 
 class InvoiceServiceImplement implements InvoiceService
 {
-  private $invoiceRepository;
+  private $_invoiceRepository;
 
   public function __construct(InvoiceRepository $invoiceRepository)
   {
-    $this->invoiceRepository = $invoiceRepository;
+    $this->_invoiceRepository = $invoiceRepository;
   }
   
   public function getInvoice($id) 
   {
-    $dataTransaction = $this->invoiceRepository->getTransactionById($id);
-    $dataPayment = $this->invoiceRepository->getDetailPrice($dataTransaction->price_id)->toArray();
-    $codePayment =  $this->invoiceRepository->getNameCodePayment($dataPayment['code_payment']);
+    $dataTransaction = $this->_invoiceRepository->getTransactionById($id);
+    $dataPayment = $this->_invoiceRepository->getDetailPrice($dataTransaction->price_id)->toArray();
+    $codePayment =  $this->_invoiceRepository->getNameCodePayment($dataPayment['code_payment']);
 
     $result['invoice'] = $dataTransaction->toArray();
-    $result['game'] = $this->invoiceRepository->getGameInfo($dataTransaction->game_id);
+    $result['game'] = $this->_invoiceRepository->getGameInfo($dataTransaction->game_id);
     $result['payment'] = $dataPayment;
     $result['payment']['name_payment'] = $codePayment;
-    $result['payment']['ppn'] = $this->invoiceRepository->getAllDataPpn()[0]['ppn'];
+    $result['payment']['ppn'] = $this->_invoiceRepository->getAllDataPpn()[0]['ppn'];
     $result['payment']['invoice'] = $dataTransaction->invoice;
     $result['payment']['email'] = $dataTransaction->email;
-    $result['attribute'] = $this->getPaymentAttribute($result['payment'], $result['game']);
+    $result['attribute'] = $this->_getPaymentAttribute($result['payment'], $result['game']);
 
     // dd($result);
     
     return $result;
   }
 
-  private function getPaymentAttribute(array $dataPayment = null, array $dataGame = null)
+  private function _getPaymentAttribute(array $dataPayment = null, array $dataGame = null)
   {
     if(empty($dataPayment)) return 'data is null';
 

@@ -1,0 +1,78 @@
+.swiper {
+  width: 100%;
+  height: 100%;
+
+  &-button-prev,
+  &-button-next {
+    &:before,
+    &:after {
+      display: none;
+    }
+
+    img {
+      height: 2rem;
+      
+      @include media-breakpoint-up(lg) {
+        height: 90%;
+      }
+    }
+  }
+  &-button-prev {
+    left: .5rem;
+  }
+  
+  &-button-next {
+    right: .5rem;
+  }
+}
+
+.swiper-slide {
+  padding: .5rem;
+  height: 10rem;
+  text-align: center;
+  font-size: 18px;
+  background: $black;
+  border-radius: 5px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(1.6px);
+  -webkit-backdrop-filter: blur(1.6px);
+
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  overflow: hidden;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @include media-breakpoint-up(lg) {
+    height: 20rem;
+  }
+}
+
+.swiper-pagination {
+  position: static;
+
+  &-bullet {
+    width: 3rem;
+    border-radius: 1px;
+
+    &-active {
+      background-color: colors.$color-fourth;
+    }
+  }
+}

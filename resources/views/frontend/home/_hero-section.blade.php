@@ -1,14 +1,19 @@
 <section class="section-banner">
   <div class="swiper mySwiper">
     <div class="swiper-wrapper">
-      <div class="swiper-slide">Slide 1</div>
-      <div class="swiper-slide">Slide 2</div>
-      <div class="swiper-slide">Slide 3</div>
-      <div class="swiper-slide">Slide 4</div>
+      @foreach ($banners as $banner)
+        <div class="swiper-slide">
+          <img src="{{ asset('banner/'.$banner->name) }}" alt="{{ $banner->name }}" class="img-fluid">
+        </div>
+      @endforeach
     </div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-pagin=ation"></div>
+    <div class="swiper-button-next">
+      <img src="{{ asset('assets/website/images/banner/right.png') }}" alt="arrow right">
+    </div>
+    <div class="swiper-button-prev">
+      <img src="{{ asset('assets/website/images/banner/left.png') }}" alt="arrow left">
+    </div>
+    <div class="swiper-pagination"></div>
   </div>
 </section>
 @section('js-utilities')

@@ -10,13 +10,14 @@ use Illuminate\Support\Facades\Http;
 
 class PaymentController extends Controller
 {
-    protected $invoiceService;
+    private $_invoiceService;
+    private $_generalRepository;
     private $activeLink = 'payment';
 
     public function __construct(InvoiceService $invoiceService, GeneralRepository $generalRepository)
     {
-        $this->invoiceService = $invoiceService;
-        $this->generalRepository = $generalRepository;
+        $this->_invoiceService = $invoiceService;
+        $this->_generalRepository = $generalRepository;
 
     }
 
@@ -24,8 +25,8 @@ class PaymentController extends Controller
     {
         try {
             $slug = $request->slug;
-            $dataGame = $this->generalRepository->getDataGameBySlug($slug);
-            $countries = $this->generalRepository->getAllDataCountry();
+            $dataGame = $this->_generalRepository->getDataGameBySlug($slug);
+            $countries = $this->_generalRepository->getAllDataCountry();
             $activeLink = $this->activeLink;
             
             return view('frontend.payment.index', compact('countries', 'dataGame', 'activeLink'));
@@ -38,7 +39,7 @@ class PaymentController extends Controller
     {  
         try {
             if(!$request->query('invoice')) return dd('not found');
-            $data = $this->invoiceService->getInvoice($request->query('invoice'));
+            $data = $this->_invoiceService->getInvoice($request->query('invoice'));
             
             return response()->view('frontend.payment.confirmation', compact('data'))
             ->header('Access-Control-Allow-Origin', 'https://dev.unipin.com/api/unibox/request')

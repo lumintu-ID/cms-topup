@@ -1,12 +1,12 @@
 const swiper = new Swiper(".mySwiper", {
-  slidesPerView: 3,
-  spaceBetween: 20,
+  slidesPerView: 2,
+  spaceBetween: 10,
   loop: true,
   centerSlide: 'true',
   fade: 'true',
   grabCursor: 'true',
   autoplay: {
-    delay: 3000,
+    delay: 5000,
     disableOnInteraction: false,
   },
   pagination: {
@@ -25,7 +25,7 @@ const swiper = new Swiper(".mySwiper", {
       slidesPerView: 2
     },
     950: {
-      slidesPerView: 4
+      slidesPerView: 2
     },
 
   }

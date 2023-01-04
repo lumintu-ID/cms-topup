@@ -24,8 +24,9 @@
   <div class="row row-cols-1 gy-5 py-3 py-lg-4">
     @include('frontend.home._info-video')
     @include('frontend.home._info-news')
+  </div>
   <div class="row justify-content-center mt-3 py-5 px-3">
-    <a href="list-game.html" class="button__primary">
+    <a href="#" class="button__primary">
       Lihat Semua
     </a>
   </div>
