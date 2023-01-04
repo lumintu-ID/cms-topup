@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Events\Transaction as EventsTransaction;
+use App\Models\History_transaction;
 
 class TransactionController extends Controller
 {
@@ -135,8 +136,7 @@ class TransactionController extends Controller
 
             $title = "Transaction History";
 
-            $data = Transaction::with('payment', 'game')->orderBy('created_at', 'desc')->get();
-
+            $data = Transaction::with('price', 'pricepoint', 'payment', 'game')->orderBy('created_at', 'desc')->get();
 
             return view('cms.pages.transaction.index', compact('title', 'data'));
         } catch (\Throwable $th) {

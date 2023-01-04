@@ -85,40 +85,48 @@
                 </div>
             </div>
                 <div class="modal-body row">
-                    <div class="row row-cols-1 row-cols-sm-2 py-2">
-                        <div class="col-6"> Paid Date : </div>
-                        <div class="col-6 text-end">  </div>
-                    </div>
+                    
                     <div class="row row-cols-1 row-cols-sm-2 py-2">
                         <div class="col-6"> Game : </div>
-                        <div class="col-6 text-end" id="GAME"> Fight Of Legends </div>
+                        <div class="col-6 text-end" id="GAME"></div>
                       </div>
                       <div class="row row-cols-1 row-cols-sm-2 py-2 ">
                         <div class="col-6"> User ID : </div>
-                        <div class="col-6 text-end" id="USERID"> 13123123adsa </div>
+                        <div class="col-6 text-end" id="USERID"> </div>
                       </div>
                       <div class="row row-cols-1 row-cols-sm-2 py-2">
                         <div class="col-6"> Amount : </div>
-                        <div class="col-6 text-end"> 
+                        <div class="col-6 text-end" id="AMOUNT"> 
                          
                         </div>
                       </div>
                       <div class="row row-cols-1 row-cols-sm-2 py-2">
                         <div class="col-6"> PPI :</div>
-                        <div class="col-6 text-end">  </div>
+                        <div class="col-6 text-end" id="PPI">  </div>
                       </div>
                       <div class="row row-cols-1 row-cols-sm-2 py-2">
                         <div class="col-6"> Method Payment : </div>
-                        <div class="col-6 text-end" id="PAYMENT"> BNI </div>
+                        <div class="col-6 text-end" id="PAYMENT"> </div>
                       </div>
+                     
+                      <hr>
+
                       <div class="row row-cols-1 row-cols-sm-2 py-2">
-                        <div class="col-6"> Total Payment : </div>
-                        <div class="col-6 text-end" id="TTLPRICE"> Rp 100.000 </div>
+                        <div class="col-6"> Paid Date : </div>
+                        <div class="col-6 text-end">  </div>
                       </div>
+
                       <div class="row row-cols-1 row-cols-sm-2 py-2">
                         <div class="col-6"> Status : </div>
-                        <div class="col-6 text-end" id="STATUS"> Success </div>
-                    </div>
+                        <div class="col-6 text-end" id="STATUS"> </div>
+                      </div>
+
+                      <div class="row row-cols-1 row-cols-sm-2 py-2">
+                        <div class="col-6"> Total Payment : </div>
+                        <div class="col-6 text-end" id="TTLPRICE"> </div>
+                      </div>
+
+                      
                 </div>
                 <div class="modal-footer">
                     <input id="btn-modal-form" type="submit" value="Create" class="btn btn-secondary">
@@ -143,6 +151,8 @@
         $('#USERID').html(data.id_player)
         $('#PAYMENT').html(data.payment.name_channel)
         $('#TTLPRICE').html(data.total_price)
+        $('#PPI').html(data.pricepoint.price_point)
+        $('#AMOUNT').html(data.price.amount+' '+data.price.name)
 
         let status
         if (data.status == 0) {
