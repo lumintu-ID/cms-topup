@@ -46,7 +46,7 @@ class TransactionController extends Controller
         TransactionDetail::create([
             'detail_id' => Str::uuid(),
             'invoice_id' => $detail->invoice,
-            'player_id' => $detail->id_player,
+            'player_id' => $detail->id_Player,
             'game_id' => $detail->game_id,
             'ppi' => $price->pricepoint->price_point,
             'method' => $price->payment->name_channel,
@@ -79,7 +79,7 @@ class TransactionController extends Controller
         TransactionDetail::create([
             'detail_id' => Str::uuid(),
             'invoice_id' => $detail->invoice,
-            'player_id' => $detail->id_player,
+            'player_id' => $detail->id_Player,
             'game_id' => $detail->game_id,
             'ppi' => $price->pricepoint->price_point,
             'method' => $price->payment->name_channel,
@@ -119,7 +119,7 @@ class TransactionController extends Controller
         TransactionDetail::create([
             'detail_id' => Str::uuid(),
             'invoice_id' => $detail->invoice,
-            'player_id' => $detail->id_player,
+            'player_id' => $detail->id_Player,
             'game_id' => $detail->game_id,
             'ppi' => $price->pricepoint->price_point,
             'method' => $price->payment->name_channel,
@@ -129,6 +129,42 @@ class TransactionController extends Controller
         ]);
     }
 
+    private function _razorGold($request)
+    {
+
+        if ($request->paymentStatusCode == 00) {
+            $status = 1;
+            Log::info('Success Transaction Paid', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Success Transaction Paid with Razor GOLD Invoice ' . $request->referenceId]);
+        } else {
+
+            $status = 2;
+            Log::info('Cancel Transaction Paid', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Cancel Transaction Paid with Razor GOLD Invoice ' . $request->referenceId]);
+        };
+
+        $trx = Transaction::where('invoice', $request->referenceId)->update([
+            'status' => $status
+        ]);
+
+        $detail = Transaction::where('invoice', $request->referenceId)->first();
+
+        $price = Price::with('payment', 'pricepoint')->where('price_id', $detail->price_id)->first();
+
+        TransactionDetail::create([
+            'detail_id' => Str::uuid(),
+            'invoice_id' => $detail->invoice,
+            'player_id' => $detail->id_Player,
+            'game_id' => $detail->game_id,
+            'ppi' => $price->pricepoint->price_point,
+            'method' => $price->payment->name_channel,
+            'amount' => $price->amount . ' ' . $price->name,
+            'total_paid' => $detail->total_price,
+            'paid_time' => $request->paymentStatusDate
+        ]);
+
+        Log::info('info', ['data' => $request->all()]);
+        EventsTransaction::dispatch($request->referenceId);
+    }
+
     public function index(Request $request)
     {
         try {
@@ -136,7 +172,7 @@ class TransactionController extends Controller
 
             $title = "Transaction History";
 
-            $data = Transaction::with('price', 'pricepoint', 'payment', 'game')->orderBy('created_at', 'desc')->get();
+            $data = Transaction::with('price', 'pricepoint', 'payment', 'game', 'transactionDetail')->orderBy('created_at', 'desc')->get();
 
             return view('cms.pages.transaction.index', compact('title', 'data'));
         } catch (\Throwable $th) {
@@ -156,8 +192,6 @@ class TransactionController extends Controller
         $trx = null;
         $status = null;
 
-
-
         DB::beginTransaction();
         try {
 
@@ -165,6 +199,13 @@ class TransactionController extends Controller
                 // GV
 
                 $this->_gudangVoucher($request);
+            } else if ($request->applicationCode) {
+
+                // Razor
+
+                Log::info('info', ['data' => $request->all()]);
+                EventsTransaction::dispatch($request->referenceId);
+                $this->_razorGold($request);
             } else if ($request->transaction) {
 
                 // Unipin ;
@@ -185,6 +226,11 @@ class TransactionController extends Controller
                 return \response()->json([
                     'status' => 0,
                     'message' => 'Reload Successful',
+                ], Response::HTTP_OK);
+            } else if ($request->applicationCode) {
+                return \response()->json([
+                    'status' => 200,
+                    'message' => '200 OK',
                 ], Response::HTTP_OK);
             } else {
                 return "OK";
