@@ -1,17 +1,26 @@
 .total-payment {
+  padding: 0 1rem;
   &__header {
     color: #fff;
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: bold;
     text-transform: uppercase;
     transition: .1s ease-in-out color;
+
+    @include media-breakpoint-up(md) {
+      font-size: 1.5rem;
+    }
   }
 
   &__nominal {
     padding: .3rem 0;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
     color: #040726;
     background-color: #fff;
+  }
+
+  @include media-breakpoint-up(md) {
+    font-size: 1.2rem;
   }
 }

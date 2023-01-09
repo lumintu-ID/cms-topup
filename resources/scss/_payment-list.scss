@@ -1,9 +1,19 @@
-.payment-list {
-  margin: 1rem 0;
+@use "./colors";
 
+.input-form__player > .form-control:focus,
+.input-form__country > .form-select:focus {
+  border-color: colors.$color-fourth;
+  outline: .1rem;
+  box-shadow: 0 0 0 0.2rem transparentize($color: colors.$color-fourth, $amount: .8);
+}
+
+.payment-list {
   &__items {
     display: flex;
-    padding: .5rem 1rem;
+    justify-items: center;
+    align-items: center;
+    height: 3rem;
+    padding: .5rem;
     background-color: rgba(255, 255, 255, 0.641);
     border-radius: 3px;
     cursor: pointer;
@@ -13,9 +23,25 @@
       outline: 3px solid #979696;
     }
     
-    img {
-      height: 100%;
+    @include media-breakpoint-up(sm) {
+      min-height: 4rem;
+      padding: .5rem 1rem;
     }
+    
+    img {
+      max-width: 80%;
+      max-height: 70%;
+      object-fit: fill;
+
+      @include media-breakpoint-up(md) {
+        max-width: 100%;
+        height: auto;
+      }
+    }
+  }
+
+  @include media-breakpoint-up(sm) {
+    margin: 1rem 0;
   }
 }
 
@@ -37,6 +63,24 @@
     input[type=radio]:checked {
       background-color: none !important;
     }
+  }
+}
+
+.input-feedback {
+  padding: .1rem 0 .5rem 1rem;
+  font-size: .8rem;
+  font-style: italic;
+
+  &.invalid {
+    color: colors.$color-second;
+    text-shadow: 1px 1px darken($color: colors.$color-first, $amount: 30);
+    letter-spacing: .05rem;
+  }
+
+  &.valid {
+    color: colors.$color-fourth;
+    text-shadow: 1px 1px darken($color: colors.$color-first, $amount: 10);
+    letter-spacing: .05rem;
   }
 }
 

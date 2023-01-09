@@ -1,10 +1,9 @@
 @extends('frontend.layouts.app')
-
 @section('content')
 <section class="section-banner">
   @include('frontend.home._hero-section')
 </section>
-<section class="section-games">
+<section class="section-games" id="games">
   <div class="row">
     <div class="label-section">Voucher Game</div>
   </div>
@@ -17,7 +16,7 @@
     </a>
   </div>
 </section>
-<section class="section-promo-info">
+<section class="section-promo-info" id="news">
   <div class="row">
     <div class="label-section">Berita Info</div>
   </div>

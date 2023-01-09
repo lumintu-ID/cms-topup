@@ -11,6 +11,11 @@
   // SECTION FOR HOME PAGE
   &-games, &-promo-info {
     @extend .section-home;
+    @include media-breakpoint-up(md) {
+      padding: 1.5rem 1rem 1rem 1rem;
+      border-bottom-width: 1px;
+      font-size: 1.5rem;
+    }
   }
 
   &-support {

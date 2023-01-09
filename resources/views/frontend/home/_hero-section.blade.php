@@ -1,3 +1,6 @@
+@section('css-utilities')
+  <link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"/>
+@endsection
 <section class="section-banner">
   <div class="swiper mySwiper">
     <div class="swiper-wrapper">
@@ -16,6 +19,7 @@
     <div class="swiper-pagination"></div>
   </div>
 </section>
+
 @section('js-utilities')
-<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+  @include('frontend.home._hero-section-js')
 @endsection

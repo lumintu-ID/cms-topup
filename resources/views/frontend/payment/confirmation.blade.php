@@ -2,7 +2,7 @@
 @section('content')
   <section class="container-fluid container-lg py-3">
     <div class="row justify-content-center">
-      <div class="col-12 col-sm-10 col-md-4 p-0">
+      <div class="col-12 col-sm-10 col-lg-6 col-xl-4 p-0">
         <div class="box-invoice">
           @if ($data)
             <div class="box-invoice__header d-flex justify-content-center">
@@ -66,6 +66,7 @@
 
 
 @section('js-utilities')
+  <script src="{{ asset('assets/website/js/jquery-3.5.1.slim.min.js') }}"></script>
   <script>
     $(document).ready(function(){
       const payment = $("#elementAttribute").data("element-input");

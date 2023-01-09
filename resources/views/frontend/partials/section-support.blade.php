@@ -1,4 +1,4 @@
-<section class="section-support">
+<section class="section-support" id="support">
   <div class="row">
     <div class="label-section">Dukungan</div>
   </div>

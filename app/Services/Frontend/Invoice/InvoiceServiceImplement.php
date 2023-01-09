@@ -29,8 +29,6 @@ class InvoiceServiceImplement implements InvoiceService
     $result['payment']['email'] = $dataTransaction->email;
     $result['attribute'] = $this->_getPaymentAttribute($result['payment'], $result['game']);
 
-    // dd($result);
-    
     return $result;
   }
 
@@ -42,8 +40,8 @@ class InvoiceServiceImplement implements InvoiceService
     
     switch (Str::upper($dataPayment['name_payment'])) {
       case 'GV':
-        $merchantId = "1138";
-        $mercahtKey = '947f512d9b86b517a0070d5a';
+        $merchantId = env('GV_MERCHANT_ID');
+        $mercahtKey = env('GV_MERCHANT_KEY');
         $methodAction = 'GET';
         $sign = hash('md5', $merchantId.$dataPayment['price'].$mercahtKey.$dataPayment['invoice']);
         $dataAttribute = [
@@ -62,17 +60,15 @@ class InvoiceServiceImplement implements InvoiceService
 
       case 'UNIPIN':
         $methodAction = 'POST';
-        $devGuid = 'bcd3a3a3-4c68-419e-bd79-91d8678faf04';
-        $devSecretKey = 'ntcaud5ehoe8ryci';
-        $guid = '9b42a14d-a986-40a9-b4cc-354be6aea6db';
-        $secretKey = 'w56kbwxuxh3heka3';
+        $guid = env('UNIPIN_DEV_GUID');
+        $secretKey = env('UNIPIN_DEV_SECRET_KEY');
         $currency = 'IDR';
         $reference =  $dataPayment['invoice'];
         $urlAck = 'https://esi-paymandashboard.azurewebsites.net/api/v1/transaction/notify';
         $denominations = $dataPayment['price'].$dataPayment['amount'].' '.$dataPayment['name'];
-        $signature = hash('sha256', $devGuid.$reference.$urlAck.$currency.$denominations.$devSecretKey);
+        $signature = hash('sha256', $guid.$reference.$urlAck.$currency.$denominations.$secretKey);
         $dataParse = [
-          'guid' => $devGuid,
+          'guid' => $guid,
           'reference' => $reference,
           'urlAck' => $urlAck,
           'currency' => $currency,
@@ -94,8 +90,8 @@ class InvoiceServiceImplement implements InvoiceService
         
       case 'GOC':
         $methodAction = 'POST';
-        $merchantId = "Esp5373790";
-        $haskey = 'jqji815m748z0ql560982426ca0j70qk02411d2no6u94qgdf58js2jn596s99si';
+        $merchantId = env('GOC_MERCHANT_ID');
+        $haskey = env('GOC_HASHKEY');
         $trxDateTime= \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('Y-m-d\TH:i:s')."+07";
         $currency = "IDR";
         $sign = hash('sha256', $merchantId.$dataPayment['invoice'].$trxDateTime.$dataPayment['channel_id'].$dataPayment['price'].$currency.$haskey);

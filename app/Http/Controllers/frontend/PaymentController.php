@@ -13,6 +13,23 @@ class PaymentController extends Controller
     private $_invoiceService;
     private $_generalRepository;
     private $activeLink = 'payment';
+    private $dataset = [
+        'infoTextInput' => [
+            'idPlayer' => 'Please input your id',
+            'country' => 'Please choose your country',
+        ],
+        'titleModal' => [
+            'purchase' => 'Detail Puschase',
+            'alertInfo' => 'Alert',
+        ],
+        'alert' => [
+            'idPlayer' => 'Id player is required',
+            'country' => 'Country must be choosed',
+            'payment' => 'Payment must be choosed',
+            'item' => 'Item must be choosed',
+        ],
+        'noPayment' => 'Payment not avaliable',
+    ];
 
     public function __construct(InvoiceService $invoiceService, GeneralRepository $generalRepository)
     {
@@ -28,8 +45,9 @@ class PaymentController extends Controller
                 $dataGame = $this->_generalRepository->getDataGameBySlug($slug);
                 $countries = $this->_generalRepository->getAllDataCountry();
                 $activeLink = $this->activeLink;
-                
-                return view('frontend.payment.index', compact('countries', 'dataGame', 'activeLink'));
+                $textAttribute = json_encode($this->dataset);
+
+                return view('frontend.payment.index', compact('countries', 'dataGame', 'activeLink', 'textAttribute'));
             }
 
             return redirect()->route('home');
@@ -41,22 +59,24 @@ class PaymentController extends Controller
     public function confirmation(Request $request) 
     {  
         try {
-            if(!$request->query('invoice')) return dd('not found');
+            if(!$request->query('invoice')) return 'not found';
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
+            $activeLink = $this->activeLink;
             
-            return response()->view('frontend.payment.confirmation', compact('data'))
-            ->header('Access-Control-Allow-Origin', 'https://dev.unipin.com/api/unibox/request')
-            ->header('Access-Control-Allow-Methods', 'POST')
-            ->header('Access-Control-Allow-Headers', '*');
+            return response()->view('frontend.payment.confirmation', compact('data', 'activeLink'));
+            // ->header('Access-Control-Allow-Origin', 'https://dev.unipin.com/api/unibox/request')
+            // ->header('Access-Control-Allow-Methods', 'POST')
+            // ->header('Access-Control-Allow-Headers', '*');
         } catch (\Throwable $th) {
             dd($th);
         }
     }
 
-    public function test(Request $request)
-    {
-        dd(json_encode($request->all()));
-    }
+    // public function test(Request $request)
+    // {
+    //     dd(json_encode($request->all()));
+        
+    // }
 
     public function unipin(Request $request)
     {

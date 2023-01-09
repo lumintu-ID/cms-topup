@@ -17,35 +17,31 @@ class HomeController extends Controller
     }
 
     public function index()
-    {
-        $games = $this->_generalRepository->getAllDataGame();
-        $articles = $this->_curlArticle();
-        $activeLink = $this->_activeLink;
-        $banners = $this->_generalRepository->getAllBanner();
-        // dd($banners);
-
-        return view('frontend.home.index', compact('games', 'articles', 'activeLink', 'banners'));
+    {   
+        try {
+            $games = $this->_generalRepository->getAllDataGame();
+            $articles = $this->_curlArticle();
+            $activeLink = $this->_activeLink;
+            $banners = $this->_generalRepository->getAllBanner();
+    
+            return view('frontend.home.index', compact('games', 'articles', 'activeLink', 'banners'));
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     public function test()
     {
-        try {
-            $slug = 'fight-of-legends';
-            $dataGame = $this->_generalRepository->getDataGameBySlug($slug);
-            $countries = $this->_generalRepository->getAllDataCountry();
-            
-            return view('frontend.test.payment', compact('countries', 'dataGame'));
-        } catch (\Throwable $th) {
-            dd($th);
-        }
+        return 'test home';
     }
 
     private function _curlArticle()
     {
+        $url = "https://fightoflegends.co.id/news";
         // initialize the cURL request 
         $curl = curl_init();
         // set the URL to reach with a GET HTTP request 
-        curl_setopt($curl, CURLOPT_URL, "https://fightoflegends.co.id/news");
+        curl_setopt($curl, CURLOPT_URL, $url);
         // get the data returned by the cURL request as a string 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         // make the cURL request follow eventual redirects, 
@@ -63,10 +59,10 @@ class HomeController extends Controller
         $dom = HtmlDomParser::str_get_html($html);
 
         if ($dom->find('section.news')) {
-
+            $limitArictle = 3; 
             $article['articles'] = [];
 
-            for ($i = 0; $i < 3; $i++) {
+            for ($i = 0; $i < $limitArictle; $i++) {
                 $data = array(
                     'image' => $dom->find('div.news__thumbnail.col-md-4 > img.img-fluid')[$i]->getAttribute('src'),
                     'title' => $dom->find('h5.news__title > a')[$i]->innertext,

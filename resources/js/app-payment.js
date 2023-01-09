@@ -1,6 +1,4 @@
-<script src="{{ asset('assets/website/js/jquery-3.5.1.slim.min.js') }}"></script>
-<script>
-  'use strict';
+'use strict';
 
   $(document).ready(function(){
     const baseUrl = window.location.origin;
@@ -207,5 +205,3 @@
     $(".modal-body #playerName span").text('');
     return;
   }
- 
-</script>

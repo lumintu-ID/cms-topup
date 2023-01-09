@@ -10,7 +10,16 @@
 
 * {
   list-style: none;
-  // transition: .3s ease-in-out;
+  animation: fadein .5s;
+}
+
+@keyframes fadein {
+  from {
+      opacity:0;
+  }
+  to {
+      opacity:1;
+  }
 }
 
 body {
@@ -95,12 +104,24 @@ main {
 footer {
   margin-top: 2rem;
   padding: 1rem;
-  border-top: 1px solid #040726;
+  border-top: 1px solid colors.$color-third;
+
   &__text {
-    font-size: .6rem;
+    font-size: 2rem;
+
+    color: red;
+    a {
+      // cursor: pointer;
+
+      &:hover {
+      }
+    }
+    
+
     @include media-breakpoint-up(md) {
       font-size: .8rem;
     }
+
     @include media-breakpoint-up(xl) {
       font-size: .9rem;
     }
@@ -111,6 +132,7 @@ footer {
 
 .modal-content {
   background-color: lighten($color: colors.$color-first, $amount: 70);
+  border: none;
 }
 
 .box-invoice {
