@@ -152,14 +152,11 @@ class TransactionController extends Controller
     public function notify(Request $request)
     {
 
-        // dd($request->transaction['reference']);
+
         $trx = null;
         $status = null;
 
-        // // Log::critical('Critical error', $request->all());
-        // // Log::info('info', ['data' => $request->all()]);
-        // // Log::error('error', ['data' => $request->all()]);
-        // // Log::warning('warning', ['data' => $request->all()]);
+
 
         DB::beginTransaction();
         try {

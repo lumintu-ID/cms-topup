@@ -148,11 +148,11 @@
         console.log(data);
         $('#INV').html(data.invoice)
         $('#GAME').html(data.game.game_title)
-        $('#USERID').html(data.id_player)
+        $('#USERID').html(data.id_Player)
         $('#PAYMENT').html(data.payment.name_channel)
         $('#TTLPRICE').html(data.total_price)
         $('#PPI').html(data.pricepoint.price_point)
-        $('#AMOUNT').html(data.price.amount+' '+data.price.name)
+        $('#AMOUNT').html(data.amount)
 
         let status
         if (data.status == 0) {
