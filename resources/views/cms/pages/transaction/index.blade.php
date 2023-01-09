@@ -113,7 +113,7 @@
 
                       <div class="row row-cols-1 row-cols-sm-2 py-2">
                         <div class="col-6"> Paid Date : </div>
-                        <div class="col-6 text-end">  </div>
+                        <div class="col-6 text-end" id="PAID-DATE">  </div>
                       </div>
 
                       <div class="row row-cols-1 row-cols-sm-2 py-2">
@@ -143,16 +143,24 @@
 
 <script>
 
+    function dateToYMD(date) {
+        var strArray=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var d = date.getDate();
+        var m = strArray[date.getMonth()];
+        var y = date.getFullYear();
+        return '' + (d <= 9 ? '0' + d : d) + '-' + m + '-' + y;
+    }
 
     function Detail(data) {
-        console.log(data);
+        // console.log(data);
         $('#INV').html(data.invoice)
         $('#GAME').html(data.game.game_title)
-        $('#USERID').html(data.id_player)
+        $('#USERID').html(data.id_Player)
         $('#PAYMENT').html(data.payment.name_channel)
         $('#TTLPRICE').html(data.total_price)
         $('#PPI').html(data.pricepoint.price_point)
-        $('#AMOUNT').html(data.price.amount+' '+data.price.name)
+        $('#AMOUNT').html(data.amount)
+        $('#PAID-DATE').html((data.status == 1) ? dateToYMD(new Date(data.transaction_detail.created_at)) : '')
 
         let status
         if (data.status == 0) {
@@ -212,7 +220,7 @@
 
         notyf.open({
             type: 'info',
-            message: 'Transaction From '+event.message.email+ ' in '+ dateFormat()
+            message: 'Transaction in '+ dateFormat()
         });
        
         console.log(data);

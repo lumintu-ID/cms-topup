@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\frontend;
 
 use Carbon\Carbon;
+use App\Models\Ppn;
 use App\Models\Price;
 use App\Models\Payment;
 use App\Models\GameList;
@@ -10,16 +11,25 @@ use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+
+
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\TransactionRequest;
-
-
 use App\Events\Transaction as EventsTransaction;
-use App\Models\History_transaction;
-use App\Models\Ppn;
 
 class TransactionController extends Controller
 {
+
+    private function _sendEmail($request)
+    {
+        EventsTransaction::dispatch($request->email);
+        Mail::send('emails.invoice', ['email' => $request->email], function ($message) use ($request) {
+            $message->to($request->email);
+            $message->subject('Email Verification Mail');
+        });
+    }
+
     public function transaction(TransactionRequest $request)
     {
         DB::beginTransaction();
@@ -68,9 +78,6 @@ class TransactionController extends Controller
             $invoice = "INV-" . Str::random(12);
 
 
-            EventsTransaction::dispatch($request->email);
-
-
             Transaction::create([
                 'invoice' => $invoice,
                 'game_id' => $request->game_id,
@@ -79,6 +86,7 @@ class TransactionController extends Controller
                 'price_point_id' => $price[0]->pricepoint->id,
                 'price_id' => $request->price_id,
                 'email' => $request->email,
+                'amount' => $price[0]->amount . ' ' . $price[0]->name,
                 'total_price' => $this->totalPrice($price[0]->price),
                 'status' => 0
             ]);
