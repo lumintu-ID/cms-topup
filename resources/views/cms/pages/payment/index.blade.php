@@ -52,7 +52,7 @@
             <tr>
                 <td><p class="text-primary fw-bold">{{ $loop->iteration }}</p> </td>
                 <td>
-                    <img src="{{ url('/image/'.$pay->logo_channel) }}" alt="thumbnail" style="width: 100px">
+                    <img src="{{ url('/image/'.$pay->logo_channel) }}" alt="thumbnail" style="width: 80px">
                 </td>
                 <td>
                     {{ $pay->name_channel }}

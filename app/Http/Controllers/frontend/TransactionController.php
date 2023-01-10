@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\frontend;
 
 use Carbon\Carbon;
+use App\Models\Ppn;
 use App\Models\Price;
 use App\Models\Payment;
 use App\Models\GameList;
@@ -10,15 +11,25 @@ use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+
+
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\TransactionRequest;
-
-
 use App\Events\Transaction as EventsTransaction;
-use App\Models\Ppn;
 
 class TransactionController extends Controller
 {
+
+    private function _sendEmail($request)
+    {
+        EventsTransaction::dispatch($request->email);
+        Mail::send('emails.invoice', ['email' => $request->email], function ($message) use ($request) {
+            $message->to($request->email);
+            $message->subject('Email Verification Mail');
+        });
+    }
+
     public function transaction(TransactionRequest $request)
     {
         DB::beginTransaction();
@@ -51,7 +62,7 @@ class TransactionController extends Controller
                 return redirect()->back()->with($notif);
             };
 
-            $price = Price::where('price_id', $request->price_id)->get();
+            $price = Price::with('pricepoint')->where('price_id', $request->price_id)->get();
 
             if (count($price) == 0) {
                 Log::warning('Price List Not Found', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | WARN ' . ' | data not found ']);
@@ -67,18 +78,18 @@ class TransactionController extends Controller
             $invoice = "INV-" . Str::random(12);
 
 
-            EventsTransaction::dispatch($request->email);
-
-
             Transaction::create([
                 'invoice' => $invoice,
                 'game_id' => $request->game_id,
                 'id_Player' => $request->player_id,
                 'method_payment' => $request->payment_id,
+                'price_point_id' => $price[0]->pricepoint->id,
                 'price_id' => $request->price_id,
                 'email' => $request->email,
+                'phone' => $request->phone,
+                'amount' => $price[0]->amount . ' ' . $price[0]->name,
                 'total_price' => $this->totalPrice($price[0]->price),
-                'status' => 1
+                'status' => 0
             ]);
 
             DB::commit();
@@ -104,10 +115,10 @@ class TransactionController extends Controller
     }
 
     private function totalPrice($price)
-    {   
-        $ppn = Ppn::select('id_ppn as id','ppn')->get()->toArray();
+    {
+        $ppn = Ppn::select('id_ppn as id', 'ppn')->get()->toArray();
         $totalPrice = $price + $ppn[0]['ppn'];
-        
+
         return $totalPrice;
     }
 }

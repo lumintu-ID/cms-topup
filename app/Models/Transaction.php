@@ -28,4 +28,14 @@ class Transaction extends Model
     {
         return $this->belongsTo(PricePoint::class, 'price_point_id');
     }
+
+    public function price()
+    {
+        return $this->belongsTo(Price::class, 'price_id', 'price_id');
+    }
+
+    public function transactionDetail()
+    {
+        return $this->belongsTo(TransactionDetail::class, 'invoice', 'invoice_id');
+    }
 }
