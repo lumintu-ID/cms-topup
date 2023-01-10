@@ -125,7 +125,6 @@
 
     $(".input-form__country .form-select").change(async function() {
       clearPayment();
-      $(".payment-list").empty();
       $(".payment-list").removeClass("justify-content-center");
       if(this.value) {
         await fetch(`${baseUrl}/api/v1/payment?country=${this.value}&game_id=${dataGame.id}`)
@@ -139,6 +138,8 @@
         })
         .then((data) => {
           const dataPayment = data.data;
+          $(".payment-list").empty();
+          $(".price-list").empty();
           dataPayment.map((data) => {
             $(".payment-list").append(`
               <div class="col">
