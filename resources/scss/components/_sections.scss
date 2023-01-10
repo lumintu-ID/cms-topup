@@ -1,6 +1,7 @@
 .section-home {
   min-height: 50vh;
   margin-top: .5rem;
+  
   @include media-breakpoint-down(lg) {
     padding: 0 .3rem;
   }

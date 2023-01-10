@@ -46,7 +46,3 @@
     </div>
   </a>
 </div>
-
-@section('js-utilities')
-  @include('frontend.home._test-js')
-@endsection

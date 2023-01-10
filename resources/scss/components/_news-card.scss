@@ -70,9 +70,7 @@
 
     @include media-breakpoint-up(xl) {
       font-size: 1.2rem;
-    }
-
-   
+    }   
   }
 
   &__descriptions {
@@ -82,6 +80,7 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2; /* number of lines to show */
+    
     @include media-breakpoint-up(lg) {
       font-size: .7rem;
     }

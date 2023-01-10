@@ -2,7 +2,8 @@
 @section('content')
 <section class="section-games-info">
   <div class="row row-cols-1 row-cols-sm-2 gy-1 pb-sm-1">
-    @include('frontend.test._info-game')
+    {{-- @include('frontend.test._info-game') --}}
+    @include('frontend.payment._info-game')
   </div>
 </section>
 <section class="section-payment container-fluid container-lg">

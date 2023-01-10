@@ -13,6 +13,11 @@
     $(".modal-body #nameGame span").text(dataGame.title);
     $(".modal-body #nameGame :input").val(dataGame.id);
     $("#formCheckout").hide();
+
+    const changeModalTitle = (title) => {
+      $("#modalPaymentLabel").text();
+      $("#modalPaymentLabel").text(title);
+    }
    
     $("#btnConfirm").prop("disabled", false);
     $("#btnConfirm").click(function() {

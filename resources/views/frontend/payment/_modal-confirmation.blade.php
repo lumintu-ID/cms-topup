@@ -7,9 +7,9 @@
       </div>
       <div id="infoCaution" class="info-caution">
         <div class="modal-body text-center">
-          <p class="info-caution__empty-all">
+          {{-- <p class="info-caution__empty-all">
             Silahkan masukan id player dan pilih jumlah item.
-          </p>
+          </p> --}}
           <p class="info-caution__empty-player" hidden></p>
           <p class="info-caution__empty-country" hidden></p>
           <p class="info-caution__empty-payment" hidden>
