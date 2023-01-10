@@ -17,6 +17,13 @@
     const changeModalTitle = (title) => {
       $("#modalPaymentLabel").text();
       $("#modalPaymentLabel").text(title);
+      return;
+    }
+
+    const showAlertInfo = () => {
+      $("#formCheckout").hide();
+      $("#infoCaution").show();
+      return;
     }
    
     $("#btnConfirm").prop("disabled", false);
@@ -25,38 +32,38 @@
 
       if($("#idPlayer").val() == '' ) {
         showAlertInfo();
-        $(".info-caution__empty-all, .info-caution__empty-country, .info-caution__empty-payment").attr('hidden', true);
+        $(".info-caution__empty-country, .info-caution__empty-payment, .info-caution__empty-item").attr('hidden', true);
         $(".info-caution__empty-player")
         .removeAttr('hidden')
         .text(textInfo.alert.idPlayer);
         return;
       }
 
-      if($(".input-form__country .form-select").val() == '') {
+      if($(".input-form__country .form-select").val() == '' || !$(".input-form__country .form-select").val()) {
         showAlertInfo();
-        $(".info-caution__empty-all, .info-caution__empty-player, .info-caution__empty-payment, .info-caution__empty-item").attr('hidden', true);
+        $(".info-caution__empty-player, .info-caution__empty-payment, .info-caution__empty-item").attr('hidden', true);
         $(".info-caution__empty-country")
         .removeAttr('hidden')
         .text(textInfo.alert.country);
-        return
+        return;
       }
 
-      if($(".modal-body #payment input[name=payment]").val() == '') {
+      if($(".modal-body #payment input[name=payment]").val() == '' || $(".payment-list").children().length <= 0) {
         showAlertInfo();
-        $(".info-caution__empty-all, .info-caution__empty-player, .info-caution__empty-country, .info-caution__empty-item").attr('hidden', true);
+        $(".info-caution__empty-player, .info-caution__empty-country, .info-caution__empty-item").attr('hidden', true);
         $(".info-caution__empty-payment")
         .removeAttr('hidden')
         .text(textInfo.alert.payment);
-        return
+        return;
       }
 
-      if($(".modal-body #price :input").val() == '') {
+      if($(".modal-body #price input[name=price]").val() == '') {
         showAlertInfo();
-        $(".info-caution__empty-all, .info-caution__empty-player, .info-caution__empty-country, .info-caution__empty-payment").attr('hidden', true);
+        $(".info-caution__empty-player, .info-caution__empty-country, .info-caution__empty-payment").attr('hidden', true);
         $(".info-caution__empty-item")
         .removeAttr('hidden')
         .text(textInfo.alert.item);
-        return
+        return;
       }
 
       changeModalTitle(textInfo.titleModal.purchase);
@@ -67,7 +74,6 @@
     });
 
     $(".total-payment__nominal").text(0);
-    // $("#idPlayer").val(Math.random().toString(8).slice(2));
     $("#idGameInpt").val(dataGame.id);
     $("#btnClearId").hide();
     $("#btnCheckId").click(async function(event) {
@@ -113,13 +119,14 @@
       $("#idPlayer").val('');
       $(".input-feedback.input-id-player").removeClass('valid invalid');
       $(".input-feedback.input-id-player").text(textInfo.infoTextInput.idPlayer);
-      // $("#idPlayer").val(Math.random().toString(8).slice(2));
       $("#formCheckout").children('.info-user').remove();
       clearPlayer();
     });
 
     $(".input-form__country .form-select").change(async function() {
       clearPayment();
+      $(".payment-list").empty();
+      $(".payment-list").removeClass("justify-content-center");
       if(this.value) {
         await fetch(`${baseUrl}/api/v1/payment?country=${this.value}&game_id=${dataGame.id}`)
         .then((response) => {
@@ -132,7 +139,6 @@
         })
         .then((data) => {
           const dataPayment = data.data;
-          $(".payment-list").empty();
           dataPayment.map((data) => {
             $(".payment-list").append(`
               <div class="col">
@@ -186,6 +192,7 @@
         })
         .catch((error) => {
           $(".payment-list").empty();
+          $(".payment-list").addClass("justify-content-center");
           $(".payment-list").append(textInfo.noPayment);
           $(".price-list").empty();
         });
@@ -199,6 +206,8 @@
     $(".modal-body #payment span").text('');
     $(".modal-body #payment input[name=payment]").val('');
     $(".modal-body #payment input[name=payment_id]").val('');
+    $(".modal-body #amount span").text('');
+    $(".modal-body #amount :input").val('');
     $(".modal-body #price span").text('');
     $(".modal-body #price :input").val('');
     $(".total-payment__nominal").text('0');

@@ -40,7 +40,12 @@
     }
   }
 
+  @include media-breakpoint-down(sm) {
+    min-height: 10vh;
+   
+  }
   @include media-breakpoint-up(sm) {
+    min-height: 20vh;
     margin: 1rem 0;
   }
 }

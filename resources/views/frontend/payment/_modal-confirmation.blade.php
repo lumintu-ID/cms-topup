@@ -2,14 +2,11 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header box-invoice__header">
-        <h5 class="modal-title" id="modalPaymentLabel">Detail Pembelian</h5>
+        <h5 class="modal-title" id="modalPaymentLabel"></h5>
         <button type="button" class="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div id="infoCaution" class="info-caution">
         <div class="modal-body text-center">
-          {{-- <p class="info-caution__empty-all">
-            Silahkan masukan id player dan pilih jumlah item.
-          </p> --}}
           <p class="info-caution__empty-player" hidden></p>
           <p class="info-caution__empty-country" hidden></p>
           <p class="info-caution__empty-payment" hidden>
