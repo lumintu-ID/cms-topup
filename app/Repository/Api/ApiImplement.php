@@ -38,6 +38,8 @@ class ApiImplement implements ApiRepository
         foreach ($payment as $pay) {
             $price = Price::select('price_id', 'payment_id', 'game_id', 'name', 'amount', 'price')->where('payment_id', $pay->payment_id)->where('game_id', $gameId)->orderBy('price', 'asc')->get();
             $p = array(
+                "category_id" => $pay->category->category_id,
+                "category_name" => $pay->category->category,
                 "payment_id" => $pay->payment_id,
                 "country_id" => $pay->country_id,
                 "channelId" => $pay->channel_id,
