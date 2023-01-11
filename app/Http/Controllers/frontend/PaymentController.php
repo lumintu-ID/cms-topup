@@ -10,22 +10,47 @@ use Illuminate\Support\Facades\Http;
 
 class PaymentController extends Controller
 {
-    protected $invoiceService;
+    private $_invoiceService;
+    private $_generalRepository;
+    private $activeLink = 'payment';
+    private $dataset = [
+        'infoTextInput' => [
+            'idPlayer' => 'Please input your id',
+            'country' => 'Please choose your country',
+        ],
+        'titleModal' => [
+            'purchase' => 'Detail Puschase',
+            'alertInfo' => 'Alert',
+        ],
+        'alert' => [
+            'idPlayer' => 'Id player is required',
+            'country' => 'Country must be choosed',
+            'payment' => 'Payment must be choosed',
+            'item' => 'Item must be choosed',
+        ],
+        'noPayment' => 'Payment not avaliable',
+    ];
 
     public function __construct(InvoiceService $invoiceService, GeneralRepository $generalRepository)
     {
-        $this->invoiceService = $invoiceService;
-        $this->generalRepository = $generalRepository;
+        $this->_invoiceService = $invoiceService;
+        $this->_generalRepository = $generalRepository;
     }
 
     public function index(Request $request)
     {
         try {
-            $slug = $request->slug;
-            $dataGame = $this->generalRepository->getDataGameBySlug($slug);
-            $countries = $this->generalRepository->getAllDataCountry();
-            
-            return view('frontend.payment.index', compact('countries', 'dataGame'));
+            if($request->slug) {
+                $slug = $request->slug;
+                $dataGame = $this->_generalRepository->getDataGameBySlug($slug);
+                $countries = $this->_generalRepository->getAllDataCountry();
+                $activeLink = $this->activeLink;
+                $textAttribute = json_encode($this->dataset);
+
+                return view('frontend.payment.index', compact('countries', 'dataGame', 'activeLink', 'textAttribute'));
+            }
+
+            return redirect()->route('home');
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -34,22 +59,24 @@ class PaymentController extends Controller
     public function confirmation(Request $request) 
     {  
         try {
-            if(!$request->query('invoice')) return dd('not found');
-            $data = $this->invoiceService->getInvoice($request->query('invoice'));
+            if(!$request->query('invoice')) return 'not found';
+            $data = $this->_invoiceService->getInvoice($request->query('invoice'));
+            $activeLink = $this->activeLink;
             
-            return response()->view('frontend.payment.confirmation', compact('data'))
-            ->header('Access-Control-Allow-Origin', 'https://dev.unipin.com/api/unibox/request')
-            ->header('Access-Control-Allow-Methods', 'POST')
-            ->header('Access-Control-Allow-Headers', '*');
+            return response()->view('frontend.payment.confirmation', compact('data', 'activeLink'));
+            // ->header('Access-Control-Allow-Origin', 'https://dev.unipin.com/api/unibox/request')
+            // ->header('Access-Control-Allow-Methods', 'POST')
+            // ->header('Access-Control-Allow-Headers', '*');
         } catch (\Throwable $th) {
             dd($th);
         }
     }
 
-    public function test(Request $request)
-    {
-        dd(json_encode($request->all()));
-    }
+    // public function test(Request $request)
+    // {
+    //     dd(json_encode($request->all()));
+        
+    // }
 
     public function unipin(Request $request)
     {

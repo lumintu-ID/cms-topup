@@ -33,6 +33,10 @@ window.Echo = new Echo({
     enabledTransports: ['ws', 'wss'],
 });
 
+import * as Popper from '@popperjs/core'
+window.Popper = Popper
+import 'bootstrap'
+
 
 window.Echo.channel("messages").listen("ServerCreated", (event) => {
     console.log(event);

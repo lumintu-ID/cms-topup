@@ -1,0 +1,53 @@
+@use "../colors";
+@use "../fonts";
+@import "~bootstrap/scss/nav";
+@import "~bootstrap/scss/navbar";
+
+.navbar {
+  background-color: colors.$color-third;
+}
+
+.nav-link {
+  text-transform: uppercase;
+  margin-bottom: 0;
+  border-bottom: 0 solid unset;
+  transition: 2s ease-in-out border-bottom;
+  
+  &:hover,
+  &.active {
+    margin-bottom: -1px;
+    border-bottom: 3px solid colors.$color-second;
+    transition: .3s ease-in-out border-bottom;
+  }
+}
+
+@mixin nav-btn() {
+  min-width: 44px;
+  min-height: 44px;
+  padding: .3rem 1.5rem;
+  margin-bottom: .1rem;
+  border-radius: 5px;
+  text-transform: uppercase;
+  font-weight: map-get(fonts.$font-weight, bold);
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.nav-btn {
+  @include nav-btn();
+ 
+  color: #fff;
+  background-color: colors.$color-fifth;
+  outline: .2rem solid #0343a4;
+  transition: .2s ease-in-out transform, .3s ease-in-out color, .3s ease-in-out outline;
+  &:hover {
+    outline: .21rem solid colors.$color-fourth;
+    color: colors.$color-fourth;
+    transform: scale(1.05);
+    transition: .3s ease-in-out transform, .3s ease-in-out color, .3s ease-in-out outline;
+  }
+
+  @include media-breakpoint-up(lg) {
+    margin-left: 1rem;
+  }
+}
