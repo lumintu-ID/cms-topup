@@ -8,7 +8,6 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/js/app-payment.js',
             ],
             refresh: true,
         }),
@@ -18,5 +17,5 @@ export default defineConfig({
             '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
         }
     },
-    
+
 });
