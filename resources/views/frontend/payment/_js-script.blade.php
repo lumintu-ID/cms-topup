@@ -20,18 +20,20 @@
       return;
     }
 
-    const showAlertInfo = () => {
-      $("#formCheckout").hide();
-      $("#infoCaution").show();
+    const showHideElement = ({ showElement = null, hideElement= null} ) => {
+      $(showElement).show();
+      $(hideElement).hide();
       return;
     }
+
+    showHideElement({ showElement:'#formCheckout' })
    
     $("#btnConfirm").prop("disabled", false);
     $("#btnConfirm").click(function() {
       changeModalTitle(textInfo.titleModal.alertInfo);
 
       if($("#idPlayer").val() == '' ) {
-        showAlertInfo();
+        showHideElement({ showElement:'#infoCaution', hideElement: '#formCheckout' });
         $(".info-caution__empty-country, .info-caution__empty-payment, .info-caution__empty-item").attr('hidden', true);
         $(".info-caution__empty-player")
         .removeAttr('hidden')
@@ -40,7 +42,7 @@
       }
 
       if($(".input-form__country .form-select").val() == '' || !$(".input-form__country .form-select").val()) {
-        showAlertInfo();
+        showHideElement({ showElement:'#infoCaution', hideElement: '#formCheckout' });
         $(".info-caution__empty-player, .info-caution__empty-payment, .info-caution__empty-item").attr('hidden', true);
         $(".info-caution__empty-country")
         .removeAttr('hidden')
@@ -49,7 +51,7 @@
       }
 
       if($(".modal-body #payment input[name=payment]").val() == '' || $(".payment-list").children().length <= 0) {
-        showAlertInfo();
+        showHideElement({ showElement:'#infoCaution', hideElement: '#formCheckout' });
         $(".info-caution__empty-player, .info-caution__empty-country, .info-caution__empty-item").attr('hidden', true);
         $(".info-caution__empty-payment")
         .removeAttr('hidden')
@@ -58,7 +60,7 @@
       }
 
       if($(".modal-body #price input[name=price]").val() == '') {
-        showAlertInfo();
+        showHideElement({ showElement:'#infoCaution', hideElement: '#formCheckout' });
         $(".info-caution__empty-player, .info-caution__empty-country, .info-caution__empty-payment").attr('hidden', true);
         $(".info-caution__empty-item")
         .removeAttr('hidden')
@@ -67,8 +69,7 @@
       }
 
       changeModalTitle(textInfo.titleModal.purchase);
-      $("#formCheckout").show();
-      $("#infoCaution").hide();
+      showHideElement({ showElement:'#formCheckout', hideElement: '#infoCaution' });
       return;
      
     });
@@ -141,6 +142,7 @@
           $(".payment-list").empty();
           $(".price-list").empty();
           dataPayment.map((data) => {
+            
             $(".payment-list").append(`
               <div class="col">
                 <div class="payment-list__items" data-payment="${data.payment.payment_id}">
@@ -155,6 +157,8 @@
           $(".payment-list__items").click(function() {
             $(this).children().prop("checked", true);
             const priceList = dataPayment.find(({payment}) => payment.payment_id == this.dataset.payment );
+            console.log(priceList);
+
             $(".price-list").empty();
             $(".modal-body #payment span").text(priceList.payment.name_channel);
             $(".modal-body #payment input[name=payment]").val(priceList.payment.name_channel);
@@ -175,6 +179,7 @@
                 </div>`
               );
             });
+
             $(".amount-price__wrap").click(function() {
               $(this).children(".amount-price__name-item").children().prop("checked", true);
               const price = parseInt($(this).children(".amount-price__price").text());
@@ -184,8 +189,6 @@
               $(".modal-body #amount input[name=amount]").val($(this).children(".amount-price__name-item").text());
               $(".modal-body #amount span").text($(this).children(".amount-price__name-item").text());
               $(".modal-body #priceId").val($(this).children(".amount-price__name-item").children('input').val());
-              // $(".modal-body #totalPayment span").text(price);
-              // $(".modal-body #totalPayment :input").val(price);
               $("#formCheckout").show();
               $("#infoCaution").hide();
             });
