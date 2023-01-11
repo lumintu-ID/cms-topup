@@ -95,7 +95,7 @@
         })
         .then((data) => {
           const dataPayment = data.data;
-          // console.log(dataPayment);
+          console.log(dataPayment);
           $(".payment-list").empty();
           dataPayment.map((data) => {
             $(".payment-list").append(`
