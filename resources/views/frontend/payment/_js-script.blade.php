@@ -5,8 +5,10 @@
   $(document).ready(function(){
     const baseUrl = window.location.origin;
     const dataGame = JSON.parse(document.getElementsByClassName('games-info__body')[0].dataset.game);
+    const categoryPayment = JSON.parse(document.getElementsByClassName('payment-list')[0].dataset.paymentcategory);
     const textInfo = JSON.parse(document.getElementsByClassName('player-input')[0].dataset.infotext);
     let player;
+    console.log(categoryPayment);
 
     $(".input-feedback.input-id-player").text(textInfo.infoTextInput.idPlayer);
     $(".input-feedback.input-country").text(textInfo.infoTextInput.country);

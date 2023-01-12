@@ -2,6 +2,7 @@
 
 namespace App\Repository\Frontend\Invoice;
 
+use App\Models\Category;
 use App\Models\Code_payment;
 use App\Models\GameList;
 use App\Models\Ppn;
@@ -66,6 +67,12 @@ class InvoiceRepositoryImplement implements InvoiceRepository
   public function getAllDataPpn()
   {
     $data = Ppn::select('id_ppn as id','ppn')->get()->toArray();
+    return $data;
+  }
+
+  public function getAllCategoryPayment()
+  {
+    $data = Category::select('category_id as id','category')->get()->toArray();
     return $data;
   }
 } 
