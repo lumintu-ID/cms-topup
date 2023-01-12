@@ -141,7 +141,7 @@
         })
         .then((data) => {
           const dataPayment = data.data;
-          // console.log(dataPayment);
+          console.log(dataPayment);
           $(".payment-list").empty();
           $(".price-list").empty();
           dataPayment.map((data) => {
