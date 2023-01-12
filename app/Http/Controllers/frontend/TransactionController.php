@@ -92,7 +92,7 @@ class TransactionController extends Controller
                 'status' => 0
             ]);
 
-            // DB::commit();
+            DB::commit();
             Log::info('Success Request Transaction', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Success Post Transaction data']);
 
             $notif = array(
