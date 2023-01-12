@@ -17,6 +17,7 @@
     @vite(['resources/js/app.js'])
   </head>
   <body>
+    @include('frontend.partials.loader-page')
     @include('frontend.partials.header')
     <main class="container-fluid container-lg">
       @yield('content')

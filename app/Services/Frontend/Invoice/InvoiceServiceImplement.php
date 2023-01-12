@@ -96,7 +96,7 @@ class InvoiceServiceImplement implements InvoiceService
         $currency = "IDR";
         $sign = hash('sha256', $merchantId.$dataPayment['invoice'].$trxDateTime.$dataPayment['channel_id'].$dataPayment['price'].$currency.$haskey);
         // $phone = '08777535648447';
-        $phone = '082119673393';
+        // $phone = '082119673393';
         $dataAttribute = [
           ['urlAction' => $dataPayment['url']],
           ['methodAction' => $methodAction],
@@ -109,7 +109,7 @@ class InvoiceServiceImplement implements InvoiceService
           ['returnUrl' => $urlReturn],
           ['name' => 'name'],
           ['email' => $dataPayment['email']],
-          ['phone' => $phone],
+          ['phone' => $dataPayment['phone'] ? $dataPayment['phone'] : null],
           ['userId' => 'userId'],
           ['sign' => $sign],
         ];

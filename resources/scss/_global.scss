@@ -7,26 +7,20 @@
 @import "./components/sections";
 @import "./total-payment";
 @import "./payment-list";
+@import "./loader";
 
 * {
   list-style: none;
-  animation: fadein .5s;
-}
-
-@keyframes fadein {
-  from {
-    opacity:0;
-  }
-  to {
-    opacity:1;
-  }
 }
 
 body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  animation: fadein 1.5s;
 }
+
+
 
 a {
   color: $black;
@@ -99,7 +93,6 @@ main {
   }
 }
 
-
 footer {
   margin-top: 2rem;
   padding: 1rem;
@@ -116,14 +109,15 @@ footer {
         text-shadow: 1px 2px darken($color: colors.$color-first, $amount: 10);
       }
     }
+  }
+}
 
-    // @include media-breakpoint-up(md) {
-    //   font-size: .8rem;
-    // }
-
-    // @include media-breakpoint-up(xl) {
-    //   font-size: .9rem;
-    // }
+@keyframes fadein {
+  from {
+    opacity:0;
+  }
+  to {
+    opacity:1;
   }
 }
 
