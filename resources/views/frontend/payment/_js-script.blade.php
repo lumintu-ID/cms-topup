@@ -8,7 +8,6 @@
     const categoryPayment = JSON.parse(document.getElementsByClassName('payment-list')[0].dataset.paymentcategory);
     const textInfo = JSON.parse(document.getElementsByClassName('player-input')[0].dataset.infotext);
     let player;
-    console.log(categoryPayment);
 
     $(".input-feedback.input-id-player").text(textInfo.infoTextInput.idPlayer);
     $(".input-feedback.input-country").text(textInfo.infoTextInput.country);
@@ -144,7 +143,6 @@
         })
         .then((data) => {
           const dataPayment = data.data;
-          // console.log(dataPayment);
           addRemoveClass({ element: ".payment-list", addClass: "justify-content-start", removeClass: "justify-content-center"})
           $(".payment-list").empty();
           $(".price-list").empty();
@@ -161,10 +159,10 @@
           $("#formCheckout").hide();
           $("#infoCaution").show();
           $(".payment-list__items").click(function() {
+            clearItems();
             $(this).children().prop("checked", true);
             const priceList = dataPayment.find(({payment}) => payment.payment_id == this.dataset.payment );
-            console.log(priceList);
-
+            
             $(".price-list").empty();
             $(".modal-body #payment span").text(priceList.payment.name_channel);
             $(".modal-body #payment input[name=payment]").val(priceList.payment.name_channel);
@@ -218,8 +216,13 @@
     $(".modal-body #payment input[name=payment_id]").val('');
     $(".modal-body #amount span").text('');
     $(".modal-body #amount :input").val('');
+    clearItems();
+    return;
+  }
+
+  const clearItems = () => {
     $(".modal-body #price span").text('');
-    $(".modal-body #price :input").val('');
+    $(".modal-body #price input[name=price]").val('');
     $(".total-payment__nominal").text('0');
     return;
   }
