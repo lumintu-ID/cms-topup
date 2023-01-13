@@ -17,9 +17,11 @@ class PaymentController extends Controller
         'infoTextInput' => [
             'idPlayer' => 'Please input your id',
             'country' => 'Please choose your country',
+            'warning' => 'ID Player is required',
+            'playerNotFound' => 'error, please try again'
         ],
         'titleModal' => [
-            'purchase' => 'Detail Puschase',
+            'purchase' => 'Detail Purchases',
             'alertInfo' => 'Alert',
         ],
         'alert' => [
@@ -65,6 +67,8 @@ class PaymentController extends Controller
             // dd($request->query('invoice'));
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
             $activeLink = $this->activeLink;
+
+            // dd( $data);
             
             return response()->view('frontend.payment.confirmation', compact('data', 'activeLink'));
             // ->header('Access-Control-Allow-Origin', 'https://dev.unipin.com/api/unibox/request')

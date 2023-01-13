@@ -1,13 +1,12 @@
 import './bootstrap';
 import '../scss/app.scss';
 
-let loader = document.getElementById("loader");
+const loader = document.getElementById("loader");
+const body = document.getElementsByTagName("body")[0];
+body.style.overflow = 'hidden';
 
 window.addEventListener('load', (event) => {  
-  loader.style.display = "none";
-  // loader.style.transition = "10s linear display";
-  // loader.addEventListener("transitionend", () => {
-  //   // console.log('transtionend');
-  // });
+  loader.style.display = 'none';
+  body.style.removeProperty('overflow');
 });
 

@@ -70,8 +70,7 @@
   <script>
     $(document).ready(function(){
       const payment = $("#elementAttribute").data("element-input");
-      // console.log(payment);
-      if(typeof payment.dataparse === "undefined"){
+      if(typeof payment.dataparse === 'undefined' ){
         for (const key in payment) {
           if (Object.hasOwnProperty.call(payment, key)) {
             const element = payment[key];
@@ -91,6 +90,7 @@
         }
       }else{
         // console.log($("#btnPay"));
+        console.log('hjahsjah')
         $("#btnPay").removeAttr('type');
         $("#btnPay").click(async function(event) {
           // // let headers = new Headers();

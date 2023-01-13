@@ -22,7 +22,7 @@
       return;
     }
 
-    const showHideElement = ({ showElement = null, hideElement= null} ) => {
+    const showHideElement = ({ showElement = null, hideElement= null } ) => {
       $(showElement).show();
       $(hideElement).hide();
       return;
@@ -71,7 +71,7 @@
       }
 
       changeModalTitle(textInfo.titleModal.purchase);
-      showHideElement({ showElement:'#formCheckout', hideElement: '#infoCaution' });
+      showHideElement({ showElement: '#formCheckout', hideElement: '#infoCaution' });
       return;
      
     });
@@ -82,7 +82,7 @@
     $("#btnCheckId").click(async function(event) {
       if(!$("#idPlayer").val()) {
         $(".input-feedback.input-id-player").addClass('invalid');
-        $(".input-feedback.input-id-player").text('Id Player is required');
+        $(".input-feedback.input-id-player").text(textInfo.infoTextInput.warning);
         return;
       }
       
@@ -91,7 +91,7 @@
         if(response.status === 404) {
           $(".input-feedback.input-id-player").removeClass('valid invalid');
           $(".input-feedback.input-id-player").addClass('invalid');
-          $(".input-feedback.input-id-player").text('ID player not avaliable');
+          $(".input-feedback.input-id-player").text(textInfo.infoTextInput.playerNotFound);
           $("#formCheckout").children('div').last().remove();
           $("#formCheckout").append('<div class="info-user">Data user tidak tersedia, silahkan coba kembali</div>');
           return;
@@ -112,6 +112,9 @@
         $(".modal-body #emailInpt :input").val(player.email);
         $(".modal-body #emailInpt span").text(player.email);
         $("#idPlayer").prop('disabled', true);
+      })
+      .catch(e => {
+        console.log(e);
       });
     });
 
@@ -128,11 +131,11 @@
 
     $(".input-form__country .form-select").change(async function() {
       clearPayment();
-      $(".payment-list").removeClass("justify-content-center");
       if(this.value) {
         await fetch(`${baseUrl}/api/v1/payment?country=${this.value}&game_id=${dataGame.id}`)
         .then((response) => {
           if(response.status === 404) {
+            addRemoveClass({ element: ".payment-list", addClass: "justify-content-center", removeClass: "justify-content-start"})
             $(".payment-list").empty();
             $(".payment-list").append(textInfo.noPayment);
             return;
@@ -141,11 +144,11 @@
         })
         .then((data) => {
           const dataPayment = data.data;
-          console.log(dataPayment);
+          // console.log(dataPayment);
+          addRemoveClass({ element: ".payment-list", addClass: "justify-content-start", removeClass: "justify-content-center"})
           $(".payment-list").empty();
           $(".price-list").empty();
           dataPayment.map((data) => {
-            
             $(".payment-list").append(`
               <div class="col">
                 <div class="payment-list__items" data-payment="${data.payment.payment_id}">
@@ -228,5 +231,11 @@
     $(".modal-body #playerName span").text('');
     return;
   }
+
+  const addRemoveClass = ({ element = null, addClass = null, removeClass = null }) => {
+      $(element).removeClass(removeClass);
+      $(element).addClass(addClass);
+      return;
+    }
  
 </script>
