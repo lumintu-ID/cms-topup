@@ -265,7 +265,7 @@ class TransactionController extends Controller
 
             if ($request->transaction) {
                 return \response()->json([
-                    'status' => 0,
+                    'status' => $request['transaction']['status'],
                     'message' => 'Reload Successful',
                 ], Response::HTTP_OK);
             } else if ($request->applicationCode) {
