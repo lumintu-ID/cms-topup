@@ -39,7 +39,7 @@ class InvoiceServiceImplement implements InvoiceService
     $urlReturn = route('home');
     
     switch (Str::upper($dataPayment['name_payment'])) {
-      case 'GV':
+      case env('GV_NAME_PAYMENT'):
         $merchantId = env('GV_MERCHANT_ID');
         $mercahtKey = env('GV_MERCHANT_KEY');
         $methodAction = 'GET';
@@ -58,7 +58,7 @@ class InvoiceServiceImplement implements InvoiceService
         return json_encode($dataAttribute);
       break;
 
-      case 'UNIPIN':
+      case env('UNIPIN_NAME_PAYMENT'):
         $methodAction = 'POST';
         $guid = env('UNIPIN_DEV_GUID');
         $secretKey = env('UNIPIN_DEV_SECRET_KEY');
@@ -88,15 +88,15 @@ class InvoiceServiceImplement implements InvoiceService
         return json_encode($dataAttribute);
       break;
         
-      case 'GOC':
+      case env('GOC_NAME_PAYMENT'):
         $methodAction = 'POST';
         $merchantId = env('GOC_MERCHANT_ID');
         $haskey = env('GOC_HASHKEY');
         $trxDateTime= \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('Y-m-d\TH:i:s')."+07";
         $currency = "IDR";
         $sign = hash('sha256', $merchantId.$dataPayment['invoice'].$trxDateTime.$dataPayment['channel_id'].$dataPayment['price'].$currency.$haskey);
-        $phone = '08777535648447';
-        // $phone = '082119673390';
+        // $phone = '08777535648447';
+        // $phone = '082119673393';
         $dataAttribute = [
           ['urlAction' => $dataPayment['url']],
           ['methodAction' => $methodAction],
@@ -109,11 +109,16 @@ class InvoiceServiceImplement implements InvoiceService
           ['returnUrl' => $urlReturn],
           ['name' => 'name'],
           ['email' => $dataPayment['email']],
-          ['phone' => $phone],
+          ['phone' => $dataPayment['phone'] ? $dataPayment['phone'] : null],
           ['userId' => 'userId'],
           ['sign' => $sign],
         ];
         
+        return json_encode($dataAttribute);
+      break;
+
+      case env("RAZE_NAME_PAYMENT"):
+        $dataAttribute = "Razer payment";
         return json_encode($dataAttribute);
       break;
     }

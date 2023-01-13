@@ -200,6 +200,7 @@ return [
         // Frontend Service Provider
         App\Providers\Frontend\GeneralServiceProvider::class,
         App\Providers\Frontend\InvoiceServiceProvider::class,
+        App\Providers\Frontend\PaymentServiceProvider::class,
 
     ],
 

@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\frontend;
 
 use App\Http\Controllers\Controller;
-use App\Repository\Frontend\GeneralRepository;
 use App\Services\Frontend\Invoice\InvoiceService;
+use App\Services\Frontend\Payment\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class PaymentController extends Controller
 {
     private $_invoiceService;
-    private $_generalRepository;
+    private $_paymentService;
     private $activeLink = 'payment';
     private $dataset = [
         'infoTextInput' => [
@@ -31,10 +31,10 @@ class PaymentController extends Controller
         'noPayment' => 'Payment not avaliable',
     ];
 
-    public function __construct(InvoiceService $invoiceService, GeneralRepository $generalRepository)
+    public function __construct(InvoiceService $invoiceService, PaymentService $paymentService)
     {
         $this->_invoiceService = $invoiceService;
-        $this->_generalRepository = $generalRepository;
+        $this->_paymentService = $paymentService;
     }
 
     public function index(Request $request)
@@ -42,12 +42,13 @@ class PaymentController extends Controller
         try {
             if($request->slug) {
                 $slug = $request->slug;
-                $dataGame = $this->_generalRepository->getDataGameBySlug($slug);
-                $countries = $this->_generalRepository->getAllDataCountry();
+                $dataGame = $this->_paymentService->getDataGame($slug);
+                $countries = $this->_paymentService->getAllDataCountry();
                 $activeLink = $this->activeLink;
                 $textAttribute = json_encode($this->dataset);
+                $categoryPayment = json_encode( $this->_paymentService->getAllCategoryPayment());
 
-                return view('frontend.payment.index', compact('countries', 'dataGame', 'activeLink', 'textAttribute'));
+                return view('frontend.payment.index', compact('countries', 'dataGame', 'activeLink', 'textAttribute', 'categoryPayment'));
             }
 
             return redirect()->route('home');
@@ -58,8 +59,10 @@ class PaymentController extends Controller
 
     public function confirmation(Request $request) 
     {  
+        // dd($request->query('invoice'));
         try {
             if(!$request->query('invoice')) return 'not found';
+            // dd($request->query('invoice'));
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
             $activeLink = $this->activeLink;
             

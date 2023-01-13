@@ -17,6 +17,7 @@
     background-color: rgba(255, 255, 255, 0.641);
     border-radius: 3px;
     cursor: pointer;
+    animation: fadein 1s;
     
     &:hover {
       background-color: #ffffffd8;
@@ -60,6 +61,7 @@
     border-radius: 3px;
     font-size: .8rem;
     cursor: pointer;
+    animation: fadein 1s;
 
     &:hover {
       outline: .1rem solid #717171;
