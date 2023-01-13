@@ -9,12 +9,8 @@
         <div class="modal-body text-center">
           <p class="info-caution__empty-player" hidden></p>
           <p class="info-caution__empty-country" hidden></p>
-          <p class="info-caution__empty-payment" hidden>
-            Payment harus dipilih.
-          </p>
-          <p class="info-caution__empty-item" hidden>
-            Item pembelian harus dipilih.
-          </p>
+          <p class="info-caution__empty-payment" hidden></p>
+          <p class="info-caution__empty-item" hidden></p>
         </div>
         <div class="modal-footer">
           <button type="button" class="button__cancel" data-bs-dismiss="modal">Tutup</button>

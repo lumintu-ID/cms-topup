@@ -41,13 +41,14 @@ class InvoiceRepositoryImplement implements InvoiceRepository
   public function getDetailPrice($id)
   {
     $data = Price::join('payments', 'prices.payment_id', '=', 'payments.payment_id')
+    ->join('code_payments', 'payments.code_payment', '=', 'code_payments.id')
     ->select(
       'channel_id',
       'name_channel',
       'price',
       'name',
       'amount',
-      'code_payment',
+      'code_payments.code_payment',
       'category_id',
       'url')
     ->where('price_id', $id)
