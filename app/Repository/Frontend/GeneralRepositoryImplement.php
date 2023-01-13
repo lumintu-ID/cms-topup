@@ -2,6 +2,7 @@
 
 namespace App\Repository\Frontend;
 
+use App\Models\Banner;
 use App\Models\Country;
 use App\Models\GameList;
 
@@ -49,6 +50,16 @@ class GeneralRepositoryImplement implements GeneralRepository
       'currency')
     ->get()->toArray();
     
+    return $data;
+  }
+
+  public function getAllBanner(int $limit = 5)
+  {
+    $data = Banner::select(
+      'id_banner as id',
+      'banner as name',
+    )->get();
+
     return $data;
   }
   

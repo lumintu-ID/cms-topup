@@ -1,0 +1,53 @@
+.games-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #ff9000;
+  height: 100%;
+  min-height: 13rem;
+  border-radius: 3px;
+  outline: 1px solid red;
+  overflow: hidden;
+  transition: .2s ease-in-out color, .3s linear box-shadow;
+ 
+  &:hover {
+    color: #fff;
+    box-shadow: 0 0 1rem #888888;
+    transition: .3s ease-in-out color, box-shadow .3s linear;
+  }
+
+  &__body {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    background-color: #fff;
+
+    & img {
+      height: auto;
+      width: 100%;
+    }    
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 2rem;
+    padding: .5rem;
+    text-transform: uppercase;
+    text-align: center;
+    background-color: #ff9000;
+
+    &-text {
+      font-size: .7rem;
+      font-weight: 600;
+
+      @include media-breakpoint-up(md) {
+        font-size: 1.1rem;
+      }
+    }
+  }
+}
+
+
+
+

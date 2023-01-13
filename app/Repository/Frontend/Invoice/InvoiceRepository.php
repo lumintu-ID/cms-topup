@@ -9,4 +9,5 @@ interface InvoiceRepository
   public function getDetailPrice(string $priceId);
   public function getNameCodePayment(string $codePayment);
   public function getAllDataPpn();
+  public function getAllCategoryPayment();
 }

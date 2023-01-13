@@ -3,29 +3,55 @@
 namespace App\Http\Controllers\frontend;
 
 use App\Http\Controllers\Controller;
-use App\Repository\Frontend\GeneralRepository;
 use App\Services\Frontend\Invoice\InvoiceService;
+use App\Services\Frontend\Payment\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class PaymentController extends Controller
 {
-    protected $invoiceService;
+    private $_invoiceService;
+    private $_paymentService;
+    private $activeLink = 'payment';
+    private $dataset = [
+        'infoTextInput' => [
+            'idPlayer' => 'Please input your id',
+            'country' => 'Please choose your country',
+        ],
+        'titleModal' => [
+            'purchase' => 'Detail Puschase',
+            'alertInfo' => 'Alert',
+        ],
+        'alert' => [
+            'idPlayer' => 'Id player is required',
+            'country' => 'Country must be choosed',
+            'payment' => 'Payment must be choosed',
+            'item' => 'Item must be choosed',
+        ],
+        'noPayment' => 'Payment not avaliable',
+    ];
 
-    public function __construct(InvoiceService $invoiceService, GeneralRepository $generalRepository)
+    public function __construct(InvoiceService $invoiceService, PaymentService $paymentService)
     {
-        $this->invoiceService = $invoiceService;
-        $this->generalRepository = $generalRepository;
+        $this->_invoiceService = $invoiceService;
+        $this->_paymentService = $paymentService;
     }
 
     public function index(Request $request)
     {
         try {
-            $slug = $request->slug;
-            $dataGame = $this->generalRepository->getDataGameBySlug($slug);
-            $countries = $this->generalRepository->getAllDataCountry();
-            
-            return view('frontend.payment.index', compact('countries', 'dataGame'));
+            if($request->slug) {
+                $slug = $request->slug;
+                $dataGame = $this->_paymentService->getDataGame($slug);
+                $countries = $this->_paymentService->getAllDataCountry();
+                $activeLink = $this->activeLink;
+                $textAttribute = json_encode($this->dataset);
+                $categoryPayment = json_encode( $this->_paymentService->getAllCategoryPayment());
+
+                return view('frontend.payment.index', compact('countries', 'dataGame', 'activeLink', 'textAttribute', 'categoryPayment'));
+            }
+
+            return redirect()->route('home');
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -33,23 +59,27 @@ class PaymentController extends Controller
 
     public function confirmation(Request $request) 
     {  
+        // dd($request->query('invoice'));
         try {
-            if(!$request->query('invoice')) return dd('not found');
-            $data = $this->invoiceService->getInvoice($request->query('invoice'));
+            if(!$request->query('invoice')) return 'not found';
+            // dd($request->query('invoice'));
+            $data = $this->_invoiceService->getInvoice($request->query('invoice'));
+            $activeLink = $this->activeLink;
             
-            return response()->view('frontend.payment.confirmation', compact('data'))
-            ->header('Access-Control-Allow-Origin', 'https://dev.unipin.com/api/unibox/request')
-            ->header('Access-Control-Allow-Methods', 'POST')
-            ->header('Access-Control-Allow-Headers', '*');
+            return response()->view('frontend.payment.confirmation', compact('data', 'activeLink'));
+            // ->header('Access-Control-Allow-Origin', 'https://dev.unipin.com/api/unibox/request')
+            // ->header('Access-Control-Allow-Methods', 'POST')
+            // ->header('Access-Control-Allow-Headers', '*');
         } catch (\Throwable $th) {
             dd($th);
         }
     }
 
-    public function test(Request $request)
-    {
-        dd(json_encode($request->all()));
-    }
+    // public function test(Request $request)
+    // {
+    //     dd(json_encode($request->all()));
+        
+    // }
 
     public function unipin(Request $request)
     {

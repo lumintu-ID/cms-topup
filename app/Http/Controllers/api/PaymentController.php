@@ -30,7 +30,7 @@ class PaymentController extends Controller
 
             $dataGame = GameList::where('id', $game)->first();
 
-            $payment = Payment::where('country_id', $country)->get();
+            $payment = Payment::with('category', 'code_pay')->where('country_id', $country)->get();
 
             if ($dataGame == null || count($payment) == 0) {
                 Log::warning('Get Payment List Not Found', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | WARN ' . ' | id game ' . $game . ' and country id ' . $country . ' not found']);

@@ -1,0 +1,92 @@
+@use "../colors";
+
+.promo-info-news {
+  display: flex;
+  flex-direction: column;
+  min-height: 10rem;
+
+  @include media-breakpoint-up(md) {
+    min-height: 11rem;
+  }
+
+  @include media-breakpoint-up(lg) {
+    min-height: 13rem;
+  }
+
+  @include media-breakpoint-up(xl) {
+    min-height: 17.3rem;
+  }
+  
+  &__thumbnail {
+    display: flex;
+    flex: 1;
+    min-height: 6rem;
+    background-color: colors.$color-third;
+    outline: 1px solid colors.$color-fourth;
+    border-radius: 5px;
+    overflow: hidden;
+
+    @include media-breakpoint-up(md) {
+      min-height: 10rem;
+    }
+
+    @include media-breakpoint-up(lg) {
+      min-height: 11rem;
+    }
+
+    @include media-breakpoint-up(xxl) {
+      min-height: 14rem;
+    }
+
+    img{
+      max-width: 100%;
+      min-height: 100%;
+    }
+  }
+
+  &__title {
+    margin: .3rem 0;
+    font-size: .7rem;
+    font-weight: bold;
+    text-shadow: 1px 2px darken($color: colors.$color-first, $amount: 10);
+
+    a {
+      transition: .3s ease-in-out text-shadow;
+    }
+
+    a:hover {
+      color: unset;
+      text-shadow: 1px 1px lighten($color: colors.$color-fourth, $amount: 25);
+      transition: .3s ease-in-out text-shadow;
+    }
+
+    @include media-breakpoint-up(md) {
+      font-size: .7rem;
+    }
+
+    @include media-breakpoint-up(lg) {
+      font-size: 1rem;
+    }
+
+    @include media-breakpoint-up(xl) {
+      font-size: 1.2rem;
+    }   
+  }
+
+  &__descriptions {
+    font-size: .6rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* number of lines to show */
+    
+    @include media-breakpoint-up(lg) {
+      font-size: .7rem;
+    }
+
+    @include media-breakpoint-up(xl) {
+      font-size: .9rem;
+    }
+  }
+}

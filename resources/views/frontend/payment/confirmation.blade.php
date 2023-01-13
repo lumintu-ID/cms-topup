@@ -2,7 +2,7 @@
 @section('content')
   <section class="container-fluid container-lg py-3">
     <div class="row justify-content-center">
-      <div class="col-12 col-sm-10 col-md-4 p-0">
+      <div class="col-12 col-sm-10 col-lg-6 col-xl-4 p-0">
         <div class="box-invoice">
           @if ($data)
             <div class="box-invoice__header d-flex justify-content-center">
@@ -66,9 +66,11 @@
 
 
 @section('js-utilities')
+  <script src="{{ asset('assets/website/js/jquery-3.5.1.slim.min.js') }}"></script>
   <script>
     $(document).ready(function(){
       const payment = $("#elementAttribute").data("element-input");
+      // console.log(payment);
       if(typeof payment.dataparse === "undefined"){
         for (const key in payment) {
           if (Object.hasOwnProperty.call(payment, key)) {
@@ -88,13 +90,37 @@
           }
         }
       }else{
+        // console.log($("#btnPay"));
         $("#btnPay").removeAttr('type');
         $("#btnPay").click(async function(event) {
+          // // let headers = new Headers();
+          // // headers.append('Content-Type', 'application/json');
+          // // headers.append('Accept', 'application/json');
+          // // headers.append('Access-Control-Allow-Origin', 'http://localhost:8000');
+          // // headers.append('Access-Control-Allow-Credentials', 'true');
+          // // headers.append('GET', 'POST', 'OPTIONS');
           event.preventDefault();
+          // let headers = {'Content-Type':'application/json',
+          //           'Access-Control-Allow-Origin':'*',
+          //           'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'}
+          // console.log(headers);
+          console.log(payment.dataparse);
+          console.log(JSON.stringify( payment.dataparse));
+          // // await fetch(payment.urlAction, {
+          // //   method: payment.methodAction,
+          // //   headers: headers,
+          // //   body: JSON.stringify( payment.dataparse),
+          // // })
+          // // .then((response) => {
+          // //   console.log(response);
+          // // });
+          // pageRedirect();
           let myHeaders = new Headers();
           myHeaders.append("Content-Type", "application/json");
           myHeaders.append('Access-Control-Allow-Origin', '*');
-          myHeaders.append('Access-Control-Allow-Methods', 'POST,PATCH,OPTIONS');
+          myHeaders.append('Access-Control-Allow-Methods', 'POST, PATCH, OPTIONS');
+          myHeaders.append('Access-Control-Allow-Credentials', false);
+          myHeaders.append('Access-Control-Allow-Headers', 'Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization');
           let requestOptions = {
             method: payment.methodAction,
             headers: myHeaders,
@@ -109,6 +135,7 @@
           .catch(error => console.log('error', error));
                   
           });
+        // console.log(payment.urlAction);
       }
     });
     function pageRedirect() {

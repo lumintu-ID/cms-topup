@@ -86,6 +86,7 @@ class TransactionController extends Controller
                 'price_point_id' => $price[0]->pricepoint->id,
                 'price_id' => $request->price_id,
                 'email' => $request->email,
+                'phone' => $request->phone ? $request->phone : null,
                 'amount' => $price[0]->amount . ' ' . $price[0]->name,
                 'total_price' => $this->totalPrice($price[0]->price),
                 'status' => 0

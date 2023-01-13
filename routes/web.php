@@ -18,8 +18,9 @@ use App\Http\Controllers\cms\TransactionController;
 // use Illuminate\Http\Request;
 
 /* ============ Frontend Controller ============ */
-use App\Http\Controllers\frontend\HomeController;
+use App\Http\Controllers\frontend\HomeController as HomeFrontend;
 use App\Http\Controllers\frontend\PaymentController as PaymentFrontend;
+use App\Http\Controllers\frontend\GameController as GameFrontend;
 use App\Http\Controllers\frontend\TransactionController as FrontendTransactionController;
 
 /*
@@ -33,10 +34,13 @@ use App\Http\Controllers\frontend\TransactionController as FrontendTransactionCo
 |
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::post('/payment-unipin', [PaymentFrontend::class, 'unipin'])->name('payment.unipin');
-Route::get('/payment/{slug}', [PaymentFrontend::class, 'index'])->name('payment');
-Route::post('/payment/test', [PaymentFrontend::class, 'test'])->name('payment.test');
+Route::get('/', [HomeFrontend::class, 'index'])->name('home');
+// Route::get('/test', [HomeFrontend::class, 'test'])->name('home.test');
+Route::get('/games', [GameFrontend::class, 'index'])->name('games');
+// Route::post('/payment-unipin', [PaymentFrontend::class, 'unipin'])->name('payment.unipin');
+Route::get('/payment', [PaymentFrontend::class, 'index'])->name('payment');
+Route::get('/payment/{slug}', [PaymentFrontend::class, 'index'])->name('payment.games');
+// Route::post('/payment/test', [PaymentFrontend::class, 'test'])->name('payment.test');
 Route::get('/confirmation', [PaymentFrontend::class, 'confirmation'])->name('payment.confirmation');
 Route::post('/transaction', [FrontendTransactionController::class, 'transaction'])->name('payment.transaction');
 

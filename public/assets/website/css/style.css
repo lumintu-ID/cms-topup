@@ -175,7 +175,7 @@ section.support {
 
 /*=================== Section Promo Info =============== */
 
-.promo-card__video {
+.promo-card__video {  
   display: flex;
   justify-content: center;
   outline: 1px solid #ff9000;
