@@ -64,7 +64,6 @@
   </section>
 @endsection
 
-
 @section('js-utilities')
   <script src="{{ asset('assets/website/js/jquery-3.5.1.slim.min.js') }}"></script>
   <script>
@@ -89,8 +88,6 @@
           }
         }
       }else{
-        // console.log($("#btnPay"));
-        console.log('hjahsjah')
         $("#btnPay").removeAttr('type');
         $("#btnPay").click(async function(event) {
           // // let headers = new Headers();
@@ -104,8 +101,8 @@
           //           'Access-Control-Allow-Origin':'*',
           //           'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'}
           // console.log(headers);
-          console.log(payment.dataparse);
-          console.log(JSON.stringify( payment.dataparse));
+          // console.log(payment.dataparse);
+          // console.log(JSON.stringify( payment.dataparse));
           // // await fetch(payment.urlAction, {
           // //   method: payment.methodAction,
           // //   headers: headers,
@@ -132,10 +129,10 @@
           await fetch(payment.urlAction, requestOptions)
           .then(response => response.text())
           .then(result => console.log(result))
-          .catch(error => console.log('error', error));
-                  
+          .catch((error) => {
+            console.error('Error:', error);
           });
-        // console.log(payment.urlAction);
+        });
       }
     });
     function pageRedirect() {

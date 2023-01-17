@@ -42,13 +42,13 @@ class PaymentController extends Controller
     public function index(Request $request)
     {
         try {
-            if($request->slug) {
+            if ($request->slug) {
                 $slug = $request->slug;
                 $dataGame = $this->_paymentService->getDataGame($slug);
                 $countries = $this->_paymentService->getAllDataCountry();
                 $activeLink = $this->activeLink;
                 $textAttribute = json_encode($this->dataset);
-                $categoryPayment = json_encode( $this->_paymentService->getAllCategoryPayment());
+                $categoryPayment = json_encode($this->_paymentService->getAllCategoryPayment());
 
                 return view('frontend.payment.index', compact('countries', 'dataGame', 'activeLink', 'textAttribute', 'categoryPayment'));
             }
@@ -59,17 +59,17 @@ class PaymentController extends Controller
         }
     }
 
-    public function confirmation(Request $request) 
-    {  
+    public function confirmation(Request $request)
+    {
         // dd($request->query('invoice'));
         try {
-            if(!$request->query('invoice')) return 'not found';
+            if (!$request->query('invoice')) return 'not found';
             // dd($request->query('invoice'));
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
             $activeLink = $this->activeLink;
 
             // dd( $data);
-            
+
             return response()->view('frontend.payment.confirmation', compact('data', 'activeLink'));
             // ->header('Access-Control-Allow-Origin', 'https://dev.unipin.com/api/unibox/request')
             // ->header('Access-Control-Allow-Methods', 'POST')
@@ -82,7 +82,7 @@ class PaymentController extends Controller
     // public function test(Request $request)
     // {
     //     dd(json_encode($request->all()));
-        
+
     // }
 
     public function unipin(Request $request)
@@ -98,7 +98,7 @@ class PaymentController extends Controller
             'denominations' => $request->denominations
         ];
         // dd(json_encode($dataParse));
-        
+
         // $response = Http::accept('application/json')->post($request->urlPayment, $dataParse);
         $response = Http::get('https://jsonplaceholder.typicode.com/todos/1');
 
@@ -108,8 +108,4 @@ class PaymentController extends Controller
         // return Http::dd()->post($request->urlPayment, $dataParse);
         return dd($response);
     }
-    
-    
 }
-
-

@@ -7,12 +7,14 @@
   border-radius: 3px;
   outline: 1px solid red;
   overflow: hidden;
-  transition: .2s ease-in-out color, .3s linear box-shadow;
+  transition: .3s ease-in-out color, .3s linear box-shadow;
+  box-shadow: rgb(0 0 0 / 50%) 0px 1px 6px 0px;
  
   &:hover {
     color: #fff;
     box-shadow: 0 0 1rem #888888;
-    transition: .3s ease-in-out color, box-shadow .3s linear;
+    text-shadow: 1px 2px rgb(0 0 0 / 12%);
+    transition: .3s ease-in-out color, box-shadow .3s linear, .3s linear text-shadow;
   }
 
   &__body {

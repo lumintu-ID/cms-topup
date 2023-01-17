@@ -1,13 +1,21 @@
 @use "./colors";
 
-.input-form__player > .form-control:focus,
-.input-form__country > .form-select:focus {
+.player-input {
+  padding-top: .7rem;
+  border-radius: 3px;
+  box-shadow: 0 1px 6px 0 rgb(49 53 59 / 12%);
+}
+
+.input-form__player>.form-control:focus,
+.input-form__country>.form-select:focus {
   border-color: colors.$color-fourth;
   outline: .1rem;
   box-shadow: 0 0 0 0.2rem transparentize($color: colors.$color-fourth, $amount: .8);
 }
 
 .payment-list {
+  padding-top: 1rem;
+
   &__items {
     display: flex;
     justify-items: center;
@@ -18,17 +26,17 @@
     border-radius: 3px;
     cursor: pointer;
     animation: fadein 1s;
-    
+
     &:hover {
       background-color: #ffffffd8;
       outline: 3px solid #979696;
     }
-    
+
     @include media-breakpoint-up(sm) {
       min-height: 4rem;
       padding: .5rem 1rem;
     }
-    
+
     img {
       max-width: 80%;
       max-height: 70%;
@@ -43,8 +51,9 @@
 
   @include media-breakpoint-down(sm) {
     min-height: 10vh;
-   
+
   }
+
   @include media-breakpoint-up(sm) {
     min-height: 20vh;
     margin: 1rem 0;
@@ -66,7 +75,7 @@
     &:hover {
       outline: .1rem solid #717171;
     }
-    
+
     input[type=radio]:checked {
       background-color: none !important;
     }
@@ -90,8 +99,3 @@
     letter-spacing: .05rem;
   }
 }
-
-
-
-
-

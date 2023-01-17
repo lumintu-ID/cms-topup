@@ -13,8 +13,8 @@ class InvoiceServiceImplement implements InvoiceService
   {
     $this->_invoiceRepository = $invoiceRepository;
   }
-  
-  public function getInvoice($id) 
+
+  public function getInvoice($id)
   {
     $dataTransaction = $this->_invoiceRepository->getTransactionById($id);
     $dataPayment = $this->_invoiceRepository->getDetailPrice($dataTransaction->price_id)->toArray();
@@ -29,40 +29,39 @@ class InvoiceServiceImplement implements InvoiceService
     $result['payment']['email'] = $dataTransaction->email;
     $result['attribute'] = $this->_getPaymentAttribute($result['payment'], $result['game']);
 
-    // dd( $data['attribute']);
-
     return $result;
   }
 
   private function _getPaymentAttribute(array $dataPayment = null, array $dataGame = null)
   {
-    if(empty($dataPayment)) return 'data is null';
+    if (empty($dataPayment)) return 'data is null';
 
     $urlReturn = route('home');
     $methodActionPost = "POST";
     $methodActionGet = "GET";
-    $trxDateTime= \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('Y-m-d\TH:i:s');
-    // dd($trxDateTime);
+    $trxDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('Y-m-d\TH:i:s');
+
     $notifUrl = 'https://esi-paymandashboard.azurewebsites.net/api/v1/transaction/notify';
-    
+
     switch (Str::upper($dataPayment['code_payment'])) {
       case env('GV_CODE_PAYMENT'):
         $merchantId = env('GV_MERCHANT_ID');
         $mercahtKey = env('GV_MERCHANT_KEY');
-        $sign = hash('md5', $merchantId.$dataPayment['price'].$mercahtKey.$dataPayment['invoice']);
+        $sign = hash('md5', $merchantId . $dataPayment['price'] . $mercahtKey . $dataPayment['invoice']);
         $dataAttribute = [
           ['urlAction' => $dataPayment['url']],
           ['methodAction' => $methodActionGet],
           ['merchantid' => $merchantId],
           ['custom' => $dataPayment['invoice']],
-          ['product' => $dataPayment['amount'].' '.$dataPayment['name']],
+          ['product' => $dataPayment['amount'] . ' ' . $dataPayment['name']],
           ['amount' => $dataPayment['price']],
           ['custom_redirect' => $urlReturn],
           ['email' => $dataPayment['email']],
           ['signature' => $sign],
         ];
+
         return json_encode($dataAttribute);
-      break;
+        break;
 
       case env('UNIPIN_CODE_PAYMENT'):
         $guid = env('UNIPIN_DEV_GUID');
@@ -70,8 +69,8 @@ class InvoiceServiceImplement implements InvoiceService
         $currency = 'IDR';
         $reference =  $dataPayment['invoice'];
         $urlAck = $notifUrl;
-        $denominations = $dataPayment['price'].$dataPayment['amount'].' '.$dataPayment['name'];
-        $signature = hash('sha256', $guid.$reference.$urlAck.$currency.$denominations.$secretKey);
+        $denominations = $dataPayment['price'] . $dataPayment['amount'] . ' ' . $dataPayment['name'];
+        $signature = hash('sha256', $guid . $reference . $urlAck . $currency . $denominations . $secretKey);
         $dataParse = [
           'guid' => $guid,
           'reference' => $reference,
@@ -81,7 +80,7 @@ class InvoiceServiceImplement implements InvoiceService
           'signature' => $signature,
           'denominations' => [
             'amount' => $dataPayment['price'],
-            'description' => $dataPayment['amount'].' '.$dataPayment['name']
+            'description' => $dataPayment['amount'] . ' ' . $dataPayment['name']
           ]
         ];
         $dataAttribute = [
@@ -90,16 +89,15 @@ class InvoiceServiceImplement implements InvoiceService
           'dataparse' => $dataParse,
         ];
 
-       
         return json_encode($dataAttribute);
-      break;
-        
+        break;
+
       case env('GOC_CODE_PAYMENT'):
         $merchantId = env('GOC_MERCHANT_ID');
         $haskey = env('GOC_HASHKEY');
-        // $trxDateTime= \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('Y-m-d\TH:i:s')."+07";
+        $trxDateTime = substr(\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('Y-m-d\TH:i:sP'), 0, -3);
         $currency = "IDR";
-        $sign = hash('sha256', $merchantId.$dataPayment['invoice'].$trxDateTime.$dataPayment['channel_id'].$dataPayment['price'].$currency.$haskey);
+        $sign = hash('sha256', $merchantId . $dataPayment['invoice'] . $trxDateTime . $dataPayment['channel_id'] . $dataPayment['price'] . $currency . $haskey);
         // $phone = '08777535648447';
         // $phone = '082119673393';
         $dataAttribute = [
@@ -118,9 +116,9 @@ class InvoiceServiceImplement implements InvoiceService
           ['userId' => 'userId'],
           ['sign' => $sign],
         ];
-        
+
         return json_encode($dataAttribute);
-      break;
+        break;
 
       case env("MOTIONPAY_CODE_PAYMENT"):
         $merchantCode = env("MOTIONPAY_MERCHANT_CODE");
@@ -131,28 +129,30 @@ class InvoiceServiceImplement implements InvoiceService
         $orderId = $dataPayment['invoice'];
         $numberReference = $dataPayment['invoice'];
         $amount = $dataPayment['price'];
-        $itemDetails = $dataPayment['name'].' '.$dataPayment['amount'];
+        $itemDetails = $dataPayment['name'] . ' ' . $dataPayment['amount'];
         $datetimeRequest = $trxDateTime;
         $paymentMethod = 'All';
         $timeLimit = '60';
         $thanksUrl = route('home');
-        $signature = hash('sha1', md5($merchantCode
-          .$firstName
-          .$lastName
-          .$email
-          .$phone
-          .$orderId
-          .$numberReference
-          .$amount
-          .$itemDetails
-          .$datetimeRequest
-          .$paymentMethod
-          .$timeLimit
-          .$notifUrl
-          .$thanksUrl
-        )
-      );
-        // dd($signature);
+        $signature = hash(
+          'sha1',
+          md5(
+            $merchantCode
+              . $firstName
+              . $lastName
+              . $email
+              . $phone
+              . $orderId
+              . $numberReference
+              . $amount
+              . $itemDetails
+              . $datetimeRequest
+              . $paymentMethod
+              . $timeLimit
+              . $notifUrl
+              . $thanksUrl
+          )
+        );
         $dataParse = [
           'merchant_code' => $merchantCode,
           'first_name' => $firstName,
@@ -175,20 +175,15 @@ class InvoiceServiceImplement implements InvoiceService
           'urlAction' => env("MOTIONPAY_URL"),
           'dataparse' => $dataParse,
         ];
+
         return json_encode($dataAttribute);
-      break;
+        break;
 
       case env("RAZE_NAME_PAYMENT"):
         $dataAttribute = "Razer payment";
+
         return json_encode($dataAttribute);
-      break;
+        break;
     }
   }
-
-  private function generateSignatureMotionPay()
-  {
-
-
-  }
-  
 }
