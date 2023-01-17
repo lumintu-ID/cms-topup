@@ -19,57 +19,128 @@
       <form action="{{ route('payment.transaction') }}" method="post" id="formCheckout">
         @csrf
         <div class="modal-body checkout-confirm">
-          <div class="row" id="nameGame">
-            <div>
-              Game: <span></span>
+          <div class="row justify-content-around mb-2 mb-2" id="nameGame">
+            <div class="col-6">
+              Game :
+            </div>
+            <div class="col-4 text-end">
+              <span></span>
             </div>
             <input type="text" name="game_id" hidden>
           </div>
-          <div class="row" id="playerId">
+
+          <div class="row justify-content-around mb-2" id="playerId">
+            <div class="col-6">
+              Player ID :
+            </div>
+            <div class="col-4 text-end">
+              <span></span>
+            </div>
+            <input type="text" name="player_id" hidden>
+          </div>
+
+          {{-- <div class="row" id="playerId">
             <div>
               Player ID: <span></span>
             </div>
             <input type="text" name="player_id" hidden>
+          </div> --}}
+
+          <div class="row justify-content-around mb-2" id="playerName">
+            <div class="col-6">
+              Username :
+            </div>
+            <div class="col-4 text-end">
+              <span></span>
+            </div>
+            <input type="text" name="username" hidden>
           </div>
-          <div class="row" id="playerName">
+
+          {{-- <div class="row" id="playerName">
             <div>
               Username: <span></span>
             </div>
             <input type="text" name="username" hidden>
+          </div> --}}
+
+          <div class="row justify-content-around mb-2" id="emailInpt">
+            <div class="col-6">
+              Email :
+            </div>
+            <div class="col-4 text-end">
+              <span></span>
+            </div>
+            <input type="text" name="email" hidden>
           </div>
-          <div class="row" id="emailInpt">
+
+          {{-- <div class="row" id="emailInpt">
             <div>
               Email: <span></span> 
             </div> 
             <input type="text" name="email" hidden>
+          </div> --}}
+
+          <div class="row justify-content-around mb-2" id="amount">
+            <div class="col-6">
+              Amount :
+            </div>
+            <div class="col-4 text-end">
+              <span></span>
+            </div>
+            <input type="text" name="amount" hidden>
           </div>
-          <div class="row" id="amount">
+
+          {{-- <div class="row" id="amount">
             <div>
               Amount: <span></span>
             </div>
             <input type="text" name="amount" hidden>
+          </div> --}}
+
+          <div class="row justify-content-around mb-2" id="price">
+            <div class="col-6">
+              Price :
+            </div>
+            <div class="col-4 text-end">
+              <span></span>
+            </div>
+            <input type="text" name="price" hidden>
+            <input type="text" name="price_id" id="priceId" hidden>
           </div>
-          <div class="row" id="price">
+          
+          {{-- <div class="row" id="price">
             <div>
               Price: <span></span>
             </div>
             <input type="text" name="price" hidden>
             <input type="text" name="price_id" id="priceId" hidden>
+          </div> --}}
+
+          <div class="row justify-content-around mb-2" id="payment">
+            <div class="col-6">
+              Method Payment :
+            </div>
+            <div class="col-4 text-end">
+              <span></span>
+            </div>
+            <input type="text" name="payment" hidden>
+            <input type="text" name="payment_id" id="priceId" hidden>
           </div>
-          <div class="row" id="payment">
+
+          {{-- <div class="row" id="payment">
             <div>
               Method Payment: <span></span>
             </div>
             <input type="text" name="payment" hidden>
             <input type="text" name="payment_id" hidden>
-          </div>
+          </div> --}}
           <div class="row checkout-confirm__info mt-2">
             <p>*Pastikan ID Player dan item yang dipilih sudah sesuai.</p>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="button__cancel" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="button__primary">Lanjutkan</button>
+          <button type="button" class="button__cancel" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="button__primary">Continue</button>
         </div>
       </form>
     </div>

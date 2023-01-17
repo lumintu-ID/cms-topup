@@ -5,6 +5,7 @@
 
 .navbar {
   background-color: colors.$color-third;
+  box-shadow: 0 3px 6px 0 transparentize($color: colors.$color-third, $amount: .3);
 }
 
 .nav-link {
@@ -12,7 +13,7 @@
   margin-bottom: 0;
   border-bottom: 0 solid unset;
   transition: 2s ease-in-out border-bottom;
-  
+
   &:hover,
   &.active {
     margin-bottom: -1px;
@@ -35,11 +36,12 @@
 
 .nav-btn {
   @include nav-btn();
- 
+
   color: #fff;
   background-color: colors.$color-fifth;
   outline: .2rem solid #0343a4;
   transition: .2s ease-in-out transform, .3s ease-in-out color, .3s ease-in-out outline;
+
   &:hover {
     outline: .21rem solid colors.$color-fourth;
     color: colors.$color-fourth;

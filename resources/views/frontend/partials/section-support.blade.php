@@ -1,6 +1,6 @@
-<section class="section-support" id="support">
+<section class="section-support pt-5" id="support">
   <div class="row">
-    <div class="label-section">Dukungan</div>
+    <div class="label-section">Support</div>
   </div>
   <div class="row row-cols-1 row-cols-sm-2 gy-3 py-4">
     <div class="col">

@@ -16,7 +16,8 @@
       <div class="col">
         <div class="promo-info-video__card">
           <div class="promo-card__video">
-            <iframe src="https://www.youtube.com/embed/hA7w4gDbTEE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/ZNG9pYyM2rQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            
           </div>
           <div class="promo-card__video-title">
             <a href="#">

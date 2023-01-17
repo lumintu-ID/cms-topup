@@ -1,7 +1,7 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-<section class="section-games">
+<section class="section-games mt-4">
   <div class="row">
     <div class="label-section">List Game</div>
   </div>
