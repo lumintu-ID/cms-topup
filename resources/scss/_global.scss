@@ -39,17 +39,17 @@ main {
     border-radius: 3px;
     background-color: rgb(0, 0, 0);
     overflow: hidden;
-  
-    a > &:hover {
+
+    a>&:hover {
       background-color: rgba(0, 0, 0, 0.922);
       outline: 2px solid rgb(0, 0, 0);
       box-shadow: 0 0 1rem #888888;
     }
-  
+
     @include media-breakpoint-up(md) {
       padding: .5rem;
     }
-  
+
     @include media-breakpoint-up(xl) {
       padding: .8rem;
     }
@@ -74,6 +74,7 @@ main {
       font-size: .7rem;
       color: #fff;
       letter-spacing: .15rem;
+
       @include media-breakpoint-up(xl) {
         font-size: 1rem;
       }
@@ -100,8 +101,10 @@ footer {
 .footer {
   &__text {
     font-size: .9rem;
+
     a {
       cursor: pointer;
+
       &:hover {
         color: $white;
         text-shadow: 1px 2px darken($color: colors.$color-first, $amount: 10);
@@ -112,10 +115,11 @@ footer {
 
 @keyframes fadein {
   from {
-    opacity:0;
+    opacity: 0;
   }
+
   to {
-    opacity:1;
+    opacity: 1;
   }
 }
 
@@ -131,8 +135,9 @@ footer {
   border-radius: .5rem;
   background-color: #ffffff;
   overflow: hidden;
+  box-shadow: 0 1px 6px 0 rgb(49 53 59 / 50%);
 
-  hr { 
+  hr {
     margin: .5rem 0;
     color: inherit;
     background-color: currentColor;
@@ -162,11 +167,3 @@ footer {
     font-style: italic;
   }
 }
-
-
-
-
-
-
-
-

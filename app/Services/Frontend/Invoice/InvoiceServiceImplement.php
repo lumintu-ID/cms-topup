@@ -121,6 +121,7 @@ class InvoiceServiceImplement implements InvoiceService
         break;
 
       case env("MOTIONPAY_CODE_PAYMENT"):
+        $dateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('YmdHis');
         $merchantCode = env("MOTIONPAY_MERCHANT_CODE");
         $firstName = $dataPayment['user'];
         $lastName = $dataPayment['user'];
@@ -128,31 +129,31 @@ class InvoiceServiceImplement implements InvoiceService
         $phone = '082119673393';
         $orderId = $dataPayment['invoice'];
         $numberReference = $dataPayment['invoice'];
-        $amount = $dataPayment['price'];
-        $itemDetails = $dataPayment['name'] . ' ' . $dataPayment['amount'];
-        $datetimeRequest = $trxDateTime;
-        $paymentMethod = 'All';
+        $amount = (string)$dataPayment['price'];
+        $currency = "IDR";
+        $itemDetails = $dataPayment['name'] . $dataPayment['amount'];
+        $datetimeRequest = $dateTime;
+        $paymentMethod = 'ALL';
         $timeLimit = '60';
         $thanksUrl = route('home');
-        $signature = hash(
-          'sha1',
-          md5(
-            $merchantCode
-              . $firstName
-              . $lastName
-              . $email
-              . $phone
-              . $orderId
-              . $numberReference
-              . $amount
-              . $itemDetails
-              . $datetimeRequest
-              . $paymentMethod
-              . $timeLimit
-              . $notifUrl
-              . $thanksUrl
-          )
-        );
+        $secretKey = env("MOTIONPAY_SECRET_KEY");
+        $plainText = $merchantCode
+          . $firstName
+          . $lastName
+          . $email
+          . $phone
+          . $orderId
+          . $numberReference
+          . $amount
+          . $currency
+          . $itemDetails
+          . $datetimeRequest
+          . $paymentMethod
+          . $timeLimit
+          . $notifUrl
+          . $thanksUrl
+          . $secretKey;
+        $signature = hash('sha1', md5($plainText));
         $dataParse = [
           'merchant_code' => $merchantCode,
           'first_name' => $firstName,
@@ -162,6 +163,7 @@ class InvoiceServiceImplement implements InvoiceService
           'order_id' => $orderId,
           'no_reference' => $numberReference,
           'amount' => $amount,
+          'currency' => $currency,
           'item_details' => $itemDetails,
           'datetime_request' => $datetimeRequest,
           'payment_method' => $paymentMethod,
@@ -170,6 +172,7 @@ class InvoiceServiceImplement implements InvoiceService
           'thanks_url' => $thanksUrl,
           'signature' => $signature,
         ];
+
         $dataAttribute = [
           'methodAction' => $methodActionPost,
           'urlAction' => env("MOTIONPAY_URL"),

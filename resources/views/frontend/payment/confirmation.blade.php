@@ -102,6 +102,7 @@
           //           'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'}
           // console.log(headers);
           // console.log(payment.dataparse);
+          console.log(payment.urlAction);
           // console.log(JSON.stringify( payment.dataparse));
           // // await fetch(payment.urlAction, {
           // //   method: payment.methodAction,
@@ -116,8 +117,8 @@
           myHeaders.append("Content-Type", "application/json");
           myHeaders.append('Access-Control-Allow-Origin', '*');
           myHeaders.append('Access-Control-Allow-Methods', 'POST, PATCH, OPTIONS');
-          myHeaders.append('Access-Control-Allow-Credentials', false);
-          myHeaders.append('Access-Control-Allow-Headers', 'Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization');
+          myHeaders.append('Access-Control-Allow-Credentials', true);
+          myHeaders.append('Access-Control-Allow-Headers', 'X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization');
           let requestOptions = {
             method: payment.methodAction,
             headers: myHeaders,
@@ -132,6 +133,14 @@
           .catch((error) => {
             console.error('Error:', error);
           });
+
+          // const $url = 'https://jsonplaceholder.typicode.com/todos/1'
+          // await fetch($url, )
+          // .then(response => response.text())
+          // .then(result => console.log(result))
+          // .catch((error) => {
+          //   console.error('Error:', error);
+          // });
         });
       }
     });
