@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\ServerCreated;
+use App\Events\Transaction;
 use App\Http\Controllers\cms\BannerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\cms\AuthController;
@@ -127,6 +128,7 @@ Route::middleware(['auth', 'access'])->group(function () {
 
     // transaction
     Route::get('/administrator/transaction', [TransactionController::class, 'index'])->name('cms.transaction');
+    Route::post('/administrator/transaction/check', [TransactionController::class, 'check'])->name('cms.transaction.check');
 
     // price point
     Route::get('/administrator/pricepoint', [PricePointController::class, 'index'])->name('cms.pricepoint');

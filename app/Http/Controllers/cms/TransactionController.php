@@ -3,18 +3,20 @@
 namespace App\Http\Controllers\cms;
 
 use App\Models\Price;
+use App\Models\Payment;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 
+use App\Models\Code_payment;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
 use App\Events\Transaction as EventsTransaction;
-use App\Models\History_transaction;
 
 class TransactionController extends Controller
 {
@@ -24,7 +26,6 @@ class TransactionController extends Controller
 
     private function _goc($request)
     {
-
 
         if ($request->status == 100) {
             $status = 1;
@@ -285,6 +286,62 @@ class TransactionController extends Controller
                 'status' => 'BAD_REQUEST',
                 'error' => 'BAD REQUEST',
             ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+
+
+    // Check Status Transaction
+    public function check(Request $request)
+    {
+        $trx = Transaction::with('payment')->where('invoice', $request->invoice)->first();
+
+        if (!$trx) {
+            $notif = array(
+                'message' => 'Data Invoice Not Found',
+                'alert-info' => 'warning'
+            );
+
+            return $notif;
+        };
+
+        $code_payment = Code_payment::where('id', $trx->payment->code_payment)->first();
+
+        if ($code_payment->code_payment == 'GV') {
+            $Merchantkey = "947f512d9b86b517a0070d5a";
+            $Merchantid = "1138";
+            $custom = $request->invoice;
+            $signature = md5($Merchantkey . $Merchantid . $custom);
+
+
+
+            $response = Http::get('https://www.gudangvoucher.com/cpayment.php?merchantid=' . $Merchantid . '&custom=' . $custom . 'signature=' . $signature . '');
+
+            return response()->json([
+                'code' => 200,
+                'status' => 'SUCCESS',
+                'data' => $response->body(),
+            ], 200);
+        } else if ($code_payment->code_payment == 'GOC') {
+            $hashKey = "jqji815m748z0ql560982426ca0j70qk02411d2no6u94qgdf58js2jn596s99si";
+            $Merchantid = "Esp5373790";
+            $trxId = $request->invoice;
+
+            $signature = hash('sha256', $Merchantid . $trxId . $hashKey);
+
+            $response = Http::asForm()->post('https://pay.goc.id/inquiry/', [
+                'merchantId' => $Merchantid,
+                'trxId' => $trxId,
+                'sign' => $signature
+            ]);
+
+            // $this->_goc($response->json());
+
+            return response()->json([
+                'code' => 200,
+                'status' => 'SUCCESS',
+                'data' => $response->body(),
+            ], 200);
         }
     }
 }
