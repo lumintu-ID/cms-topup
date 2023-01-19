@@ -100,7 +100,7 @@ footer {
 
 .footer {
   &__text {
-    font-size: .9rem;
+    font-size: .7rem;
 
     a {
       cursor: pointer;
@@ -109,6 +109,10 @@ footer {
         color: $white;
         text-shadow: 1px 2px darken($color: colors.$color-first, $amount: 10);
       }
+    }
+
+    @include media-breakpoint-up(md) {
+      font-size: 1rem;
     }
   }
 }
