@@ -40,7 +40,7 @@ Route::get('/games', [GameFrontend::class, 'index'])->name('games');
 // Route::post('/payment-unipin', [PaymentFrontend::class, 'unipin'])->name('payment.unipin');
 Route::get('/payment', [PaymentFrontend::class, 'index'])->name('payment');
 Route::get('/payment/{slug}', [PaymentFrontend::class, 'index'])->name('payment.games');
-// Route::post('/payment/test', [PaymentFrontend::class, 'test'])->name('payment.test');
+Route::post('/payment/test', [PaymentFrontend::class, 'test'])->name('payment.test');
 Route::get('/confirmation', [PaymentFrontend::class, 'confirmation'])->name('payment.confirmation');
 Route::post('/transaction', [FrontendTransactionController::class, 'transaction'])->name('payment.transaction');
 
