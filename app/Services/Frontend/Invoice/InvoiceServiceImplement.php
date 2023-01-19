@@ -79,14 +79,27 @@ class InvoiceServiceImplement implements InvoiceService
           'remark' => $dataGame['game_title'],
           'signature' => $signature,
           'denominations' => [
-            'amount' => $dataPayment['price'],
-            'description' => $dataPayment['amount'] . ' ' . $dataPayment['name']
+            [
+              'amount' => $dataPayment['price'],
+              'description' => $dataPayment['amount'] . ' ' . $dataPayment['name']
+            ]
+          ]
+        ];
+        $dataRedirectTo = [
+          'methodAction' => $methodActionGet,
+          'idForm' => 'formRedirectUnp',
+          'inputElement' => [
+            'status',
+            'message',
+            'url',
+            'signature',
           ]
         ];
         $dataAttribute = [
           'methodAction' => $methodActionPost,
           'urlAction' => $dataPayment['url'],
-          'dataparse' => $dataParse,
+          'dataParse' => $dataParse,
+          'dataRedirectTo' => $dataRedirectTo
         ];
 
         return json_encode($dataAttribute);
@@ -172,11 +185,22 @@ class InvoiceServiceImplement implements InvoiceService
           'thanks_url' => $thanksUrl,
           'signature' => $signature,
         ];
-
+        $dataRedirectTo = [
+          'methodAction' => $methodActionPost,
+          'url' => route('payment.test'),
+          'idForm' => 'formRedirectMp',
+          'inputElement' => [
+            'trans_id',
+            'merchant_code',
+            'order_id',
+            'signature',
+          ]
+        ];
         $dataAttribute = [
           'methodAction' => $methodActionPost,
           'urlAction' => env("MOTIONPAY_URL"),
-          'dataparse' => $dataParse,
+          'dataParse' => $dataParse,
+          'dataRedirectTo' => $dataRedirectTo
         ];
 
         return json_encode($dataAttribute);

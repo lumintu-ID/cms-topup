@@ -69,40 +69,58 @@
   <script>
     $(document).ready(function(){
       const payment = $("#elementAttribute").data("element-input");
-      if(typeof payment.dataparse === 'undefined' ){
+      const divParseElement = document.createElement("div");
+      divParseElement.style.display = "none";
+      divParseElement.setAttribute('id', 'parseElement');
+      document.getElementById('formInvoice').append(divParseElement);
+      if(!payment.hasOwnProperty('dataParse')){
         for (const key in payment) {
           if (Object.hasOwnProperty.call(payment, key)) {
             const element = payment[key];
-            if(Object.keys(element) == 'methodAction') {
-              $("#formInvoice").attr({
-                'method': element[Object.keys(element)],
-                'action': payment[0].urlAction,
-              });
+            if(element.methodAction) {
+              $("#formInvoice").attr({ 'method': element[Object.keys(element)] });
+              continue;
             }
-            if(Object.keys(element) != 'methodAction' && Object.keys(element) != 'urlAction') {
-              createElementInput({ 
-                name: String(Object.keys(element)),
-                value: element[Object.keys(element)]
-              });
+            if(element.urlAction ) {
+              $("#formInvoice").attr({ 'action': element[Object.keys(element)] });
+              continue;
             }
+            createElementInput({ 
+              name: Object.keys(element),
+              value: element[Object.keys(element)],
+              idForm: divParseElement.getAttribute( 'id' )
+            });
           }
         }
       }else{
         $("#btnPay").removeAttr('type');
-        $("#btnPay").click(async function(event) {
+        $("#btnPay").click(function(event) {
+          event.preventDefault();
+
           // // let headers = new Headers();
           // // headers.append('Content-Type', 'application/json');
           // // headers.append('Accept', 'application/json');
           // // headers.append('Access-Control-Allow-Origin', 'http://localhost:8000');
           // // headers.append('Access-Control-Allow-Credentials', 'true');
           // // headers.append('GET', 'POST', 'OPTIONS');
-          event.preventDefault();
+
+          if(payment.hasOwnProperty('dataRedirectTo')) {
+            const { dataRedirectTo } = payment;
+            const value = JSON.parse('{"trans_id":"6pjvul9rqp","merchant_code":"FmSample","order_id":"INV-IAZtuZZ3Shx2","no_reference":"INV-IAZtuZZ3Shx2","amount":"5000","frontend_url":"https:\/\/playpay.flashmobile.co.id","signature":"3970794ebd01d8a9e0ba84627ae784676a24fe13"}');
+
+            // const value = JSON.parse('{"status": 1,"message": "Success","url": "https://dev.unipin.com/unibox/d/DLr91674028402V9cxDjMQtp5i?lg=id","signature": "aa0e7f04194b111fe692e48cd01575f3d040169c655c165aeee13a6f9c305bda"}');
+
+         
+            createRedirectForm({ dataElement: dataRedirectTo, value });
+          }
+        // console.log(dataRedirectTo);
           // let headers = {'Content-Type':'application/json',
           //           'Access-Control-Allow-Origin':'*',
           //           'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'}
           // console.log(headers);
           // console.log(payment.dataparse);
-          console.log(payment.urlAction);
+          // console.log(payment.urlAction);
+          // console.log(payment.redirectToPayment);
           // console.log(JSON.stringify( payment.dataparse));
           // // await fetch(payment.urlAction, {
           // //   method: payment.methodAction,
@@ -113,47 +131,79 @@
           // //   console.log(response);
           // // });
           // pageRedirect();
-          let myHeaders = new Headers();
-          myHeaders.append("Content-Type", "application/json");
-          myHeaders.append('Access-Control-Allow-Origin', '*');
-          myHeaders.append('Access-Control-Allow-Methods', 'POST, PATCH, OPTIONS');
-          myHeaders.append('Access-Control-Allow-Credentials', true);
-          myHeaders.append('Access-Control-Allow-Headers', 'X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization');
-          let requestOptions = {
-            method: payment.methodAction,
-            headers: myHeaders,
-            mode: 'cors',
-            body: JSON.stringify( payment.dataparse),
-            redirect: 'follow'
-          };
+          // let myHeaders = new Headers();
+          // myHeaders.append("Content-Type", "application/json");
+          // myHeaders.append('Access-Control-Allow-Origin', '*');
+          // myHeaders.append('Access-Control-Allow-Methods', 'POST, PATCH, OPTIONS');
+          // myHeaders.append('Access-Control-Allow-Credentials', true);
+          // myHeaders.append('Access-Control-Allow-Headers', 'X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization');
+          // let requestOptions = {
+          //   method: dataParse.methodAction,
+          //   headers: myHeaders,
+          //   mode: 'cors',
+          //   body: JSON.stringify( dataParse),
+          //   redirect: 'follow'
+          // };
 
-          await fetch(payment.urlAction, requestOptions)
-          .then(response => response.text())
-          .then(result => console.log(result))
-          .catch((error) => {
-            console.error('Error:', error);
-          });
+          // // await fetch(payment.urlAction, requestOptions)
+          // // .then(response => response.text())
+          // // .then(result => console.log(result))
+          // // .catch((error) => {
+          // //   console.error('Error:', error);
+          // // });
 
           // const $url = 'https://jsonplaceholder.typicode.com/todos/1'
-          // await fetch($url, )
+          // await fetch($url)
           // .then(response => response.text())
-          // .then(result => console.log(result))
+          // .then(result => {
+            
+          //   createRedirectForm(dataParse);
+          //   // console.log(result);
+
+          // })
           // .catch((error) => {
           //   console.error('Error:', error);
           // });
         });
       }
     });
+
     function pageRedirect() {
       window.location.href = "http://localhost:8000";
-    } 
-    const createElementInput = ({ name, value }) => {
+    }
+
+    const createElementInput = ({ name, value, idForm }) => {
       const elmentInput = document.createElement("input");
       elmentInput.setAttribute("name", name);
       elmentInput.hidden = true;
-      elmentInput.value = value || `Value ${name} not avaliable`;
-      $("#formInvoice").append(elmentInput);
+      elmentInput.value = value || 'no value';
+      document.getElementById(idForm || 'formInvoice').append(elmentInput);
       return;
+    }
+
+    const createRedirectForm = ({ dataElement = null, value = null }) => {
+      const { idForm, methodAction } = dataElement;
+      if(!dataElement) return console.log('no data redirect');
+      if(document.getElementById(idForm)) return console.log('form was avaliable');
+
+      let redirectForm = document.createElement("form");
+      redirectForm.setAttribute('id', idForm);
+      redirectForm.setAttribute('method', methodAction);
+      redirectForm.setAttribute('action', value.url);
+      document.getElementsByClassName('box-invoice')[0].appendChild(redirectForm);
+      
+      for (const key in value) {
+        if(key.includes("url")) { 
+          redirectForm.setAttribute('action', value[key]);
+        };
+        createElementInput({ idForm, name: key, value: value[key] });
+      }
+
+      const inputSubmit = document.createElement("input");
+      inputSubmit.setAttribute("type", "submit");
+      inputSubmit.hidden = true;
+      document.getElementById(idForm).append(inputSubmit);
+      document.forms[idForm].submit();
     }
   </script>
 @endsection
