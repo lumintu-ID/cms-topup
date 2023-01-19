@@ -69,82 +69,101 @@
   <script>
     $(document).ready(function(){
       const payment = $("#elementAttribute").data("element-input");
-      if(typeof payment.dataparse === 'undefined' ){
+      const divParseElement = document.createElement("div");
+      divParseElement.style.display = "none";
+      divParseElement.setAttribute('id', 'parseElement');
+      document.getElementById('formInvoice').append(divParseElement);
+      if(!payment.hasOwnProperty('dataParse')){
         for (const key in payment) {
           if (Object.hasOwnProperty.call(payment, key)) {
             const element = payment[key];
-            if(Object.keys(element) == 'methodAction') {
-              $("#formInvoice").attr({
-                'method': element[Object.keys(element)],
-                'action': payment[0].urlAction,
-              });
+            if(element.methodAction) {
+              $("#formInvoice").attr({ 'method': element[Object.keys(element)] });
+              continue;
             }
-            if(Object.keys(element) != 'methodAction' && Object.keys(element) != 'urlAction') {
-              createElementInput({ 
-                name: String(Object.keys(element)),
-                value: element[Object.keys(element)]
-              });
+            if(element.urlAction ) {
+              $("#formInvoice").attr({ 'action': element[Object.keys(element)] });
+              continue;
             }
+            createElementInput({ 
+              name: Object.keys(element),
+              value: element[Object.keys(element)],
+              idForm: divParseElement.getAttribute( 'id' )
+            });
           }
         }
       }else{
         $("#btnPay").removeAttr('type');
-        $("#btnPay").click(async function(event) {
-          // // let headers = new Headers();
-          // // headers.append('Content-Type', 'application/json');
-          // // headers.append('Accept', 'application/json');
-          // // headers.append('Access-Control-Allow-Origin', 'http://localhost:8000');
-          // // headers.append('Access-Control-Allow-Credentials', 'true');
-          // // headers.append('GET', 'POST', 'OPTIONS');
+        $("#btnPay").click(function(event) {
+          const { urlAction, dataParse } = payment;
           event.preventDefault();
-          // let headers = {'Content-Type':'application/json',
-          //           'Access-Control-Allow-Origin':'*',
-          //           'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'}
-          // console.log(headers);
-          // console.log(payment.dataparse);
-          // console.log(JSON.stringify( payment.dataparse));
-          // // await fetch(payment.urlAction, {
-          // //   method: payment.methodAction,
-          // //   headers: headers,
-          // //   body: JSON.stringify( payment.dataparse),
-          // // })
-          // // .then((response) => {
-          // //   console.log(response);
-          // // });
-          // pageRedirect();
-          let myHeaders = new Headers();
-          myHeaders.append("Content-Type", "application/json");
-          myHeaders.append('Access-Control-Allow-Origin', '*');
-          myHeaders.append('Access-Control-Allow-Methods', 'POST, PATCH, OPTIONS');
-          myHeaders.append('Access-Control-Allow-Credentials', false);
-          myHeaders.append('Access-Control-Allow-Headers', 'Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization');
-          let requestOptions = {
-            method: payment.methodAction,
-            headers: myHeaders,
-            mode: 'cors',
-            body: JSON.stringify( payment.dataparse),
-            redirect: 'follow'
-          };
-
-          await fetch(payment.urlAction, requestOptions)
-          .then(response => response.text())
-          .then(result => console.log(result))
-          .catch((error) => {
-            console.error('Error:', error);
-          });
+          postData(urlAction, dataParse);
         });
       }
     });
-    function pageRedirect() {
-      window.location.href = "http://localhost:8000";
-    } 
-    const createElementInput = ({ name, value }) => {
+
+    const createElementInput = ({ name, value, idForm }) => {
       const elmentInput = document.createElement("input");
       elmentInput.setAttribute("name", name);
       elmentInput.hidden = true;
-      elmentInput.value = value || `Value ${name} not avaliable`;
-      $("#formInvoice").append(elmentInput);
+      elmentInput.value = value || 'no value';
+      document.getElementById(idForm || 'formInvoice').append(elmentInput);
       return;
     }
+
+    const createRedirectForm = ({ dataElement = null, value = null }) => {
+      const { idForm, methodAction } = dataElement;
+      if(!dataElement) return console.log('no data redirect');
+      if(document.getElementById(idForm)) return console.log('form was avaliable');
+
+      let redirectForm = document.createElement("form");
+      redirectForm.setAttribute('id', idForm);
+      redirectForm.setAttribute('method', methodAction);
+      redirectForm.setAttribute('action', value.url);
+      document.getElementsByClassName('box-invoice')[0].appendChild(redirectForm);
+      
+      for (const key in value) {
+        if(key.includes("url")) { 
+          redirectForm.setAttribute('action', value[key]);
+        };
+        createElementInput({ idForm, name: key, value: value[key] });
+      }
+
+      const inputSubmit = document.createElement("input");
+      inputSubmit.setAttribute("type", "submit");
+      inputSubmit.hidden = false;
+      document.getElementById(idForm).append(inputSubmit);
+      document.forms[idForm].submit();
+    }
+
+        // Example POST method implementation:
+    async function postData(url = '', data = {}) {
+
+      try {
+        const response = await fetch(url, { 
+          method: 'POST', // *GET, POST, PUT, DELETE, etc.
+          mode: 'cors', // no-cors, *cors, same-origin
+          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: 'include', // *include, same-origin, omit
+          headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          redirect: 'follow', // manual, *follow, error
+          referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        
+        console.log(response);
+        
+        return response.json(); // parses JSON response into native JavaScript objects
+        
+      } catch (error) {
+        console.log('system error, please try again');
+      }
+      // Default options are marked with *
+    }
+
+   
   </script>
 @endsection
