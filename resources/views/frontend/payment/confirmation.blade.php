@@ -97,6 +97,20 @@
         $("#btnPay").click(function(event) {
           event.preventDefault();
 
+          const $url = 'https://jsonplaceholder.typicode.com/todos/1'
+          await fetch($url)
+          .then(response => response.text())
+          .then(result => {
+            
+            // createRedirectForm(dataParse);
+            console.log(result);
+
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+        
+
           // // let headers = new Headers();
           // // headers.append('Content-Type', 'application/json');
           // // headers.append('Accept', 'application/json');
@@ -145,12 +159,12 @@
           //   redirect: 'follow'
           // };
 
-          // // await fetch(payment.urlAction, requestOptions)
-          // // .then(response => response.text())
-          // // .then(result => console.log(result))
-          // // .catch((error) => {
-          // //   console.error('Error:', error);
-          // // });
+          // await fetch(payment.urlAction, requestOptions)
+          // .then(response => response.text())
+          // .then(result => console.log(result))
+          // .catch((error) => {
+          //   console.error('Error:', error);
+          // });
 
           // const $url = 'https://jsonplaceholder.typicode.com/todos/1'
           // await fetch($url)
