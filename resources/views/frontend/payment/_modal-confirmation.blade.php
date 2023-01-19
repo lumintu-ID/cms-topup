@@ -124,7 +124,7 @@
               <span></span>
             </div>
             <input type="text" name="payment" hidden>
-            <input type="text" name="payment_id" id="priceId" hidden>
+            <input type="text" name="payment_id" id="payment" hidden>
           </div>
 
           {{-- <div class="row" id="payment">

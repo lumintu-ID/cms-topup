@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\ServerCreated;
+use App\Events\Transaction;
 use App\Http\Controllers\cms\BannerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\cms\AuthController;
@@ -40,7 +41,7 @@ Route::get('/games', [GameFrontend::class, 'index'])->name('games');
 // Route::post('/payment-unipin', [PaymentFrontend::class, 'unipin'])->name('payment.unipin');
 Route::get('/payment', [PaymentFrontend::class, 'index'])->name('payment');
 Route::get('/payment/{slug}', [PaymentFrontend::class, 'index'])->name('payment.games');
-// Route::post('/payment/test', [PaymentFrontend::class, 'test'])->name('payment.test');
+Route::post('/payment/test', [PaymentFrontend::class, 'test'])->name('payment.test');
 Route::get('/confirmation', [PaymentFrontend::class, 'confirmation'])->name('payment.confirmation');
 Route::post('/transaction', [FrontendTransactionController::class, 'transaction'])->name('payment.transaction');
 
@@ -127,6 +128,7 @@ Route::middleware(['auth', 'access'])->group(function () {
 
     // transaction
     Route::get('/administrator/transaction', [TransactionController::class, 'index'])->name('cms.transaction');
+    Route::post('/administrator/transaction/check', [TransactionController::class, 'check'])->name('cms.transaction.check');
 
     // price point
     Route::get('/administrator/pricepoint', [PricePointController::class, 'index'])->name('cms.pricepoint');
