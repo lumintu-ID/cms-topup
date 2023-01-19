@@ -95,88 +95,9 @@
       }else{
         $("#btnPay").removeAttr('type');
         $("#btnPay").click(function(event) {
-          // console.log(payment);
           const { urlAction, dataParse } = payment;
-          // console.log(dataParse);
           event.preventDefault();
-
           postData(urlAction, dataParse);
-
-          // const $url = 'https://jsonplaceholder.typicode.com/todos/1'
-          // await fetch(urlAction)
-          // .then(response => console.log(response.headers))
-          // .then(result => {
-          //   // const { completed } = JSON.parse(result);
-          //   console.log(result);
-            
-          //   // if(!completed){
-          //   //   result.idForm = 'formRedirectMp';
-          //   //   console.log(result);
-          //   //   createRedirectForm({ dataElement: dataRedirectTo, value });
-          //   // }
-            
-          // })
-          // .catch((error) => {
-          //   console.error('Error:', error);
-          // });
-        
-
-          if(payment.hasOwnProperty('dataRedirectTo')) {
-            const { dataRedirectTo } = payment;
-            const value = JSON.parse('{"trans_id":"6pjvul9rqp","merchant_code":"FmSample","order_id":"INV-IAZtuZZ3Shx2","no_reference":"INV-IAZtuZZ3Shx2","amount":"5000","frontend_url":"https:\/\/playpay.flashmobile.co.id","signature":"3970794ebd01d8a9e0ba84627ae784676a24fe13"}');
-
-            // const value = JSON.parse('{"status": 1,"message": "Success","url": "https://dev.unipin.com/unibox/d/DLr91674028402V9cxDjMQtp5i?lg=id","signature": "aa0e7f04194b111fe692e48cd01575f3d040169c655c165aeee13a6f9c305bda"}');
-
-         
-            createRedirectForm({ dataElement: dataRedirectTo, value });
-          }
-        // console.log(dataRedirectTo);
-          // let headers = {'Content-Type':'application/json',
-          //           'Access-Control-Allow-Origin':'*',
-          //           'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'}
-          // console.log(headers);
-          // console.log(payment.dataparse);
-          // console.log(payment.urlAction);
-          // console.log(payment.redirectToPayment);
-          // console.log(JSON.stringify( payment.dataparse));
-          // // await fetch(payment.urlAction, {
-          // //   method: payment.methodAction,
-          // //   headers: headers,
-          // //   body: JSON.stringify( payment.dataparse),
-          // // })
-          // // .then((response) => {
-          // //   console.log(response);
-          // // });
-          // pageRedirect();
-          // let myHeaders = new Headers();
-          // myHeaders.append("Content-Type", "application/json");
-          // myHeaders.append('Access-Control-Allow-Origin', '*');
-          // myHeaders.append('Access-Control-Allow-Methods', 'POST, PATCH, OPTIONS');
-          // myHeaders.append('Access-Control-Allow-Credentials', true);
-          // myHeaders.append('Access-Control-Allow-Headers', 'X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization');
-          // let requestOptions = {
-          //   method: dataParse.methodAction,
-          //   headers: myHeaders,
-          //   mode: 'cors',
-          //   body: JSON.stringify( dataParse),
-          //   redirect: 'follow'
-          // };
-
-          // // await fetch(payment.urlAction, requestOptions)
-          // // .then(response => response.text())
-          // // .then(result => console.log(result))
-          // // .catch((error) => {
-          // //   console.error('Error:', error);
-          // // });
-
-          // const $url = 'https://jsonplaceholder.typicode.com/todos/1'
-          // await fetch($url)
-          // .then(response => response.text())
-          // .then(result => console.log(result))
-          // .catch((error) => {
-          //   console.error('Error:', error);
-          // });
-
         });
       }
     });
@@ -232,14 +153,7 @@
           referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
           body: JSON.stringify(data) // body data type must match "Content-Type" header
         });
-        // .then(response =>  {
-        //   console.log(response);
-        // });
         
-        // const l = 'https://jsonplaceholder.typicode.com/todos/1';
-        
-        // const response = await fetch(l)
-        // .then(response => console.log(response.headers))
         console.log(response);
         
         return response.json(); // parses JSON response into native JavaScript objects
