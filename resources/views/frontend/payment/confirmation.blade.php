@@ -95,20 +95,30 @@
       }else{
         $("#btnPay").removeAttr('type');
         $("#btnPay").click(function(event) {
+          // console.log(payment);
+          const { urlAction, dataParse } = payment;
+          // console.log(dataParse);
           event.preventDefault();
 
-          const $url = 'https://jsonplaceholder.typicode.com/todos/1'
-          await fetch($url)
-          .then(response => response.text())
-          .then(result => {
-            
-            // createRedirectForm(dataParse);
-            console.log(result);
+          postData(urlAction, dataParse);
 
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
+          // const $url = 'https://jsonplaceholder.typicode.com/todos/1'
+          // await fetch(urlAction)
+          // .then(response => console.log(response.headers))
+          // .then(result => {
+          //   // const { completed } = JSON.parse(result);
+          //   console.log(result);
+            
+          //   // if(!completed){
+          //   //   result.idForm = 'formRedirectMp';
+          //   //   console.log(result);
+          //   //   createRedirectForm({ dataElement: dataRedirectTo, value });
+          //   // }
+            
+          // })
+          // .catch((error) => {
+          //   console.error('Error:', error);
+          // });
         
 
           // // let headers = new Headers();
@@ -118,15 +128,15 @@
           // // headers.append('Access-Control-Allow-Credentials', 'true');
           // // headers.append('GET', 'POST', 'OPTIONS');
 
-          if(payment.hasOwnProperty('dataRedirectTo')) {
-            const { dataRedirectTo } = payment;
-            const value = JSON.parse('{"trans_id":"6pjvul9rqp","merchant_code":"FmSample","order_id":"INV-IAZtuZZ3Shx2","no_reference":"INV-IAZtuZZ3Shx2","amount":"5000","frontend_url":"https:\/\/playpay.flashmobile.co.id","signature":"3970794ebd01d8a9e0ba84627ae784676a24fe13"}');
+          // if(payment.hasOwnProperty('dataRedirectTo')) {
+          //   const { dataRedirectTo } = payment;
+          //   const value = JSON.parse('{"trans_id":"6pjvul9rqp","merchant_code":"FmSample","order_id":"INV-IAZtuZZ3Shx2","no_reference":"INV-IAZtuZZ3Shx2","amount":"5000","frontend_url":"https:\/\/playpay.flashmobile.co.id","signature":"3970794ebd01d8a9e0ba84627ae784676a24fe13"}');
 
-            // const value = JSON.parse('{"status": 1,"message": "Success","url": "https://dev.unipin.com/unibox/d/DLr91674028402V9cxDjMQtp5i?lg=id","signature": "aa0e7f04194b111fe692e48cd01575f3d040169c655c165aeee13a6f9c305bda"}');
+          //   // const value = JSON.parse('{"status": 1,"message": "Success","url": "https://dev.unipin.com/unibox/d/DLr91674028402V9cxDjMQtp5i?lg=id","signature": "aa0e7f04194b111fe692e48cd01575f3d040169c655c165aeee13a6f9c305bda"}');
 
          
-            createRedirectForm({ dataElement: dataRedirectTo, value });
-          }
+          //   createRedirectForm({ dataElement: dataRedirectTo, value });
+          // }
         // console.log(dataRedirectTo);
           // let headers = {'Content-Type':'application/json',
           //           'Access-Control-Allow-Origin':'*',
@@ -215,9 +225,46 @@
 
       const inputSubmit = document.createElement("input");
       inputSubmit.setAttribute("type", "submit");
-      inputSubmit.hidden = true;
+      inputSubmit.hidden = false;
       document.getElementById(idForm).append(inputSubmit);
       document.forms[idForm].submit();
     }
+
+        // Example POST method implementation:
+    async function postData(url = '', data = {}) {
+
+      try {
+        const response = await fetch(url, { 
+          method: 'POST', // *GET, POST, PUT, DELETE, etc.
+          mode: 'cors', // no-cors, *cors, same-origin
+          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: 'include', // *include, same-origin, omit
+          headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          redirect: 'follow', // manual, *follow, error
+          referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        // .then(response =>  {
+        //   console.log(response);
+        // });
+        
+        // const l = 'https://jsonplaceholder.typicode.com/todos/1';
+        
+        // const response = await fetch(l)
+        // .then(response => console.log(response.headers))
+        console.log(response);
+        
+        return response.json(); // parses JSON response into native JavaScript objects
+        
+      } catch (error) {
+        console.log('system error, please try again');
+      }
+      // Default options are marked with *
+    }
+
+   
   </script>
 @endsection
