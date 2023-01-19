@@ -198,7 +198,7 @@ class InvoiceServiceImplement implements InvoiceService
         ];
         $dataAttribute = [
           'methodAction' => $methodActionPost,
-          'urlAction' => env("MOTIONPAY_URL"),
+          'urlAction' => $dataPayment['url'],
           'dataParse' => $dataParse,
           'dataRedirectTo' => $dataRedirectTo
         ];
