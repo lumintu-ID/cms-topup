@@ -2,7 +2,7 @@
 @section('content')
   <section class="container-fluid container-lg py-3">
     <div class="row justify-content-center">
-      <div class="col-12 col-sm-10 col-lg-6 col-xl-4 p-0">
+      <div class="col-12 col-sm-6 col-lg-5 col-xl-4 p-0">
         <div class="box-invoice">
           @if ($data)
             <div class="box-invoice__header d-flex justify-content-center">
@@ -95,12 +95,12 @@
       }else{
         $("#btnPay").removeAttr('type');
         $("#btnPay").click(function(event) {
-          // console.log(payment);
+          console.log(payment);
           const { urlAction, dataParse } = payment;
-          // console.log(dataParse);
+          console.log(dataParse);
           event.preventDefault();
 
-          postData(urlAction, dataParse);
+          // postData(urlAction, dataParse);
 
           // const $url = 'https://jsonplaceholder.typicode.com/todos/1'
           // await fetch(urlAction)
@@ -129,13 +129,13 @@
           // // headers.append('GET', 'POST', 'OPTIONS');
 
           // if(payment.hasOwnProperty('dataRedirectTo')) {
-          //   const { dataRedirectTo } = payment;
-          //   const value = JSON.parse('{"trans_id":"6pjvul9rqp","merchant_code":"FmSample","order_id":"INV-IAZtuZZ3Shx2","no_reference":"INV-IAZtuZZ3Shx2","amount":"5000","frontend_url":"https:\/\/playpay.flashmobile.co.id","signature":"3970794ebd01d8a9e0ba84627ae784676a24fe13"}');
+            const { dataRedirectTo } = payment;
+            const value = JSON.parse('{"trans_id":"hfvzs7anxxni","merchant_code":"FmSample","order_id":"INV-Fhr86L5w8CpR","no_reference":"INV-Fhr86L5w8CpR","amount":"5000","frontend_url":"https:\/\/playpay.flashmobile.co.id","signature":"9de5951c68692643acb7c465d91a93abeaca91d5"}');
 
-          //   // const value = JSON.parse('{"status": 1,"message": "Success","url": "https://dev.unipin.com/unibox/d/DLr91674028402V9cxDjMQtp5i?lg=id","signature": "aa0e7f04194b111fe692e48cd01575f3d040169c655c165aeee13a6f9c305bda"}');
+            // const value = JSON.parse('{"status": 1, "message": "Success", "url": "https://dev.unipin.com/unibox/d/LDPW1674201556tQK3nQ0N33F1?lg=id", "signature": "9eb208297db7849f7f0f3698c0278fe1f83387a6bd53f1186b7a03266edec27e"}');
 
          
-          //   createRedirectForm({ dataElement: dataRedirectTo, value });
+            createRedirectForm({ dataElement: dataRedirectTo, value });
           // }
         // console.log(dataRedirectTo);
           // let headers = {'Content-Type':'application/json',
@@ -238,11 +238,11 @@
           method: 'POST', // *GET, POST, PUT, DELETE, etc.
           mode: 'cors', // no-cors, *cors, same-origin
           cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: 'omit', // *include, same-origin, omit
+          credentials: 'include', // *include, same-origin, omit
           headers: {
             'Content-Type': 'application/json',
             // 'Content-Type': 'application/x-www-form-urlencoded',
-            'Access-Control-Allow-Origin': "*",
+            'Access-Control-Allow-Origin': "https://dev.unipin.com/api/unibox/request",
           },
           redirect: 'follow', // manual, *follow, error
           referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
@@ -261,7 +261,7 @@
         return response.json(); // parses JSON response into native JavaScript objects
         
       } catch (error) {
-        console.log('system error, please try again');
+        console.log(error);
       }
       // Default options are marked with *
     }
