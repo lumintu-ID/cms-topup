@@ -19,7 +19,7 @@
 </div>
 @endif
 
-@if (Session::has('message'))
+{{-- @if (Session::has('message'))
 @if (Session::get('alert-info', 'success'))
 <div class="alert alert-success" role="alert">
     {{ Session::get('message') }}
@@ -29,7 +29,18 @@
     {{ Session::get('message') }}
 </div>
 @endif
-@endif
+@endif --}}
+
+<div>
+    <strong>Check Status Transaction</strong>
+    <form id="invoiceForm" class="input-form input-group">
+        <input class="tokenize" type="hidden" name="_token" value="{{ csrf_token() }}">
+        <input type="text" placeholder="Input Invoice" name="invoice" id="inpInvoice">
+        <button class="btn btn-block btn-gray-800" id="btnCheckInvoice">Check</button>
+    </form>
+</div>
+
+<hr>
 
 
 <div class="table-responsive">
@@ -65,7 +76,12 @@
                 <td>{{ $data->created_at }}</td>
                 <td>
                     <button data-bs-toggle="modal" data-bs-target="#Detail" onclick="Detail({{ $data }})"
-                    class="btn btn-sm btn-info">Detail</button>     
+                    class="btn btn-sm btn-info">Detail</button>  
+                    <form action="{{ route('cms.transaction.check') }}" method="post">
+                        @csrf
+                        <input type="hidden" value="{{ $data->invoice }}" name="invoice">
+                        <button type="submit" class="btn btn-block btn-gray-800">Check</button>
+                    </form>
                 </td>
             </tr>
             @endforeach
@@ -84,6 +100,7 @@
                     INVOICE : INV-58IVmQGiIzpT
                 </div>
             </div>
+            
                 <div class="modal-body row">
                     
                     <div class="row row-cols-1 row-cols-sm-2 py-2">
@@ -111,6 +128,10 @@
                      
                       <hr>
 
+                      <div class="text-center">
+                        <strong>Paid Status</strong>
+                      </div>
+
                       <div class="row row-cols-1 row-cols-sm-2 py-2">
                         <div class="col-6"> Paid Date : </div>
                         <div class="col-6 text-end" id="PAID-DATE">  </div>
@@ -136,6 +157,21 @@
     </div>
 </div>
 <!-- End of Modal Content -->
+
+
+ <!-- Modal -->
+ <div class="modal fade" id="getCodeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+       <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel"> INV-XXXXXXX </h4>
+        </div>
+        <div class="modal-body" id="getCode" style="overflow-x: scroll;">
+           
+        </div>
+     </div>
+    </div>
+  </div>
 
 
 
@@ -227,6 +263,39 @@
     });
 </script>
 
+<script>
+  
+    $('#btnCheckInvoice').click(function (e) {
+        const inv = $('#inpInvoice').val();
+        e.preventDefault();
+
+        $(this).html('Checking....');
+      
+        $.ajax({
+            data: $('#invoiceForm').serialize(),
+            url: "{{ route('cms.transaction.check') }}",
+            type: "POST",
+            success: function(resp){
+                if (resp.code == 200) {
+                    $('#INV').html(inv)
+                    $("#getCode").html(resp.data);
+                    jQuery("#Detail").modal('show');
+                }else{
+                    $("#getCode").html(resp.message);
+                    $('#myModalLabel').html(inv)
+                    jQuery("#getCodeModal").modal('show');
+                }
+            },
+            error: function (e) {
+                console.log('Error:', e);
+            }
+        });
+
+        $(this).html('Check');
+    });
+
+   
+</script>
 
 @endsection
 

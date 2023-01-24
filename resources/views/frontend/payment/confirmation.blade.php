@@ -192,10 +192,6 @@
       }
     });
 
-    function pageRedirect() {
-      window.location.href = "http://localhost:8000";
-    }
-
     const createElementInput = ({ name, value, idForm }) => {
       const elmentInput = document.createElement("input");
       elmentInput.setAttribute("name", name);
@@ -248,14 +244,7 @@
           referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
           body: JSON.stringify(data) // body data type must match "Content-Type" header
         });
-        // .then(response =>  {
-        //   console.log(response);
-        // });
         
-        // const l = 'https://jsonplaceholder.typicode.com/todos/1';
-        
-        // const response = await fetch(l)
-        // .then(response => console.log(response.headers))
         console.log(response);
         
         return response.json(); // parses JSON response into native JavaScript objects
