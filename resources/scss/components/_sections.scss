@@ -7,8 +7,10 @@
 }
 
 .section-home {
+  // background-color: aqua;
   min-height: 50vh;
   border-radius: 3px;
+
 
   @include media-breakpoint-down(lg) {
     padding: 0 .3rem;

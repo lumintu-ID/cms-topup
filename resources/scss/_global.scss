@@ -18,6 +18,7 @@ body {
   flex-direction: column;
   min-height: 100vh;
   animation: fadein 1.5s;
+  // background-image: linear-gradient(colors.$color-first, darken($white, 1));
 }
 
 a {
