@@ -14,6 +14,8 @@
     $(".modal-body #nameGame span").text(dataGame.title);
     $(".modal-body #nameGame :input").val(dataGame.id);
     $("#formCheckout").hide();
+    // $("#paymentLoader, #paymentLoader .spinner-border").hide();
+    console.log($("#paymentLoader"));
 
     const changeModalTitle = (title) => {
       $("#modalPaymentLabel").text();
@@ -129,13 +131,15 @@
     });
 
     $(".input-form__country .form-select").change(async function() {
+      $("#paymentLoader, #paymentLoader .spinner-border").addClass('mt-5').show();
+      $(".payment-list").empty();
+      $(".price-list").empty();
       clearPayment();
       if(this.value) {
         await fetch(`${baseUrl}/api/v1/payment?country=${this.value}&game_id=${dataGame.id}`)
         .then((response) => {
           if(response.status === 404) {
             addRemoveClass({ element: ".payment-list", addClass: "justify-content-center", removeClass: "justify-content-start"})
-            $(".payment-list").empty();
             $(".payment-list").append(textInfo.noPayment);
             return;
           }
@@ -144,8 +148,6 @@
         .then((data) => {
           const dataPayment = data.data;
           addRemoveClass({ element: ".payment-list", addClass: "justify-content-start", removeClass: "justify-content-center"})
-          $(".payment-list").empty();
-          $(".price-list").empty();
           dataPayment.map((data) => {
             $(".payment-list").append(`
               <div class="col">
@@ -156,6 +158,7 @@
               </div>
             `);
           });
+          $("#paymentLoader, #paymentLoader .spinner-border").removeClass('mt-5').hide();
           $("#formCheckout").hide();
           $("#infoCaution").show();
           $(".payment-list__items").click(function() {
@@ -199,6 +202,7 @@
           }); 
         })
         .catch((error) => {
+          $("#paymentLoader, #paymentLoader .spinner-border").removeClass('mt-5').hide();
           $(".payment-list").empty();
           $(".payment-list").addClass("justify-content-center");
           $(".payment-list").append(textInfo.noPayment);
