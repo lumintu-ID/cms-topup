@@ -95,99 +95,11 @@
       }else{
         $("#btnPay").removeAttr('type');
         $("#btnPay").click(function(event) {
-          console.log(payment);
-          const { urlAction, dataParse } = payment;
-          console.log(dataParse);
           event.preventDefault();
+          const { urlAction, dataParse } = payment;
+          postData(urlAction, dataParse);
 
-          // postData(urlAction, dataParse);
-
-          // const $url = 'https://jsonplaceholder.typicode.com/todos/1'
-          // await fetch(urlAction)
-          // .then(response => console.log(response.headers))
-          // .then(result => {
-          //   // const { completed } = JSON.parse(result);
-          //   console.log(result);
-            
-          //   // if(!completed){
-          //   //   result.idForm = 'formRedirectMp';
-          //   //   console.log(result);
-          //   //   createRedirectForm({ dataElement: dataRedirectTo, value });
-          //   // }
-            
-          // })
-          // .catch((error) => {
-          //   console.error('Error:', error);
-          // });
-        
-
-          // // let headers = new Headers();
-          // // headers.append('Content-Type', 'application/json');
-          // // headers.append('Accept', 'application/json');
-          // // headers.append('Access-Control-Allow-Origin', 'http://localhost:8000');
-          // // headers.append('Access-Control-Allow-Credentials', 'true');
-          // // headers.append('GET', 'POST', 'OPTIONS');
-
-          // if(payment.hasOwnProperty('dataRedirectTo')) {
-            const { dataRedirectTo } = payment;
-            const value = JSON.parse('{"trans_id":"hfvzs7anxxni","merchant_code":"FmSample","order_id":"INV-Fhr86L5w8CpR","no_reference":"INV-Fhr86L5w8CpR","amount":"5000","frontend_url":"https:\/\/playpay.flashmobile.co.id","signature":"9de5951c68692643acb7c465d91a93abeaca91d5"}');
-
-            // const value = JSON.parse('{"status": 1, "message": "Success", "url": "https://dev.unipin.com/unibox/d/LDPW1674201556tQK3nQ0N33F1?lg=id", "signature": "9eb208297db7849f7f0f3698c0278fe1f83387a6bd53f1186b7a03266edec27e"}');
-
-         
-            createRedirectForm({ dataElement: dataRedirectTo, value });
-          // }
-        // console.log(dataRedirectTo);
-          // let headers = {'Content-Type':'application/json',
-          //           'Access-Control-Allow-Origin':'*',
-          //           'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'}
-          // console.log(headers);
-          // console.log(payment.dataparse);
-          // console.log(payment.urlAction);
-          // console.log(payment.redirectToPayment);
-          // console.log(JSON.stringify( payment.dataparse));
-          // // await fetch(payment.urlAction, {
-          // //   method: payment.methodAction,
-          // //   headers: headers,
-          // //   body: JSON.stringify( payment.dataparse),
-          // // })
-          // // .then((response) => {
-          // //   console.log(response);
-          // // });
-          // pageRedirect();
-          // let myHeaders = new Headers();
-          // myHeaders.append("Content-Type", "application/json");
-          // myHeaders.append('Access-Control-Allow-Origin', '*');
-          // myHeaders.append('Access-Control-Allow-Methods', 'POST, PATCH, OPTIONS');
-          // myHeaders.append('Access-Control-Allow-Credentials', true);
-          // myHeaders.append('Access-Control-Allow-Headers', 'X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization');
-          // let requestOptions = {
-          //   method: dataParse.methodAction,
-          //   headers: myHeaders,
-          //   mode: 'cors',
-          //   body: JSON.stringify( dataParse),
-          //   redirect: 'follow'
-          // };
-
-          // await fetch(payment.urlAction, requestOptions)
-          // .then(response => response.text())
-          // .then(result => console.log(result))
-          // .catch((error) => {
-          //   console.error('Error:', error);
-          // });
-
-          // const $url = 'https://jsonplaceholder.typicode.com/todos/1'
-          // await fetch($url)
-          // .then(response => response.text())
-          // .then(result => {
-            
-          //   createRedirectForm(dataParse);
-          //   // console.log(result);
-
-          // })
-          // .catch((error) => {
-          //   console.error('Error:', error);
-          // });
+          
         });
       }
     });
@@ -226,7 +138,6 @@
       document.forms[idForm].submit();
     }
 
-        // Example POST method implementation:
     async function postData(url = '', data = {}) {
 
       try {
