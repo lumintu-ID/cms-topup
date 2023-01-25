@@ -34,13 +34,12 @@ class InvoiceServiceImplement implements InvoiceService
 
   private function _getPaymentAttribute(array $dataPayment = null, array $dataGame = null)
   {
-    if (empty($dataPayment)) return 'data is null';
+    if (empty($dataPayment) || empty($dataGame)) return 'data is null';
 
     $urlReturn = route('home');
     $methodActionPost = "POST";
     $methodActionGet = "GET";
     $trxDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('Y-m-d\TH:i:s');
-
     $notifUrl = 'https://esi-paymandashboard.azurewebsites.net/api/v1/transaction/notify';
 
     switch (Str::upper($dataPayment['code_payment'])) {
@@ -206,10 +205,51 @@ class InvoiceServiceImplement implements InvoiceService
         return json_encode($dataAttribute);
         break;
 
-      case env("RAZE_NAME_PAYMENT"):
-        $dataAttribute = "Razer payment";
+      case env("RAZOR_CODE_PAYMENT"):
+        $applicationCode = ENV("RAZOR_MERCHANT_CODE");
+        $referenceId = $dataPayment['invoice'];
+        $version = 'v1';
+        $channelId = null;
+        $amount = $dataPayment['price'];
+        $customerId = $dataPayment['user'];
+        $currencyCode = 'IDR';
+        $returnUrl = $notifUrl;
+        $description = $dataPayment['name'] . ' ' . $dataPayment['amount'];
+        $hashType = 'hmac-sha256';
+        $plainText = $amount
+          . $applicationCode
+          . $currencyCode
+          . $customerId
+          . $description
+          . $hashType
+          . $referenceId
+          . $returnUrl
+          . $version;
+        $signature = hash_hmac('sha256', $plainText, env("RAZOR_SECRET_KEY"));
+        $dataParse = [
+          'applicationCode' => $applicationCode,
+          'referenceId' => $referenceId,
+          'version' => $version,
+          'channelId' => $channelId,
+          'amount' => $amount,
+          'currencyCode' => $currencyCode,
+          'returnUrl' => $returnUrl,
+          'description' => $description,
+          'customerId' => $customerId,
+          'hashType' => $hashType,
+          'signature' => $signature,
+        ];
+        $dataAttribute = [
+          'methodAction' => $methodActionPost,
+          'urlAction' => $dataPayment['url'],
+          'dataParse' => $dataParse,
+        ];
 
         return json_encode($dataAttribute);
+        break;
+
+      default:
+        echo 'Internal error, payment can\'t find.';
         break;
     }
   }

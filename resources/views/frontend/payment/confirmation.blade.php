@@ -133,7 +133,7 @@
 
       const inputSubmit = document.createElement("input");
       inputSubmit.setAttribute("type", "submit");
-      inputSubmit.hidden = false;
+      inputSubmit.hidden = true;
       document.getElementById(idForm).append(inputSubmit);
       document.forms[idForm].submit();
     }
