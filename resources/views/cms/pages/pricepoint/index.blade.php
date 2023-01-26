@@ -39,7 +39,10 @@
         <thead class="thead-light">
             <tr>
                 <th class="border-0 rounded-start">No</th>
+                <th class="border-0">Country</th>
                 <th class="border-0">Price Point Id</th>
+                <th class="border-0">Amount</th>
+                <th class="border-0">Price</th>
                 <th class="border-0">Action</th>
             </tr>
         </thead>
@@ -47,7 +50,10 @@
             @foreach ($data as $ppi)
             <tr>
                 <td><p class="text-primary fw-bold">{{ $loop->iteration }}</p> </td>
+                <td>{{ $ppi->country->currency .' - '. $ppi->country->country }}</td>
                 <td>{{ $ppi->price_point }}</td>
+                <td>{{ $ppi->amount }}</td>
+                <td>{{ $ppi->price }}</td>
                 <td>
                     <button data-bs-toggle="modal" data-bs-target="#add" onclick="update({{ $ppi }})"
                         class="btn btn-sm btn-info">Update</button>
@@ -95,11 +101,32 @@
                     
                 </div>
                 <div class="modal-body row">
-                    
+                    <div class="col-md-12 mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Country</label>
+                        <select class="form-select" name="country" id="country" aria-label="Default select example" required>
+                            <option selected>Select Country</option>
+                            @foreach ($country as $co)
+                                <option value="{{ $co->currency }}">{{  $co->currency .' - '. $co->country }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div class="col-md-12 mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Price Point ID</label>
                         <input type="text" name="price_point" value="{{ old('price_point') }}" class="form-control" id="price_point"
                             placeholder="Price Point ID" required>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Default Amount</label>
+                        <input type="text" name="amount" value="{{ old('amount') }}" class="form-control" id="amount"
+                            placeholder="Amount" required>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Default Price</label>
+                        <input type="text" name="price" value="{{ old('price') }}" class="form-control" id="price"
+                            placeholder="Price" required>
                     </div>
                    
                 </div>
@@ -122,7 +149,10 @@
         $('#methods').append(id);
 
         $('#price_point').val(data.price_point)
-        
+        $('#country').val(data.country_id)
+        $('#amount').val(data.amount)
+        $('#price').val(data.price)
+
         $('#modal-title-form').html('Update Price Point')
         $('#btn-modal-form').html('Update')
     }
@@ -130,6 +160,9 @@
         $('#methods').empty()
         $('#url').attr('action', "{{ route('cms.pricepoint.store') }}");
         $('#price_point').val('')
+        $('#country').val()
+        $('#amount').val()
+        $('#price').val()
         $('#modal-title-form').html('Add Price Point')
         $('#btn-modal-form').html('Create')
     }

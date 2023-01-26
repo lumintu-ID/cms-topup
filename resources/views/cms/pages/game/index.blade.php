@@ -41,6 +41,7 @@
                 <th class="border-0 rounded-start">Game ID</th>
                 <th class="border-0">Cover</th>
                 <th class="border-0">Game Title</th>
+                <th class="border-0">Is Active</th>
                 <th class="border-0">Action</th>
             </tr>
         </thead>
@@ -53,6 +54,13 @@
                 </td>
                 <td>
                     {{ $game->game_title }}
+                </td>
+                <td>
+                    @if ($game->is_active == 1)
+                        <span class="badge bg-success">Active</span>
+                    @else
+                        <span class="badge bg-primary">Not Active</span>
+                    @endif
                 </td>
                 <td>
                     <button data-bs-toggle="modal" data-bs-target="#add" onclick="update({{ $game }})"
@@ -119,6 +127,15 @@
                         <input type="text" name="game_title" value="{{ old('game_title') }}" class="form-control" id="game_title"
                             placeholder="Game Title" required>
                     </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Is Active</label>
+                        <select class="form-select" name="is_active" id="is_active" aria-label="Default select example" required>
+                            <option selected>Select Status</option>
+                            <option value="1">Active</option>
+                            <option value="0">Not Active</option>
+                        </select>
+                    </div>
                    
                 </div>
                 <div class="modal-footer">
@@ -147,6 +164,7 @@
         $('#game_title').val(data.game_title)
         $('#modal-title-form').html('Update Game')
         $('#btn-modal-form').prop('value', 'Update');
+        $('#is_active').val(data.is_active)
     }
     function add() {
         $('#cover').attr('required', 'required');
@@ -157,6 +175,7 @@
         $('#game_title').val('')
         $('#modal-title-form').html('Create Game')
         $('#btn-modal-form').prop('value', 'Create');
+        $('#is_active').val('Select Status')
     }
     function delet(data) {
         $('#id').val(data.id)

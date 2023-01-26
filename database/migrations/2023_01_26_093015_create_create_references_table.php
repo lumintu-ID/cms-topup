@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_details', function (Blueprint $table) {
+        Schema::create('create_references', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
+            $table->string('invoice');
+            $table->string('reference');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_details');
+        Schema::dropIfExists('create_references');
     }
 };

@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PricePointRequest;
+use App\Models\Country;
 
 class PricePointController extends Controller
 {
@@ -14,9 +15,10 @@ class PricePointController extends Controller
     {
         $title = 'Price Point List';
 
-        $data = PricePoint::all();
+        $country = Country::all();
+        $data = PricePoint::with('country')->get();
 
-        return view('cms.pages.pricepoint.index', compact('title', 'data'));
+        return view('cms.pages.pricepoint.index', compact('title', 'data', 'country'));
     }
 
 
@@ -26,7 +28,10 @@ class PricePointController extends Controller
         try {
             PricePoint::create([
                 'id' => Str::uuid(),
-                'price_point' => $request->price_point
+                'price_point' => $request->price_point,
+                'country_id' => $request->country,
+                'amount' => $request->amount,
+                'price' => $request->price
             ]);
 
             $notif = array(
@@ -68,7 +73,10 @@ class PricePointController extends Controller
             };
 
             PricePoint::where('id', $request->id)->update([
-                'price_point' => $request->price_point
+                'price_point' => $request->price_point,
+                'country_id' => $request->country,
+                'amount' => $request->amount,
+                'price' => $request->price
             ]);
 
             $notif = array(

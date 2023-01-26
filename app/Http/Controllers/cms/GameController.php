@@ -61,7 +61,8 @@ class GameController extends Controller
                 'game_id' => $request->game_id,
                 'slug_game' => Str::slug($request->game_title),
                 'game_title' => $request->game_title,
-                'cover' => $this->_upload($request->file('cover'))
+                'cover' => $this->_upload($request->file('cover')),
+                'is_active' => $request->is_active
             ]);
 
             $notif = array(
@@ -112,7 +113,8 @@ class GameController extends Controller
                 'game_id' => $request->game_id,
                 'slug_game' => Str::slug($request->game_title),
                 'game_title' => $request->game_title,
-                'cover' => (!$request->file('cover')) ? $game->cover : $this->_upload($request->file('cover'))
+                'cover' => (!$request->file('cover')) ? $game->cover : $this->_upload($request->file('cover')),
+                'is_active' => $request->is_active
             ]);
 
             $notif = array(

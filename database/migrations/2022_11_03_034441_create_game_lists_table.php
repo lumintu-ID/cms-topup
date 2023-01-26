@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string("slug_game");
             $table->string("game_title");
             $table->string("cover");
+            $table->integer("is_active");
             $table->timestamps();
         });
     }
