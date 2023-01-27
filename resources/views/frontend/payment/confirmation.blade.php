@@ -96,11 +96,11 @@
         $("#btnPay").removeAttr('type');
         $("#btnPay").click(function(event) {
           console.log(payment);
-          const { urlAction, dataParse } = payment;
-          console.log(dataParse);
+          // const { urlAction, dataParse } = payment;
+          // console.log(dataParse);
           event.preventDefault();
 
-          // postData(urlAction, dataParse);
+          // postData(payment);
 
           // const $url = 'https://jsonplaceholder.typicode.com/todos/1'
           // await fetch(urlAction)
@@ -130,12 +130,14 @@
 
           // if(payment.hasOwnProperty('dataRedirectTo')) {
             const { dataRedirectTo } = payment;
-            const value = JSON.parse('{"trans_id":"hfvzs7anxxni","merchant_code":"FmSample","order_id":"INV-Fhr86L5w8CpR","no_reference":"INV-Fhr86L5w8CpR","amount":"5000","frontend_url":"https:\/\/playpay.flashmobile.co.id","signature":"9de5951c68692643acb7c465d91a93abeaca91d5"}');
+            // const value = JSON.parse('{"trans_id":"hfvzs7anxxni","merchant_code":"FmSample","order_id":"INV-Fhr86L5w8CpR","no_reference":"INV-Fhr86L5w8CpR","amount":"5000","frontend_url":"https:\/\/playpay.flashmobile.co.id","signature":"9de5951c68692643acb7c465d91a93abeaca91d5"}');
 
             // const value = JSON.parse('{"status": 1, "message": "Success", "url": "https://dev.unipin.com/unibox/d/LDPW1674201556tQK3nQ0N33F1?lg=id", "signature": "9eb208297db7849f7f0f3698c0278fe1f83387a6bd53f1186b7a03266edec27e"}');
 
+            // const value = JSON.parse('{"paymentId": "MPO2016930","referenceId": "INV-xfuUDRjaD7jP","paymentUrl": "https://global.gold-sandbox.razer.com/PaymentWall/Checkout/index?token=qipDtsNLDSKXMmPfKpJrjzWvXmAnRCHsQKwLYKtevTtJI4I5sLUeO9K%2f4zzk%2fgB0cVHepJ2dG%2f9ZX%2bEJOou9ou4nGNUkR3cXXShUHur6GdDOs8xAkeg4miQ5b7IuxwYekYYuzy7x55WhzOGv%2fg%2fcFVlgZ2YT4psWTCmXOa0SQg%2fWhJrHnO1Vwnp2TLRiKDa5anJmJ164eIjR%2b82Ovu5wIwlRBitV2cScnSQGJo6gNNroY7%2bt%2fbTdkZxrqq%2f3EcVOxBO%2fuivc52Q%3d","amount": 50000,"currencyCode": "IDR","hashType": "hmac-sha256","version": "v1","signature":"8f966082a8865c27382b1090e74790ce06546cc27fc5341d47e2f81b470b961a","applicationCode": "WG12Nu61SaXhQieGcmW7yYWhKp9xBwvn"}');
+
          
-            createRedirectForm({ dataElement: dataRedirectTo, value });
+            createRedirectForm({ dataElement: dataRedirectTo });
           // }
         // console.log(dataRedirectTo);
           // let headers = {'Content-Type':'application/json',
@@ -195,21 +197,21 @@
     const createElementInput = ({ name, value, idForm }) => {
       const elmentInput = document.createElement("input");
       elmentInput.setAttribute("name", name);
-      elmentInput.hidden = true;
+      elmentInput.hidden = false;
       elmentInput.value = value || 'no value';
       document.getElementById(idForm || 'formInvoice').append(elmentInput);
       return;
     }
 
     const createRedirectForm = ({ dataElement = null, value = null }) => {
+      if(!dataElement || !value) return console.error('No data can be process.');
       const { idForm, methodAction } = dataElement;
-      if(!dataElement) return console.log('no data redirect');
       if(document.getElementById(idForm)) return console.log('form was avaliable');
 
       let redirectForm = document.createElement("form");
       redirectForm.setAttribute('id', idForm);
       redirectForm.setAttribute('method', methodAction);
-      redirectForm.setAttribute('action', value.url);
+      redirectForm.setAttribute('action', value.paymentUrl);
       document.getElementsByClassName('box-invoice')[0].appendChild(redirectForm);
       
       for (const key in value) {
@@ -223,26 +225,23 @@
       inputSubmit.setAttribute("type", "submit");
       inputSubmit.hidden = false;
       document.getElementById(idForm).append(inputSubmit);
-      document.forms[idForm].submit();
+      // document.forms[idForm].submit();
     }
 
         // Example POST method implementation:
-    async function postData(url = '', data = {}) {
-
+    async function postData({ urlAction, methodAction, contentType = null, dataParse }) {
       try {
-        const response = await fetch(url, { 
-          method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        const response = await fetch(urlAction, { 
+          method: methodAction, // *GET, POST, PUT, DELETE, etc.
           mode: 'cors', // no-cors, *cors, same-origin
           cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
           credentials: 'include', // *include, same-origin, omit
           headers: {
-            'Content-Type': 'application/json',
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-            'Access-Control-Allow-Origin': "https://dev.unipin.com/api/unibox/request",
+            'Content-Type': contentType || 'application/json',
           },
           redirect: 'follow', // manual, *follow, error
           referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-          body: JSON.stringify(data) // body data type must match "Content-Type" header
+          body: JSON.stringify(dataParse) // body data type must match "Content-Type" header
         });
         
         console.log(response);
@@ -250,7 +249,7 @@
         return response.json(); // parses JSON response into native JavaScript objects
         
       } catch (error) {
-        console.log(error);
+        console.log('Failed sending data, please try again.');
       }
       // Default options are marked with *
     }

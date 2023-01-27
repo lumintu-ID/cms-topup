@@ -206,10 +206,90 @@ class InvoiceServiceImplement implements InvoiceService
         return json_encode($dataAttribute);
         break;
 
-      case env("RAZE_NAME_PAYMENT"):
-        $dataAttribute = "Razer payment";
+
+      case env("RAZOR_CODE_PAYMENT"):
+        $applicationCode = ENV("RAZOR_MERCHANT_CODE");
+        $referenceId = $dataPayment['invoice'];
+        $version = 'v1';
+        $channelId = null;
+        $amount = $dataPayment['price'];
+        $customerId = $dataPayment['user'];
+        $currencyCode = 'IDR';
+        $returnUrl = $notifUrl;
+        $description = $dataPayment['amount'] . ' ' . $dataPayment['name'];
+        $hashType = 'hmac-sha256';
+        $plainText = $amount
+          . $applicationCode
+          . $currencyCode
+          . $customerId
+          . $description
+          . $hashType
+          . $referenceId
+          . $returnUrl
+          . $version;
+        $signature = hash_hmac('sha256', $plainText, env("RAZOR_SECRET_KEY"));
+        $dataParse = [
+          'applicationCode' => $applicationCode,
+          'referenceId' => $referenceId,
+          'version' => $version,
+          // 'channelId' => $channelId,
+          'amount' => $amount,
+          'currencyCode' => $currencyCode,
+          'returnUrl' => $returnUrl,
+          'description' => $description,
+          'customerId' => $customerId,
+          'hashType' => $hashType,
+          'signature' => $signature,
+        ];
+        $dataRedirectTo = [
+          'methodAction' => $methodActionPost,
+          'url' => route('payment.test'),
+          'idForm' => 'formRedirectRzr',
+          'inputElement' => [
+            'paymentId',
+            'referenceId',
+            'paymentUrl',
+            'amount',
+            'currencyCode',
+            'hashType',
+            'version',
+            'signature',
+            'applicationCode',
+          ]
+        ];
+        // $dataAttribute = [
+        //   'methodAction' => $methodActionPost,
+        //   'urlAction' => $dataPayment['url'],
+        //   // 'contentType' => 'application/x-www-form-urlencoded',
+        //   'dataParse' => $dataParse,
+        //   'dataRedirectTo' => $dataRedirectTo
+        // ];
+
+        $dataAttribute = [
+          ['methodAction' => $methodActionPost],
+          ['urlAction' => route('payment.parse.vendor', $dataPayment['invoice'])],
+          // ['urlAction' => $dataPayment['url']],
+          // ['dataParse' => $dataParse],
+          // ['applicationCode' => $applicationCode],
+          // ['referenceId' => $referenceId],
+          // ['version' => $version],
+          // // ['channelId' => $channelId],
+          // ['amount' => $amount],
+          // ['currencyCode' => $currencyCode],
+          // ['returnUrl' => $returnUrl],
+          // ['description' => $description],
+          // ['customerId' => $customerId],
+          // ['hashType' => $hashType],
+          // ['signature' => $signature]
+        ];
+
+        // dd($dataAttribute);
 
         return json_encode($dataAttribute);
+        break;
+
+      default:
+        echo 'Internal error, payment can\'t find.';
         break;
     }
   }

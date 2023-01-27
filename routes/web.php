@@ -38,8 +38,8 @@ use App\Http\Controllers\frontend\TransactionController as FrontendTransactionCo
 Route::get('/', [HomeFrontend::class, 'index'])->name('home');
 // Route::get('/test', [HomeFrontend::class, 'test'])->name('home.test');
 Route::get('/games', [GameFrontend::class, 'index'])->name('games');
-// Route::post('/payment-unipin', [PaymentFrontend::class, 'unipin'])->name('payment.unipin');
 Route::get('/payment', [PaymentFrontend::class, 'index'])->name('payment');
+Route::post('/payment-vendor', [PaymentFrontend::class, 'parseToVendor'])->name('payment.parse.vendor');
 Route::get('/payment/{slug}', [PaymentFrontend::class, 'index'])->name('payment.games');
 Route::post('/payment/test', [PaymentFrontend::class, 'test'])->name('payment.test');
 Route::get('/confirmation', [PaymentFrontend::class, 'confirmation'])->name('payment.confirmation');
