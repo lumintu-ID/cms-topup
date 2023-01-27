@@ -37,9 +37,19 @@ class PriceController extends Controller
         $game = GameList::all();
         $payment = Payment::all();
         $ppi = PricePoint::all();
-        $country = Country::all();
 
-        return view('cms.pages.price.index', compact('game', 'payment', 'ppi', 'country', 'data', 'title'));
+        return view('cms.pages.price.index', compact('game', 'payment', 'ppi',  'data', 'title'));
+    }
+
+
+    public function add()
+    {
+        $title = "Add Price";
+        $game = GameList::all();
+        $payment = Payment::all();
+        $ppi = PricePoint::all();
+        $country = Country::all();
+        return view('cms.pages.price.add', compact('game', 'payment', 'ppi', 'country',  'title'));
     }
 
     /**
@@ -48,18 +58,99 @@ class PriceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PriceRequest $request)
+    public function store(Request $request)
     {
+
+
+
         try {
 
-            $this->priceImplement->Create($request);
+
+
+            // cek game
+
+
+            // cek payment
+
+            // set new data to save in database
+
+            $newData = [];
+
+            for ($i = 0; $i < count($request->ppi); $i++) {
+                $ppi = PricePoint::where('id', $request->ppi[$i])->first();
+
+                $result = [
+                    'game_id' => $request->game,
+                    'payment_id' => $request->payment,
+                    'name' => $request->name,
+                    'price_point_id' => $ppi->id,
+                    'amount' => ($request->amount[$i] == null) ? $ppi->amount : $request->amount[$i],
+                    'price' => $request->price[$i] == null ? $ppi->price : $request->price[$i],
+                ];
+
+                \array_push($newData, $result);
+            };
+
+
+            $this->priceImplement->Create($newData);
 
             $notif = array(
                 'message' => 'Success Create Price',
                 'alert-info' => 'success'
             );
 
+            return redirect(route('cms.price'))->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
+                'alert-info' => 'warning'
+            );
+
             return redirect()->back()->with($notif);
+        }
+    }
+
+
+    public function addAll(Request $request)
+    {
+        // dd($request);
+
+        try {
+            // cek game
+
+            // cek payment
+
+            // set new data to save in database
+
+            $newData = [];
+
+
+            $ppi = PricePoint::all();
+
+
+
+            for ($i = 0; $i < count($ppi); $i++) {
+
+                $result = [
+                    'game_id' => $request->game,
+                    'payment_id' => $request->payment,
+                    'name' => $request->name,
+                    'price_point_id' => $ppi[$i]->id,
+                    'amount' => $ppi[$i]->amount,
+                    'price' => $ppi[$i]->price,
+                ];
+
+                \array_push($newData, $result);
+            };
+
+            $this->priceImplement->Create($newData);
+
+            $notif = array(
+                'message' => 'Success Create Price',
+                'alert-info' => 'success'
+            );
+
+            return redirect(route('cms.price'))->with($notif);
         } catch (\Throwable $th) {
             $notif = array(
                 'message' => 'Internal Server Error',
@@ -78,7 +169,7 @@ class PriceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(PriceRequest $request)
+    public function update(Request $request)
     {
         try {
             $price = $this->priceImplement->getId($request->id);
