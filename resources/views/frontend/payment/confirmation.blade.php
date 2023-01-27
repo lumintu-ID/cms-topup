@@ -2,7 +2,7 @@
 @section('content')
   <section class="container-fluid container-lg py-3">
     <div class="row justify-content-center">
-      <div class="col-12 col-sm-10 col-lg-6 col-xl-4 p-0">
+      <div class="col-12 col-sm-6 col-lg-5 col-xl-4 p-0">
         <div class="box-invoice">
           @if ($data)
             <div class="box-invoice__header d-flex justify-content-center">
@@ -95,9 +95,11 @@
       }else{
         $("#btnPay").removeAttr('type');
         $("#btnPay").click(function(event) {
-          const { urlAction, dataParse } = payment;
           event.preventDefault();
+          const { urlAction, dataParse } = payment;
           postData(urlAction, dataParse);
+
+          
         });
       }
     });
@@ -136,7 +138,6 @@
       document.forms[idForm].submit();
     }
 
-        // Example POST method implementation:
     async function postData(url = '', data = {}) {
 
       try {
@@ -146,8 +147,9 @@
           cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
           credentials: 'include', // *include, same-origin, omit
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
             // 'Content-Type': 'application/x-www-form-urlencoded',
+            'Access-Control-Allow-Origin': "https://dev.unipin.com/api/unibox/request",
           },
           redirect: 'follow', // manual, *follow, error
           referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
@@ -159,7 +161,7 @@
         return response.json(); // parses JSON response into native JavaScript objects
         
       } catch (error) {
-        console.log('system error, please try again');
+        console.log(error);
       }
       // Default options are marked with *
     }

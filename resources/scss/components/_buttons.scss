@@ -11,6 +11,7 @@
   font-weight: map-get(fonts.$font-weight, bold);
   cursor: pointer;
   vertical-align: middle;
+  
 }
 
 @mixin button-esi($color) {
@@ -62,6 +63,7 @@
 
 .button__cancel {
   @include button-esi(colors.$color-first);
+
   // background-color: #DCDCDC;
   &:hover {
     color: transparentize($black, .3);

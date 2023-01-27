@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\GameController as ApiGameController;
 use App\Http\Controllers\api\PaymentController as ApiPaymentController;
-
-
 use App\Http\Controllers\cms\TransactionController;
 
 /*

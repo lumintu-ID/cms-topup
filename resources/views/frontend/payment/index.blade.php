@@ -7,7 +7,13 @@
 </section>
 <section class="section-payment container-fluid container-lg">
   @include('frontend.payment._player-input')
-  <div class="payment-list row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2" data-paymentcategory="{{ $categoryPayment }}"></div>
+  <div class="d-flex justify-content-center" id="paymentLoader">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <div class="payment-list row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2" data-paymentcategory="{{ $categoryPayment }}">
+  </div>
   <div class="price-list row row-cols-1 row-cols-md-3 row-cols-lg-4 gx-1 gx-md-3 gy-2"></div>
 </section>
 <section class="section-total-payment container-fluid container-lg py-lg-4">

@@ -99,3 +99,8 @@
     letter-spacing: .05rem;
   }
 }
+
+#paymentLoader,
+#paymentLoader .spinner-border {
+  display: none;
+}
