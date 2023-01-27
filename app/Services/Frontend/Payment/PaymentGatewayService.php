@@ -1,22 +1,21 @@
 <?php
 
-namespace App\Service\Frontend\Payment;
+namespace App\Services\Frontend\Payment;
 
 class PaymentGatewayService
 {
   protected $urlReturn;
   protected $urlNotify;
-  protected $methodActionPost;
-  protected $methodActionGet;
+  protected $urlPayment;
+  protected $methodActionPost = 'POST';
+  protected $methodActionGet = 'GET';
   protected $codePayment;
 
   public function __construct()
   {
-    $this->methodActionGet = 'GET';
-    $this->methodActionPost = 'POST';
   }
 
-  public function generateSignature()
+  protected function generateSignature(string $plaintText)
   {
     return 'generate signature';
   }

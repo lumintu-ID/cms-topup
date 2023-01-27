@@ -17,21 +17,24 @@ class InvoiceRepositoryImplement implements InvoiceRepository
       'invoice',
       'game_id',
       'id_player',
-      'method_payment',
+      // 'method_payment',
       'price_id',
       'email',
-      'total_price')
-    ->where('invoice', $id)
-    ->first();
+      'total_price',
+      'created_at as date'
+    )
+      ->where('invoice', $id)
+      ->first();
     return $data;
   }
 
   public function getGameInfo(string $id)
   {
     $data = GameList::select(
-      'id',
-      'game_id',
-      'game_title')
+      // 'id',
+      // 'game_id',
+      'game_title'
+    )
       ->where('id', $id)
       ->first()
       ->toArray();
@@ -41,18 +44,19 @@ class InvoiceRepositoryImplement implements InvoiceRepository
   public function getDetailPrice($id)
   {
     $data = Price::join('payments', 'prices.payment_id', '=', 'payments.payment_id')
-    ->join('code_payments', 'payments.code_payment', '=', 'code_payments.id')
-    ->select(
-      'channel_id',
-      'name_channel',
-      'price',
-      'name',
-      'amount',
-      'code_payments.code_payment',
-      'category_id',
-      'url')
-    ->where('price_id', $id)
-    ->first();
+      ->join('code_payments', 'payments.code_payment', '=', 'code_payments.id')
+      ->select(
+        'channel_id',
+        'name_channel',
+        'price',
+        'name',
+        'amount',
+        'code_payments.code_payment',
+        'category_id',
+        'url'
+      )
+      ->where('price_id', $id)
+      ->first();
     return $data;
   }
 
@@ -67,13 +71,13 @@ class InvoiceRepositoryImplement implements InvoiceRepository
 
   public function getAllDataPpn()
   {
-    $data = Ppn::select('id_ppn as id','ppn')->get()->toArray();
+    $data = Ppn::select('id_ppn as id', 'ppn')->get()->toArray();
     return $data;
   }
 
   public function getAllCategoryPayment()
   {
-    $data = Category::select('category_id as id','category')->get()->toArray();
+    $data = Category::select('category_id as id', 'category')->get()->toArray();
     return $data;
   }
-} 
+}

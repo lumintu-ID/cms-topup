@@ -4,7 +4,9 @@ namespace App\Http\Controllers\frontend;
 
 use App\Http\Controllers\Controller;
 use App\Services\Frontend\Invoice\InvoiceService;
+use App\Services\Frontend\Payment\MotionpayGatewayService;
 use App\Services\Frontend\Payment\PaymentService;
+use App\Services\Frontend\Payment\RazorGateWayService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
@@ -14,6 +16,9 @@ class PaymentController extends Controller
 {
     private $_invoiceService;
     private $_paymentService;
+    private $_razorService;
+    private $_motionpayService;
+
     private $activeLink = 'payment';
     private $dataset = [
         'infoTextInput' => [
@@ -35,10 +40,12 @@ class PaymentController extends Controller
         'noPayment' => 'Payment not avaliable',
     ];
 
-    public function __construct(InvoiceService $invoiceService, PaymentService $paymentService)
+    public function __construct(InvoiceService $invoiceService, PaymentService $paymentService, RazorGateWayService $razorService, MotionpayGatewayService $motionpayService)
     {
         $this->_invoiceService = $invoiceService;
         $this->_paymentService = $paymentService;
+        $this->_razorService = $razorService;
+        $this->_motionpayService = $motionpayService;
     }
 
     public function index(Request $request)
@@ -63,19 +70,13 @@ class PaymentController extends Controller
 
     public function confirmation(Request $request)
     {
-        // dd($request->query('invoice'));
         try {
             if (!$request->query('invoice')) return 'not found';
-            // dd($request->query('invoice'));
+
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
             $activeLink = $this->activeLink;
 
-            // dd( $data);
-
             return response()->view('frontend.payment.confirmation', compact('data', 'activeLink'));
-            // ->header('Access-Control-Allow-Origin', 'https://dev.unipin.com/api/unibox/request')
-            // ->header('Access-Control-Allow-Methods', 'POST')
-            // ->header('Access-Control-Allow-Headers', '*');
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -83,30 +84,11 @@ class PaymentController extends Controller
 
     public function parseToVendor(Request $request)
     {
-        dd($request->all());
         try {
-            $uri = "https://globalapi.gold-sandbox.razer.com/payout/payments";
-            $client = new Client();
-            $response = $client->request('POST', $uri, [
-                'headers' => ['Content-type' => 'application/x-www-form-urlencoded'],
-                'form_params' => [
-                    "applicationCode" => $request->applicationCode,
-                    "referenceId" => $request->referenceId,
-                    "version" => $request->version,
-                    "amount" => $request->amount,
-                    "currencyCode" => $request->currencyCode,
-                    "returnUrl" => $request->returnUrl,
-                    "description" => $request->description,
-                    "customerId" => $request->customerId,
-                    "hashType" => $request->hashType,
-                    "signature" => $request->signature,
-                ]
-            ]);
-            $dataResponse = json_decode($response->getBody()->getContents(), true);
-            if ($dataResponse['paymentUrl']) return redirect($dataResponse['paymentUrl']);
-        } catch (RequestException $error) {
-            $responseError = json_decode($error->getResponse()->getBody()->getContents(), true);
-            echo 'Error message: ' . $responseError['message'];
+            $urlRedirect = $this->_invoiceService->redirectToPayment($request->code, $request->all());
+            return redirect($urlRedirect);
+        } catch (\Throwable $th) {
+            echo 'Prosess can not continue, internal error.';
         }
     }
 }

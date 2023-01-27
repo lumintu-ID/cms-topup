@@ -17,6 +17,10 @@
               @csrf
               <div class="box-invoice__body">
                 <div class="row row-cols-1 row-cols-sm-2 py-2">
+                  <div class="col-6"> Date Time : </div>
+                  <div class="col-6 text-end"> {{ $data['invoice']['date'] }} </div>
+                </div>
+                <div class="row row-cols-1 row-cols-sm-2 py-2">
                   <div class="col-6"> Game : </div>
                   <div class="col-6 text-end"> {{ $data['game']['game_title'] }} </div>
                 </div>

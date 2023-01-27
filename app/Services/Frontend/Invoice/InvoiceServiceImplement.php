@@ -3,15 +3,21 @@
 namespace App\Services\Frontend\Invoice;
 
 use App\Repository\Frontend\Invoice\InvoiceRepository;
+use App\Services\Frontend\Payment\MotionpayGatewayService;
+use App\Services\Frontend\Payment\RazorGateWayService;
 use Illuminate\Support\Str;
 
 class InvoiceServiceImplement implements InvoiceService
 {
   private $_invoiceRepository;
+  private $_razorGateWayService;
+  private $_motionpayGateWayService;
 
-  public function __construct(InvoiceRepository $invoiceRepository)
+  public function __construct(InvoiceRepository $invoiceRepository, RazorGateWayService $razorGateWayService, MotionpayGatewayService $motionpayGateWayService)
   {
     $this->_invoiceRepository = $invoiceRepository;
+    $this->_razorGateWayService = $razorGateWayService;
+    $this->_motionpayGateWayService = $motionpayGateWayService;
   }
 
   public function getInvoice($id)
@@ -27,9 +33,25 @@ class InvoiceServiceImplement implements InvoiceService
     $result['payment']['invoice'] = $dataTransaction->invoice;
     $result['payment']['user'] = $dataTransaction->id_player;
     $result['payment']['email'] = $dataTransaction->email;
+    $result['payment']['total_price'] = $dataTransaction->total_price;
     $result['attribute'] = $this->_getPaymentAttribute($result['payment'], $result['game']);
 
     return $result;
+  }
+
+  public function redirectToPayment(string $codePayment = null, array $dataParse = null)
+  {
+    if (empty($dataParse)) return 'Prosess can not be continued, no value.';
+
+    switch ($codePayment) {
+      case env("RAZOR_CODE_PAYMENT"):
+        return $this->_razorGateWayService->urlRedirect($dataParse);
+        break;
+
+      default:
+        return 'no code payment';
+        break;
+    }
   }
 
   private function _getPaymentAttribute(array $dataPayment = null, array $dataGame = null)
@@ -134,6 +156,10 @@ class InvoiceServiceImplement implements InvoiceService
         break;
 
       case env("MOTIONPAY_CODE_PAYMENT"):
+
+        $dataAttribute = $this->_motionpayGateWayService->generateDataParse($dataPayment);
+
+        dd($dataAttribute);
         $dateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('YmdHis');
         $merchantCode = env("MOTIONPAY_MERCHANT_CODE");
         $firstName = $dataPayment['user'];
@@ -208,83 +234,7 @@ class InvoiceServiceImplement implements InvoiceService
 
 
       case env("RAZOR_CODE_PAYMENT"):
-        $applicationCode = ENV("RAZOR_MERCHANT_CODE");
-        $referenceId = $dataPayment['invoice'];
-        $version = 'v1';
-        $channelId = null;
-        $amount = $dataPayment['price'];
-        $customerId = $dataPayment['user'];
-        $currencyCode = 'IDR';
-        $returnUrl = $notifUrl;
-        $description = $dataPayment['amount'] . ' ' . $dataPayment['name'];
-        $hashType = 'hmac-sha256';
-        $plainText = $amount
-          . $applicationCode
-          . $currencyCode
-          . $customerId
-          . $description
-          . $hashType
-          . $referenceId
-          . $returnUrl
-          . $version;
-        $signature = hash_hmac('sha256', $plainText, env("RAZOR_SECRET_KEY"));
-        $dataParse = [
-          'applicationCode' => $applicationCode,
-          'referenceId' => $referenceId,
-          'version' => $version,
-          // 'channelId' => $channelId,
-          'amount' => $amount,
-          'currencyCode' => $currencyCode,
-          'returnUrl' => $returnUrl,
-          'description' => $description,
-          'customerId' => $customerId,
-          'hashType' => $hashType,
-          'signature' => $signature,
-        ];
-        $dataRedirectTo = [
-          'methodAction' => $methodActionPost,
-          'url' => route('payment.test'),
-          'idForm' => 'formRedirectRzr',
-          'inputElement' => [
-            'paymentId',
-            'referenceId',
-            'paymentUrl',
-            'amount',
-            'currencyCode',
-            'hashType',
-            'version',
-            'signature',
-            'applicationCode',
-          ]
-        ];
-        // $dataAttribute = [
-        //   'methodAction' => $methodActionPost,
-        //   'urlAction' => $dataPayment['url'],
-        //   // 'contentType' => 'application/x-www-form-urlencoded',
-        //   'dataParse' => $dataParse,
-        //   'dataRedirectTo' => $dataRedirectTo
-        // ];
-
-        $dataAttribute = [
-          ['methodAction' => $methodActionPost],
-          ['urlAction' => route('payment.parse.vendor', $dataPayment['invoice'])],
-          // ['urlAction' => $dataPayment['url']],
-          // ['dataParse' => $dataParse],
-          // ['applicationCode' => $applicationCode],
-          // ['referenceId' => $referenceId],
-          // ['version' => $version],
-          // // ['channelId' => $channelId],
-          // ['amount' => $amount],
-          // ['currencyCode' => $currencyCode],
-          // ['returnUrl' => $returnUrl],
-          // ['description' => $description],
-          // ['customerId' => $customerId],
-          // ['hashType' => $hashType],
-          // ['signature' => $signature]
-        ];
-
-        // dd($dataAttribute);
-
+        $dataAttribute = $this->_razorGateWayService->generateDataParse($dataPayment);
         return json_encode($dataAttribute);
         break;
 
