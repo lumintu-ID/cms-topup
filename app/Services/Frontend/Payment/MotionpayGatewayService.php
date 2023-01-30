@@ -24,7 +24,7 @@ class MotionpayGatewayService extends PaymentGatewayService
   public function generateDataParse(array $dataPayment)
   {
 
-    // // dd($dataPayment);
+    // dd($dataPayment);
 
     // $merchantCode = $this->_merchantCode;
     // $firstName = $dataPayment['user'];
@@ -121,23 +121,26 @@ class MotionpayGatewayService extends PaymentGatewayService
     //   // 'dataParse' => $responseDummy
     // ];
 
-    $responseDummy = [
-      "trans_id" => "xridvdl3n2",
-      "merchant_code" => "FmSample",
-      "order_id" => "INV-wBqwRSXeR9YU",
-      "no_reference" => "INV-wBqwRSXeR9YU",
-      "amount" => "10000",
-      "frontend_url" => "https://playpay.flashmobile.co.id",
-      "signature" => "93ef66e8f30f1ed5e73afdb00b412cc538eed7f2",
-    ];
+    // $responseDummy = [
+    //   "trans_id" => "xridvdl3n2",
+    //   "merchant_code" => "FmSample",
+    //   "order_id" => "INV-wBqwRSXeR9YU",
+    //   "no_reference" => "INV-wBqwRSXeR9YU",
+    //   "amount" => "10000",
+    //   "frontend_url" => "https://playpay.flashmobile.co.id",
+    //   "signature" => "93ef66e8f30f1ed5e73afdb00b412cc538eed7f2",
+    // ];
+
+    // dd($dataPayment);
+    $response = $this->urlRedirect($dataPayment);
 
     $dataAttribute = [
       ['methodAction' => $this->methodActionPost],
-      ['urlAction' => $responseDummy['frontend_url']],
-      ['trans_id' => $responseDummy['trans_id']],
-      ['merchant_code' => $responseDummy['merchant_code']],
-      ['order_id' => $responseDummy['order_id']],
-      ['signature' => $responseDummy['signature']],
+      ['urlAction' => $response['frontend_url']],
+      ['trans_id' => $response['trans_id']],
+      ['merchant_code' => $response['merchant_code']],
+      ['order_id' => $response['order_id']],
+      ['signature' => $response['signature']],
     ];
 
     return $dataAttribute;
@@ -147,15 +150,15 @@ class MotionpayGatewayService extends PaymentGatewayService
   {
     $this->_dateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('YmdHis');
     $merchantCode = $this->_merchantCode;
-    $firstName = $dataParse['first_name'];
-    $lastName = $dataParse['last_name'];
+    $firstName = $dataParse['user'];
+    $lastName = $dataParse['user'];
     $email = $dataParse['email'];
     $phone = $dataParse['phone'] ?? '082119673393';
     $orderId = $dataParse['invoice'];
     $numberReference = $dataParse['invoice'];
     $amount = (string)$dataParse['total_price'];
     $currency = $this->currency;
-    $itemDetails =  $dataParse['amount'] . '|' . $dataParse['name'];
+    $itemDetails =  $dataParse['amount'] . ' ' . $dataParse['name'];
     $paymentMethod = 'ALL';
     $thanksUrl = route('home');
     $plainText = $merchantCode
@@ -193,54 +196,9 @@ class MotionpayGatewayService extends PaymentGatewayService
       'thanks_url' => $thanksUrl,
       'signature' => $this->generateSignature($plainText)
     ];
-    // $payload = [
-    //   'merchant_code' => $this->_merchantCode,
-    //   'first_name' => $firstName,
-    //   'last_name' => $lastName,
-    //   'email' => $email,
-    //   'phone' => $phone,
-    //   'order_id' => $orderId,
-    //   'no_reference' => $numberReference,
-    //   'amount' => $amount,
-    //   'currency' => $currency,
-    //   'item_details' => $itemDetails,
-    //   'datetime_request' => $datetimeRequest,
-    //   'payment_method' => $paymentMethod,
-    //   'time_limit' => $timeLimit,
-    //   'notif_url' => $notifUrl,
-    //   'thanks_url' => $thanksUrl,
-    //   'signature' => $this->generateSignature($plainText)
-    // ];
 
-    // dd($payload);
-    // dd(json_encode($payload));
 
-    // $responseDummy = [
-    //   "trans_id" => "xridvdl3n2",
-    //   "merchant_code" => "FmSample",
-    //   "order_id" => "INV-wBqwRSXeR9YU",
-    //   "no_reference" => "INV-wBqwRSXeR9YU",
-    //   "amount" => "10000",
-    //   "frontend_url" => "https://playpay.flashmobile.co.id",
-    //   "signature" => "93ef66e8f30f1ed5e73afdb00b412cc538eed7f2",
-    // ];
 
-    // $response = Http::post('https://playpay.flashmobile.co.id', [
-    //   "trans_id" => "xridvdl3n2",
-    //   "merchant_code" => "FmSample",
-    //   "order_id" => "INV-wBqwRSXeR9YU",
-    //   "no_reference" => "INV-wBqwRSXeR9YU",
-    //   "amount" => "10000",
-    //   "signature" => "93ef66e8f30f1ed5e73afdb00b412cc538eed7f2",
-    // ]);
-
-    // $res = json_decode($response->getBody()->getContents(), true);
-
-    // dd($response);
-    // dd($res);
-
-    // return $this->_redirectToMontionpay($responseDummy);
-    die;
     try {
       $client = new Client();
       $response = $client->request('POST', $this->urlPayment, [
@@ -248,12 +206,74 @@ class MotionpayGatewayService extends PaymentGatewayService
         'body' => json_encode($payload),
       ]);
       $dataResponse = json_decode($response->getBody()->getContents(), true);
-      return $this->_redirectToMontionpay($dataResponse);
+      return $dataResponse;
     } catch (RequestException $error) {
-      // $responseError = json_decode($error->getResponse()->getBody()->getContents(), true);
       echo 'Error message: ' . $error;
     }
   }
+  // public function urlRedirect(array $dataParse)
+  // {
+  //   $this->_dateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('YmdHis');
+  //   $merchantCode = $this->_merchantCode;
+  //   $firstName = $dataParse['first_name'];
+  //   $lastName = $dataParse['last_name'];
+  //   $email = $dataParse['email'];
+  //   $phone = $dataParse['phone'] ?? '082119673393';
+  //   $orderId = $dataParse['invoice'];
+  //   $numberReference = $dataParse['invoice'];
+  //   $amount = (string)$dataParse['total_price'];
+  //   $currency = $this->currency;
+  //   $itemDetails =  $dataParse['amount'] . '|' . $dataParse['name'];
+  //   $paymentMethod = 'ALL';
+  //   $thanksUrl = route('home');
+  //   $plainText = $merchantCode
+  //     . $firstName
+  //     . $lastName
+  //     . $email
+  //     . $phone
+  //     . $orderId
+  //     . $numberReference
+  //     . $amount
+  //     . $currency
+  //     . $itemDetails
+  //     . $this->_dateTime
+  //     . $paymentMethod
+  //     . $this->_timeLimit
+  //     . $this->urlNotify
+  //     . $thanksUrl
+  //     . $this->_secretKey;
+
+  //   $payload = [
+  //     'merchant_code' => $merchantCode,
+  //     'first_name' => $firstName,
+  //     'last_name' => $lastName,
+  //     'email' => $email,
+  //     'phone' => $phone,
+  //     'order_id' => $orderId,
+  //     'no_reference' => $numberReference,
+  //     'amount' => $amount,
+  //     'currency' => $currency,
+  //     'item_details' => $itemDetails,
+  //     'datetime_request' => $this->_dateTime,
+  //     'payment_method' => $paymentMethod,
+  //     'time_limit' => $this->_timeLimit,
+  //     'notif_url' => $this->urlNotify,
+  //     'thanks_url' => $thanksUrl,
+  //     'signature' => $this->generateSignature($plainText)
+  //   ];
+
+  //   try {
+  //     $client = new Client();
+  //     $response = $client->request('POST', $this->urlPayment, [
+  //       'headers' => ['Content-type' => 'application/json'],
+  //       'body' => json_encode($payload),
+  //     ]);
+  //     $dataResponse = json_decode($response->getBody()->getContents(), true);
+  //     return $dataResponse;
+  //   } catch (RequestException $error) {
+  //     echo 'Error message: ' . $error;
+  //   }
+  // }
 
   public function generateSignature($plainText)
   {
@@ -261,28 +281,28 @@ class MotionpayGatewayService extends PaymentGatewayService
     return $signature;
   }
 
-  private function _redirectToMontionpay($data = null)
-  {
-    return  $data['frontend_url'];
+  // private function _redirectToMontionpay($data = null)
+  // {
+  //   return  $data['frontend_url'];
 
-    if (!empty($data)) {
+  //   if (!empty($data)) {
 
-      $client = new Client();
-      $response = $client->request('post', $data['frontend_url'], [
-        'headers' => ['Content-type' => 'application/x-www-form-urlencoded'],
-        'form_params' => [
-          "trans_id" => "xridvdl3n2",
-          "merchant_code" => "FmSample",
-          "order_id" => "INV-wBqwRSXeR9YU",
-          "no_reference" => "INV-wBqwRSXeR9YU",
-          "amount" => "10000",
-          "frontend_url" => "https://playpay.flashmobile.co.id",
-          "signature" => "93ef66e8f30f1ed5e73afdb00b412cc538eed7f2",
-        ]
-      ]);
-      $dataResponse = json_decode($response->getBody()->getContents(), true);
+  //     $client = new Client();
+  //     $response = $client->request('post', $data['frontend_url'], [
+  //       'headers' => ['Content-type' => 'application/x-www-form-urlencoded'],
+  //       'form_params' => [
+  //         "trans_id" => "xridvdl3n2",
+  //         "merchant_code" => "FmSample",
+  //         "order_id" => "INV-wBqwRSXeR9YU",
+  //         "no_reference" => "INV-wBqwRSXeR9YU",
+  //         "amount" => "10000",
+  //         "frontend_url" => "https://playpay.flashmobile.co.id",
+  //         "signature" => "93ef66e8f30f1ed5e73afdb00b412cc538eed7f2",
+  //       ]
+  //     ]);
+  //     $dataResponse = json_decode($response->getBody()->getContents(), true);
 
-      // dd($dataResponse);
-    }
-  }
+  //     // dd($dataResponse);
+  //   }
+  // }
 }
