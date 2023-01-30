@@ -140,22 +140,11 @@ class MotionpayGatewayService extends PaymentGatewayService
       ['signature' => $responseDummy['signature']],
     ];
 
-    // ];
-
-    // $dataAttribute = [
-    //   'methodAction' => $this->methodActionPost,
-    //   'urlAction' => route('payment.parse.vendor', strtolower($dataPayment['code_payment'])),
-    //   'dataParse' => 'dataParse',
-    //   // 'dataRedirectTo' => $dataRedirectTo,
-    // ];
-
-
     return $dataAttribute;
   }
 
   public function urlRedirect(array $dataParse)
   {
-    // dd($dataParse);
     $this->_dateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('YmdHis');
     $merchantCode = $this->_merchantCode;
     $firstName = $dataParse['first_name'];
