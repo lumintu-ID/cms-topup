@@ -36,6 +36,8 @@ class InvoiceServiceImplement implements InvoiceService
     $result['payment']['total_price'] = $dataTransaction->total_price;
     $result['attribute'] = $this->_getPaymentAttribute($result['payment'], $result['game']);
 
+    // dd($result);
+
     return $result;
   }
 
@@ -43,13 +45,15 @@ class InvoiceServiceImplement implements InvoiceService
   {
     if (empty($dataParse)) return 'Prosess can not be continued, no value.';
 
-    switch ($codePayment) {
+    switch (strtoupper($codePayment)) {
       case env("RAZOR_CODE_PAYMENT"):
         return $this->_razorGateWayService->urlRedirect($dataParse);
         break;
-
+      case env("MOTIONPAY_CODE_PAYMENT"):
+        return $this->_motionpayGateWayService->urlRedirect($dataParse);
+        break;
       default:
-        return 'no code payment';
+        echo 'no code payment';
         break;
     }
   }
@@ -156,82 +160,82 @@ class InvoiceServiceImplement implements InvoiceService
         break;
 
       case env("MOTIONPAY_CODE_PAYMENT"):
-
         $dataAttribute = $this->_motionpayGateWayService->generateDataParse($dataPayment);
-
-        dd($dataAttribute);
-        $dateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('YmdHis');
-        $merchantCode = env("MOTIONPAY_MERCHANT_CODE");
-        $firstName = $dataPayment['user'];
-        $lastName = $dataPayment['user'];
-        $email = $dataPayment['email'];
-        $phone = '082119673393';
-        $orderId = $dataPayment['invoice'];
-        $numberReference = $dataPayment['invoice'];
-        $amount = (string)$dataPayment['price'];
-        $currency = "IDR";
-        $itemDetails = $dataPayment['name'] . $dataPayment['amount'];
-        $datetimeRequest = $dateTime;
-        $paymentMethod = 'ALL';
-        $timeLimit = '60';
-        $thanksUrl = route('home');
-        $secretKey = env("MOTIONPAY_SECRET_KEY");
-        $plainText = $merchantCode
-          . $firstName
-          . $lastName
-          . $email
-          . $phone
-          . $orderId
-          . $numberReference
-          . $amount
-          . $currency
-          . $itemDetails
-          . $datetimeRequest
-          . $paymentMethod
-          . $timeLimit
-          . $notifUrl
-          . $thanksUrl
-          . $secretKey;
-        $signature = hash('sha1', md5($plainText));
-        $dataParse = [
-          'merchant_code' => $merchantCode,
-          'first_name' => $firstName,
-          'last_name' => $lastName,
-          'email' => $email,
-          'phone' => $phone,
-          'order_id' => $orderId,
-          'no_reference' => $numberReference,
-          'amount' => $amount,
-          'currency' => $currency,
-          'item_details' => $itemDetails,
-          'datetime_request' => $datetimeRequest,
-          'payment_method' => $paymentMethod,
-          'time_limit' => $timeLimit,
-          'notif_url' => $notifUrl,
-          'thanks_url' => $thanksUrl,
-          'signature' => $signature,
-        ];
-        $dataRedirectTo = [
-          'methodAction' => $methodActionPost,
-          'url' => route('payment.test'),
-          'idForm' => 'formRedirectMp',
-          'inputElement' => [
-            'trans_id',
-            'merchant_code',
-            'order_id',
-            'signature',
-          ]
-        ];
-        $dataAttribute = [
-          'methodAction' => $methodActionPost,
-          'urlAction' => $dataPayment['url'],
-          'dataParse' => $dataParse,
-          'dataRedirectTo' => $dataRedirectTo
-        ];
-
+        // dd($dataAttribute);
         return json_encode($dataAttribute);
         break;
 
+        // $dateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('YmdHis');
+        // $merchantCode = env("MOTIONPAY_MERCHANT_CODE");
+        // $firstName = $dataPayment['user'];
+        // $lastName = $dataPayment['user'];
+        // $email = $dataPayment['email'];
+        // $phone = '082119673393';
+        // $orderId = $dataPayment['invoice'];
+        // $numberReference = $dataPayment['invoice'];
+        // $amount = (string)$dataPayment['price'];
+        // $currency = "IDR";
+        // $itemDetails = $dataPayment['name'] . $dataPayment['amount'];
+        // $datetimeRequest = $dateTime;
+        // $paymentMethod = 'ALL';
+        // $timeLimit = '60';
+        // $thanksUrl = route('home');
+        // $secretKey = env("MOTIONPAY_SECRET_KEY");
+        // $plainText = $merchantCode
+        //   . $firstName
+        //   . $lastName
+        //   . $email
+        //   . $phone
+        //   . $orderId
+        //   . $numberReference
+        //   . $amount
+        //   . $currency
+        //   . $itemDetails
+        //   . $datetimeRequest
+        //   . $paymentMethod
+        //   . $timeLimit
+        //   . $notifUrl
+        //   . $thanksUrl
+        //   . $secretKey;
+        // $signature = hash('sha1', md5($plainText));
+        // $dataParse = [
+        //   'merchant_code' => $merchantCode,
+        //   'first_name' => $firstName,
+        //   'last_name' => $lastName,
+        //   'email' => $email,
+        //   'phone' => $phone,
+        //   'order_id' => $orderId,
+        //   'no_reference' => $numberReference,
+        //   'amount' => $amount,
+        //   'currency' => $currency,
+        //   'item_details' => $itemDetails,
+        //   'datetime_request' => $datetimeRequest,
+        //   'payment_method' => $paymentMethod,
+        //   'time_limit' => $timeLimit,
+        //   'notif_url' => $notifUrl,
+        //   'thanks_url' => $thanksUrl,
+        //   'signature' => $signature,
+        // ];
+        // $dataRedirectTo = [
+        //   'methodAction' => $methodActionPost,
+        //   'url' => route('payment.test'),
+        //   'idForm' => 'formRedirectMp',
+        //   'inputElement' => [
+        //     'trans_id',
+        //     'merchant_code',
+        //     'order_id',
+        //     'signature',
+        //   ]
+        // ];
+        // $dataAttribute = [
+        //   'methodAction' => $methodActionPost,
+        //   'urlAction' => $dataPayment['url'],
+        //   'dataParse' => $dataParse,
+        //   'dataRedirectTo' => $dataRedirectTo
+        // ];
+
+        // return json_encode($dataAttribute);
+        // break;
 
       case env("RAZOR_CODE_PAYMENT"):
         $dataAttribute = $this->_razorGateWayService->generateDataParse($dataPayment);

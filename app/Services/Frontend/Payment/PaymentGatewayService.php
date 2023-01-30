@@ -5,11 +5,12 @@ namespace App\Services\Frontend\Payment;
 class PaymentGatewayService
 {
   protected $urlReturn;
-  protected $urlNotify;
+  protected $urlNotify = 'https://esi-paymandashboard.azurewebsites.net/api/v1/transaction/notify';
   protected $urlPayment;
   protected $methodActionPost = 'POST';
   protected $methodActionGet = 'GET';
   protected $codePayment;
+  protected $currency = 'IDR';
 
   public function __construct()
   {

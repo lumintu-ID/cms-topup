@@ -20,6 +20,28 @@ class RazorGateWayService extends PaymentGatewayService
     $this->_hashType = 'hmac-sha256';
   }
 
+  public function generateDataParse(array $dataPayment)
+  {
+    $urlAction = route('payment.parse.vendor', strtolower($dataPayment['code_payment']));
+    $referenceId = $dataPayment['invoice'];
+    $amount = $dataPayment['total_price'];
+    $customerId = $dataPayment['user'];
+    $currencyCode = 'IDR';
+    $description = $dataPayment['amount'] . ' ' . $dataPayment['name'];
+
+    $dataAttribute = [
+      ['methodAction' => $this->methodActionPost],
+      ['urlAction' => $urlAction],
+      ['referenceId' => $referenceId],
+      ['amount' => $amount],
+      ['currencyCode' => $currencyCode],
+      ['description' => $description],
+      ['customerId' => $customerId]
+    ];
+
+    return $dataAttribute;
+  }
+
   public function urlRedirect($dataParse)
   {
     try {
@@ -55,30 +77,6 @@ class RazorGateWayService extends PaymentGatewayService
       $responseError = json_decode($error->getResponse()->getBody()->getContents(), true);
       echo 'Error message: ' . $responseError['message'];
     }
-  }
-
-  public function generateDataParse(array $dataPayment)
-  {
-    $codePayment = $dataPayment['code_payment'];
-    $urlAction = route('payment.parse.vendor', $codePayment);
-    $referenceId = $dataPayment['invoice'];
-    $amount = $dataPayment['total_price'];
-    $customerId = $dataPayment['user'];
-    $currencyCode = 'IDR';
-    $description = $dataPayment['amount'] . ' ' . $dataPayment['name'];
-
-    $dataAttribute = [
-      ['methodAction' => $this->methodActionPost],
-      ['urlAction' => $urlAction],
-      ['referenceId' => $referenceId],
-      ['amount' => $amount],
-      ['currencyCode' => $currencyCode],
-      ['description' => $description],
-      ['customerId' => $customerId],
-
-    ];
-
-    return $dataAttribute;
   }
 
   public function generateSignature($plainText)
