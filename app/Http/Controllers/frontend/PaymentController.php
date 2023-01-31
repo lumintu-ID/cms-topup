@@ -4,7 +4,11 @@ namespace App\Http\Controllers\frontend;
 
 use App\Http\Controllers\Controller;
 use App\Services\Frontend\Invoice\InvoiceService;
+use App\Services\Frontend\Payment\MotionpayGatewayService;
 use App\Services\Frontend\Payment\PaymentService;
+use App\Services\Frontend\Payment\RazorGateWayService;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -12,6 +16,9 @@ class PaymentController extends Controller
 {
     private $_invoiceService;
     private $_paymentService;
+    private $_razorService;
+    private $_motionpayService;
+
     private $activeLink = 'payment';
     private $dataset = [
         'infoTextInput' => [
@@ -33,10 +40,12 @@ class PaymentController extends Controller
         'noPayment' => 'Payment not avaliable',
     ];
 
-    public function __construct(InvoiceService $invoiceService, PaymentService $paymentService)
+    public function __construct(InvoiceService $invoiceService, PaymentService $paymentService, RazorGateWayService $razorService, MotionpayGatewayService $motionpayService)
     {
         $this->_invoiceService = $invoiceService;
         $this->_paymentService = $paymentService;
+        $this->_razorService = $razorService;
+        $this->_motionpayService = $motionpayService;
     }
 
     public function index(Request $request)
@@ -61,51 +70,25 @@ class PaymentController extends Controller
 
     public function confirmation(Request $request)
     {
-        // dd($request->query('invoice'));
         try {
             if (!$request->query('invoice')) return 'not found';
-            // dd($request->query('invoice'));
+
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
             $activeLink = $this->activeLink;
 
-            // dd( $data);
-
             return response()->view('frontend.payment.confirmation', compact('data', 'activeLink'));
-            // ->header('Access-Control-Allow-Origin', 'https://dev.unipin.com/api/unibox/request')
-            // ->header('Access-Control-Allow-Methods', 'POST')
-            // ->header('Access-Control-Allow-Headers', '*');
         } catch (\Throwable $th) {
             dd($th);
         }
     }
 
-    // public function test(Request $request)
-    // {
-    //     dd(json_encode($request->all()));
-
-    // }
-
-    public function unipin(Request $request)
+    public function parseToVendor(Request $request)
     {
-        dd($request->all());
-        $dataParse = [
-            'guid' => $request->devGuid,
-            'reference' => $request->reference,
-            'urlAck' => $request->urlAck,
-            'currency' => $request->currency,
-            'remark' => $request->remark,
-            'signature' => $request->signature,
-            'denominations' => $request->denominations
-        ];
-        // dd(json_encode($dataParse));
-
-        // $response = Http::accept('application/json')->post($request->urlPayment, $dataParse);
-        $response = Http::get('https://jsonplaceholder.typicode.com/todos/1');
-
-        // dd(json_encode($response));
-        dd($response);
-
-        // return Http::dd()->post($request->urlPayment, $dataParse);
-        return dd($response);
+        try {
+            $urlRedirect = $this->_invoiceService->redirectToPayment($request->code, $request->all());
+            return redirect($urlRedirect);
+        } catch (\Throwable $th) {
+            echo 'Prosess can not continue, internal error.';
+        }
     }
 }
