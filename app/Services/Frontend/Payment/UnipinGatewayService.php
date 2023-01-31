@@ -20,8 +20,6 @@ class UnipinGatewayService extends PaymentGatewayService
   {
     $urlAction = route('payment.parse.vendor', strtolower($dataPayment['code_payment']));
     $reference =  $dataPayment['invoice'];
-    // $denominations = $dataPayment['price'] . $dataPayment['amount'] . ' ' . $dataPayment['name'];
-
     $remark = $dataGame['game_title'];
     $dataAttribute = [
       ['methodAction' => $this->methodActionPost],
@@ -37,8 +35,6 @@ class UnipinGatewayService extends PaymentGatewayService
 
   public function urlRedirect($dataParse)
   {
-
-    // dd($reference);
     $guid = $this->_guid;
     $secretKey = $this->_secretKey;
     $currency = $this->currencyIDR;
