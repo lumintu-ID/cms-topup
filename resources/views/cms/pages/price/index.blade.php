@@ -19,13 +19,9 @@ function rupiah($number, $currency){
 @section('content')
 
 
-<button type="button" class="btn btn-block btn-gray-800 mb-3" data-bs-toggle="modal" data-bs-target="#add" onclick="add()">Add</button>
+<button type="button" class="btn btn-block btn-gray-800 mb-3" data-bs-toggle="modal" data-bs-target="#addAll" onclick="add()">Add All Payment</button>
 
-<form action="{{ route('cms.price.import') }}" method="post" enctype="multipart/form-data">
-    @csrf
-    <input type="file" id="myFile" name="file">
-    <input type="submit" class="btn btn-block btn-gray-800 mb-3">
-</form>
+<a href="{{ route('cms.price.add') }}" class="btn btn-block btn-gray-800 mb-3" >Add</a>
   
 
 
@@ -81,7 +77,7 @@ function rupiah($number, $currency){
                     {{ $price->amount.' '.$price->name }}
                 </td>
                 <td>
-                    {{ $price->country->currency.' '.rupiah($price->price, $price->country->currency) }}
+                    {{ $price->price }}
                 </td>
                 <td>
                     <button data-bs-toggle="modal" data-bs-target="#add" onclick="update({{ $price }})"
@@ -100,7 +96,7 @@ function rupiah($number, $currency){
                                     <div class="modal-body row">
                                         <h4>Are you sure delete this Price?</h4>
                                         <p>Payment : {{ $price->payment->name_channel }}</p>
-                                        <p>Name : {{ $price->amount.' '.$price->name.' - '.$price->price.' '.$price->country->currency }}</p>
+                                        {{-- <p>Name : {{ $price->amount.' '.$price->name.' - '.$price->price.' '.$price->country->currency }}</p> --}}
                                         <input type="hidden" name="id" value="{{ $price->price_id }}">
                                     </div>
                                     <div class="modal-footer">
@@ -135,18 +131,8 @@ function rupiah($number, $currency){
                         <label class="my-1 me-2" for="game">Select Game</label>
                         <select class="form-select" name="game" id="game" aria-label="Default select example" required>
                             <option selected>Select Game</option>
-                            @foreach ($game as $game)
-                                <option value="{{ $game->id }}">{{ $game->game_title }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-                        <label class="my-1 me-2" for="game">Select Currency</label>
-                        <select class="form-select" name="currency" id="currency" aria-label="Default select example" required>
-                            <option selected>Select Currency</option>
-                            @foreach ($country as $currency)
-                                <option value="{{ $currency->country_id }}">{{ $currency->currency }}</option>
+                            @foreach ($game as $ga)
+                                <option value="{{ $ga->id }}">{{ $ga->game_title }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -155,8 +141,8 @@ function rupiah($number, $currency){
                         <label class="my-1 me-2" for="payment">Select Payment</label>
                         <select class="form-select" name="payment" id="payment" aria-label="Default select example" required>
                             <option selected>Select Payment</option>
-                            @foreach ($payment as $payment)
-                                <option value="{{ $payment->payment_id }}">{{ $payment->name_channel }}</option>
+                            @foreach ($payment as $p)
+                                <option value="{{ $p->payment_id }}">{{ $p->name_channel }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -194,6 +180,50 @@ function rupiah($number, $currency){
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-secondary" id="btn-modal-form">Create</button>
+                    <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End of Modal Content -->
+
+<!-- Modal add -->
+<div class="modal fade" id="addAll" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="h6 modal-title" id="modal-title-form">Add All Price</h2>
+            </div>
+            <form id="url" action="{{ route('cms.price.addAll') }}" method="post">
+                @csrf
+                <div class="modal-body row">
+                    <div class="col-md-12 mb-3">
+                        <label class="my-1 me-2" for="game">Select Game</label>
+                        <select class="form-select" name="game" aria-label="Default select example" required>
+                            <option selected>Select Game</option>
+                            @foreach ($game as $g)
+                                <option value="{{ $g->id }}">{{ $g->game_title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Name Currency</label>
+                        <input type="text" name="name" value="{{ old('name') }}" class="form-control"
+                            placeholder="Name" required>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="my-1 me-2" for="payment">Select Payment</label>
+                        <select class="form-select" name="payment" aria-label="Default select example" required>
+                            <option selected>Select Payment</option>
+                            @foreach ($payment as $pay)
+                                <option value="{{ $pay->payment_id }}">{{ $pay->name_channel }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-secondary" id="btn-modal-form">Syncronize</button>
                     <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>

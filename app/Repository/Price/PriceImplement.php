@@ -16,17 +16,18 @@ class PriceImplement implements PriceRepository
 
     public function Create($request)
     {
-        Price::create([
-            'price_id' => Str::uuid(),
-            'game_id' => $request['game'],
-            'payment_id' => $request['payment'],
-            'price_point_id' => $request['ppi'],
-            'country_id' => $request['currency'],
-            'name' => $request['name'],
-            'amount' => $request['amount'],
-            'price' => $request['price'],
-            'is_active' => 1
-        ]);
+        foreach ($request as $v) {
+            Price::create([
+                'price_id' => Str::uuid(),
+                'game_id' => $v['game_id'],
+                'payment_id' => $v['payment_id'],
+                'price_point_id' => $v['price_point_id'],
+                'name' => $v['name'],
+                'amount' => $v['amount'],
+                'price' => $v['price'],
+                'is_active' => 1
+            ]);
+        };
 
         return;
     }
@@ -45,7 +46,6 @@ class PriceImplement implements PriceRepository
             'game_id' => $request['game'],
             'payment_id' => $request['payment'],
             'price_point_id' => $request['ppi'],
-            'country_id' => $request['currency'],
             'name' => $request['name'],
             'amount' => $request['amount'],
             'price' => $request['price'],

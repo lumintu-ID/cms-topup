@@ -15,7 +15,10 @@ return new class extends Migration
     {
         Schema::create('price_points', function (Blueprint $table) {
             $table->uuid('id');
+            $table->string('country_id');
             $table->string('price_point');
+            $table->integer('amount');
+            $table->integer('price');
             $table->timestamps();
         });
     }

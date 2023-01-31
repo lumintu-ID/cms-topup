@@ -115,7 +115,11 @@ Route::middleware(['auth', 'access'])->group(function () {
 
     // price list
     Route::get('/administrator/price', [PriceController::class, 'index'])->name('cms.price');
+    Route::get('/administrator/price/add', [PriceController::class, 'add'])->name('cms.price.add');
     Route::post('/administrator/price', [PriceController::class, 'store'])->name('cms.price.store');
+
+    Route::post('/administrator/price/addAll', [PriceController::class, 'addAll'])->name('cms.price.addAll');
+
     Route::patch('/administrator/price', [PriceController::class, 'update'])->name('cms.price.update');
     Route::delete('/administrator/price', [PriceController::class, 'destroy'])->name('cms.price.delete');
     Route::post('/administrator/price/import', [PriceController::class, 'import'])->name('cms.price.import');
