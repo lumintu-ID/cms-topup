@@ -73,8 +73,8 @@
   <script>
     $(document).ready(function(){
       const payment = $("#elementAttribute").data("element-input");
-      const divParseElement = document.createElement("div");
-      divParseElement.style.display = "none";
+      const divParseElement = document.createElement('div');
+      divParseElement.style.display = 'none';
       divParseElement.setAttribute('id', 'parseElement');
       document.getElementById('formInvoice').append(divParseElement);
       if(!payment.hasOwnProperty('dataParse')){
@@ -92,81 +92,21 @@
             createElementInput({ 
               name: Object.keys(element),
               value: element[Object.keys(element)],
-              idForm: divParseElement.getAttribute( 'id' )
+              idForm: divParseElement.getAttribute('id')
             });
           }
         }
-      }else{
-        $("#btnPay").removeAttr('type');
-        $("#btnPay").click(function(event) {
-          event.preventDefault();
-          const { urlAction, dataParse, dataRedirectTo } = payment;
-          postData({urlAction, dataParse});
-        });
       }
     });
 
     const createElementInput = ({ name, value, idForm }) => {
-      const elmentInput = document.createElement("input");
-      elmentInput.setAttribute("name", name);
+      const elmentInput = document.createElement('input');
+      elmentInput.setAttribute('name', name);
       elmentInput.hidden = true;
       elmentInput.value = value || 'no value';
       document.getElementById(idForm || 'formInvoice').append(elmentInput);
       return;
     }
-
-    const createRedirectForm = ({ dataElement = null, value = null }) => {
-      if(!dataElement || !value) return console.error('No data can be process.');
-      const { idForm, methodAction } = dataElement;
-      if(document.getElementById(idForm)) return console.log('form was avaliable');
-
-      let redirectForm = document.createElement("form");
-      redirectForm.setAttribute('id', idForm);
-      redirectForm.setAttribute('method', methodAction);
-      redirectForm.setAttribute('action', value.paymentUrl);
-      document.getElementsByClassName('box-invoice')[0].appendChild(redirectForm);
-      
-      for (const key in value) {
-        if(key.includes("url")) { 
-          redirectForm.setAttribute('action', value[key]);
-        };
-        createElementInput({ idForm, name: key, value: value[key] });
-      }
-
-      const inputSubmit = document.createElement("input");
-      inputSubmit.setAttribute("type", "submit");
-      inputSubmit.hidden = true;
-      document.getElementById(idForm).append(inputSubmit);
-      document.forms[idForm].submit();
-    }
-
-        // Example POST method implementation:
-    async function postData({ urlAction = null, methodAction = null, contentType = null, dataParse = null }) {
-      // console.log(dataParse);
-      try {
-        const response = await fetch(urlAction, { 
-          method: methodAction, // *GET, POST, PUT, DELETE, etc.
-          mode: 'cors', // no-cors, *cors, same-origin
-          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: 'include', // *include, same-origin, omit
-          headers: {
-            'Content-Type': contentType || 'application/json',
-          },
-          redirect: 'follow', // manual, *follow, error
-          referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-          body: JSON.stringify(dataParse) // body data type must match "Content-Type" header
-        });
-        
-        console.log(response);
-        
-        return response.json(); // parses JSON response into native JavaScript objects
-        
-      } catch (error) {
-        console.log('Failed sending data, please try again.');
-      }
-      // Default options are marked with *
-    }
-
    
   </script>
 @endsection

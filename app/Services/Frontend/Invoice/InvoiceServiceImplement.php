@@ -72,14 +72,14 @@ class InvoiceServiceImplement implements InvoiceService
       case env('GV_CODE_PAYMENT'):
         $merchantId = env('GV_MERCHANT_ID');
         $mercahtKey = env('GV_MERCHANT_KEY');
-        $sign = hash('md5', $merchantId . $dataPayment['price'] . $mercahtKey . $dataPayment['invoice']);
+        $sign = hash('md5', $merchantId . $dataPayment['total_price'] . $mercahtKey . $dataPayment['invoice']);
         $dataAttribute = [
           ['urlAction' => $dataPayment['url']],
           ['methodAction' => $methodActionGet],
           ['merchantid' => $merchantId],
           ['custom' => $dataPayment['invoice']],
           ['product' => $dataPayment['amount'] . ' ' . $dataPayment['name']],
-          ['amount' => $dataPayment['price']],
+          ['amount' => $dataPayment['total_price']],
           ['custom_redirect' => $urlReturn],
           ['email' => $dataPayment['email']],
           ['signature' => $sign],
@@ -93,9 +93,9 @@ class InvoiceServiceImplement implements InvoiceService
         $haskey = env('GOC_HASHKEY');
         $trxDateTime = substr(\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('Y-m-d\TH:i:sP'), 0, -3);
         $currency = "IDR";
-        $sign = hash('sha256', $merchantId . $dataPayment['invoice'] . $trxDateTime . $dataPayment['channel_id'] . $dataPayment['price'] . $currency . $haskey);
+        $sign = hash('sha256', $merchantId . $dataPayment['invoice'] . $trxDateTime . $dataPayment['channel_id'] . $dataPayment['total_price'] . $currency . $haskey);
         // $phone = '08777535648447';
-        $phone = '082119673393';
+        // $phone = '082119673393';
         $dataAttribute = [
           ['urlAction' => $dataPayment['url']],
           ['methodAction' => $methodActionPost],
@@ -103,12 +103,12 @@ class InvoiceServiceImplement implements InvoiceService
           ['trxId' => $dataPayment['invoice']],
           ['trxDateTime' => $trxDateTime],
           ['channelId' => $dataPayment['channel_id']],
-          ['amount' => $dataPayment['price']],
+          ['amount' => $dataPayment['total_price']],
           ['currency' => $currency],
           ['returnUrl' => $urlReturn],
           ['name' => 'name'],
           ['email' => $dataPayment['email']],
-          ['phone' => $dataPayment['phone'] ?? $phone],
+          ['phone' => $dataPayment['phone'] ?? null],
           ['userId' => 'userId'],
           ['sign' => $sign],
         ];
