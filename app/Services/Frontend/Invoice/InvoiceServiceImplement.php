@@ -5,6 +5,7 @@ namespace App\Services\Frontend\Invoice;
 use App\Repository\Frontend\Invoice\InvoiceRepository;
 use App\Services\Frontend\Payment\MotionpayGatewayService;
 use App\Services\Frontend\Payment\RazorGateWayService;
+use App\Services\Frontend\Payment\UnipinGatewayService;
 use Illuminate\Support\Str;
 
 class InvoiceServiceImplement implements InvoiceService
@@ -12,12 +13,14 @@ class InvoiceServiceImplement implements InvoiceService
   private $_invoiceRepository;
   private $_razorGateWayService;
   private $_motionpayGateWayService;
+  private $_unipinGatewayService;
 
-  public function __construct(InvoiceRepository $invoiceRepository, RazorGateWayService $razorGateWayService, MotionpayGatewayService $motionpayGateWayService)
+  public function __construct(InvoiceRepository $invoiceRepository, RazorGateWayService $razorGateWayService, MotionpayGatewayService $motionpayGateWayService, UnipinGatewayService $unipinGatewayService)
   {
     $this->_invoiceRepository = $invoiceRepository;
     $this->_razorGateWayService = $razorGateWayService;
     $this->_motionpayGateWayService = $motionpayGateWayService;
+    $this->_unipinGatewayService = $unipinGatewayService;
   }
 
   public function getInvoice($id)
@@ -43,12 +46,15 @@ class InvoiceServiceImplement implements InvoiceService
   {
     if (empty($dataParse)) return 'Prosess can not be continued, no value.';
 
-    switch (strtoupper($codePayment)) {
+    switch (Str::upper(($codePayment))) {
+      case env("UNIPIN_CODE_PAYMENT"):
+        return $this->_unipinGatewayService->urlRedirect($dataParse);
+        break;
       case env("RAZOR_CODE_PAYMENT"):
         return $this->_razorGateWayService->urlRedirect($dataParse);
         break;
       default:
-        echo 'no code payment';
+        echo 'No code payment';
         break;
     }
   }
@@ -61,7 +67,6 @@ class InvoiceServiceImplement implements InvoiceService
     $methodActionPost = "POST";
     $methodActionGet = "GET";
     $trxDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('Y-m-d\TH:i:s');
-    $notifUrl = 'https://esi-paymandashboard.azurewebsites.net/api/v1/transaction/notify';
 
     switch (Str::upper($dataPayment['code_payment'])) {
       case env('GV_CODE_PAYMENT'):
@@ -83,48 +88,6 @@ class InvoiceServiceImplement implements InvoiceService
         return json_encode($dataAttribute);
         break;
 
-      case env('UNIPIN_CODE_PAYMENT'):
-        $guid = env('UNIPIN_DEV_GUID');
-        $secretKey = env('UNIPIN_DEV_SECRET_KEY');
-        $currency = 'IDR';
-        $reference =  $dataPayment['invoice'];
-        $urlAck = $notifUrl;
-        $denominations = $dataPayment['price'] . $dataPayment['amount'] . ' ' . $dataPayment['name'];
-        $signature = hash('sha256', $guid . $reference . $urlAck . $currency . $denominations . $secretKey);
-        $dataParse = [
-          'guid' => $guid,
-          'reference' => $reference,
-          'urlAck' => $urlAck,
-          'currency' => $currency,
-          'remark' => $dataGame['game_title'],
-          'signature' => $signature,
-          'denominations' => [
-            [
-              'amount' => $dataPayment['price'],
-              'description' => $dataPayment['amount'] . ' ' . $dataPayment['name']
-            ]
-          ]
-        ];
-        $dataRedirectTo = [
-          'methodAction' => $methodActionGet,
-          'idForm' => 'formRedirectUnp',
-          'inputElement' => [
-            'status',
-            'message',
-            'url',
-            'signature',
-          ]
-        ];
-        $dataAttribute = [
-          'methodAction' => $methodActionPost,
-          'urlAction' => $dataPayment['url'],
-          'dataParse' => $dataParse,
-          'dataRedirectTo' => $dataRedirectTo
-        ];
-
-        return json_encode($dataAttribute);
-        break;
-
       case env('GOC_CODE_PAYMENT'):
         $merchantId = env('GOC_MERCHANT_ID');
         $haskey = env('GOC_HASHKEY');
@@ -132,7 +95,7 @@ class InvoiceServiceImplement implements InvoiceService
         $currency = "IDR";
         $sign = hash('sha256', $merchantId . $dataPayment['invoice'] . $trxDateTime . $dataPayment['channel_id'] . $dataPayment['price'] . $currency . $haskey);
         // $phone = '08777535648447';
-        // $phone = '082119673393';
+        $phone = '082119673393';
         $dataAttribute = [
           ['urlAction' => $dataPayment['url']],
           ['methodAction' => $methodActionPost],
@@ -145,11 +108,16 @@ class InvoiceServiceImplement implements InvoiceService
           ['returnUrl' => $urlReturn],
           ['name' => 'name'],
           ['email' => $dataPayment['email']],
-          ['phone' => $dataPayment['phone'] ?? '057653826239'],
+          ['phone' => $dataPayment['phone'] ?? $phone],
           ['userId' => 'userId'],
           ['sign' => $sign],
         ];
 
+        return json_encode($dataAttribute);
+        break;
+
+      case env('UNIPIN_CODE_PAYMENT'):
+        $dataAttribute = $this->_unipinGatewayService->generateDataParse($dataPayment, $dataGame);
         return json_encode($dataAttribute);
         break;
 

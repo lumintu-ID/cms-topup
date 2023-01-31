@@ -14,9 +14,7 @@
     $(".modal-body #nameGame span").text(dataGame.title);
     $(".modal-body #nameGame :input").val(dataGame.id);
     $("#formCheckout").hide();
-    // $("#paymentLoader, #paymentLoader .spinner-border").hide();
-    console.log($("#paymentLoader"));
-
+    
     const changeModalTitle = (title) => {
       $("#modalPaymentLabel").text();
       $("#modalPaymentLabel").text(title);

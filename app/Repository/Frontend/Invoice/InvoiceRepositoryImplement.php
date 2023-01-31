@@ -17,7 +17,6 @@ class InvoiceRepositoryImplement implements InvoiceRepository
       'invoice',
       'game_id',
       'id_player',
-      // 'method_payment',
       'price_id',
       'email',
       'total_price',
@@ -30,11 +29,7 @@ class InvoiceRepositoryImplement implements InvoiceRepository
 
   public function getGameInfo(string $id)
   {
-    $data = GameList::select(
-      // 'id',
-      // 'game_id',
-      'game_title'
-    )
+    $data = GameList::select('game_title')
       ->where('id', $id)
       ->first()
       ->toArray();

@@ -4,21 +4,13 @@ namespace App\Http\Controllers\frontend;
 
 use App\Http\Controllers\Controller;
 use App\Services\Frontend\Invoice\InvoiceService;
-use App\Services\Frontend\Payment\MotionpayGatewayService;
 use App\Services\Frontend\Payment\PaymentService;
-use App\Services\Frontend\Payment\RazorGateWayService;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 class PaymentController extends Controller
 {
     private $_invoiceService;
     private $_paymentService;
-    private $_razorService;
-    private $_motionpayService;
-
     private $activeLink = 'payment';
     private $dataset = [
         'infoTextInput' => [
@@ -40,12 +32,10 @@ class PaymentController extends Controller
         'noPayment' => 'Payment not avaliable',
     ];
 
-    public function __construct(InvoiceService $invoiceService, PaymentService $paymentService, RazorGateWayService $razorService, MotionpayGatewayService $motionpayService)
+    public function __construct(InvoiceService $invoiceService, PaymentService $paymentService)
     {
         $this->_invoiceService = $invoiceService;
         $this->_paymentService = $paymentService;
-        $this->_razorService = $razorService;
-        $this->_motionpayService = $motionpayService;
     }
 
     public function index(Request $request)
