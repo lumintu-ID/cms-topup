@@ -10,7 +10,7 @@ class PaymentGatewayService
   protected $methodActionPost = 'POST';
   protected $methodActionGet = 'GET';
   protected $codePayment;
-  protected $currency = 'IDR';
+  protected $currencyIDR = 'IDR';
 
   public function __construct()
   {

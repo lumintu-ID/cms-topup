@@ -48,7 +48,7 @@ class MotionpayGatewayService extends PaymentGatewayService
       $orderId = $dataParse['invoice'];
       $numberReference = $dataParse['invoice'];
       $amount = (string)$dataParse['total_price'];
-      $currency = $this->currency;
+      $currency = $this->currencyIDR;
       $itemDetails =  $dataParse['amount'] . ' ' . $dataParse['name'];
       $paymentMethod = 'ALL';
       $thanksUrl = route('home');
@@ -87,12 +87,14 @@ class MotionpayGatewayService extends PaymentGatewayService
         'thanks_url' => $thanksUrl,
         'signature' => $this->generateSignature($plainText)
       ];
+
       $client = new Client();
       $response = $client->request('POST', $this->urlPayment, [
         'headers' => ['Content-type' => 'application/json'],
         'body' => json_encode($payload),
       ]);
       $dataResponse = json_decode($response->getBody()->getContents(), true);
+
       return $dataResponse;
     } catch (RequestException $error) {
       echo 'Error message: ' . $error;

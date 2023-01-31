@@ -74,7 +74,7 @@
     $(document).ready(function(){
       const payment = $("#elementAttribute").data("element-input");
       const divParseElement = document.createElement("div");
-      // divParseElement.style.display = "none";
+      divParseElement.style.display = "none";
       divParseElement.setAttribute('id', 'parseElement');
       document.getElementById('formInvoice').append(divParseElement);
       if(!payment.hasOwnProperty('dataParse')){
@@ -144,7 +144,7 @@
             // const value = JSON.parse('{"paymentId": "MPO2016930","referenceId": "INV-xfuUDRjaD7jP","paymentUrl": "https://global.gold-sandbox.razer.com/PaymentWall/Checkout/index?token=qipDtsNLDSKXMmPfKpJrjzWvXmAnRCHsQKwLYKtevTtJI4I5sLUeO9K%2f4zzk%2fgB0cVHepJ2dG%2f9ZX%2bEJOou9ou4nGNUkR3cXXShUHur6GdDOs8xAkeg4miQ5b7IuxwYekYYuzy7x55WhzOGv%2fg%2fcFVlgZ2YT4psWTCmXOa0SQg%2fWhJrHnO1Vwnp2TLRiKDa5anJmJ164eIjR%2b82Ovu5wIwlRBitV2cScnSQGJo6gNNroY7%2bt%2fbTdkZxrqq%2f3EcVOxBO%2fuivc52Q%3d","amount": 50000,"currencyCode": "IDR","hashType": "hmac-sha256","version": "v1","signature":"8f966082a8865c27382b1090e74790ce06546cc27fc5341d47e2f81b470b961a","applicationCode": "WG12Nu61SaXhQieGcmW7yYWhKp9xBwvn"}');
 
          
-            createRedirectForm({ dataElement: dataRedirectTo });
+            // createRedirectForm({ dataElement: dataRedirectTo });
           // }
         // console.log(dataRedirectTo);
           // let headers = {'Content-Type':'application/json',
