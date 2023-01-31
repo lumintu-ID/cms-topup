@@ -99,7 +99,7 @@
       }else{
         $("#btnPay").removeAttr('type');
         $("#btnPay").click(function(event) {
-          console.log(payment);
+          // console.log(payment);
           // const { urlAction, dataParse } = payment;
           // console.log(dataParse);
           event.preventDefault();
@@ -137,8 +137,8 @@
           // // headers.append('GET', 'POST', 'OPTIONS');
 
           // if(payment.hasOwnProperty('dataRedirectTo')) {
-            const { dataRedirectTo, dataParse } = payment;
-            console.log(dataParse);
+            const { dataRedirectTo } = payment;
+            // console.log(dataParse);
             // const value = JSON.parse('{"trans_id":"hfvzs7anxxni","merchant_code":"FmSample","order_id":"INV-Fhr86L5w8CpR","no_reference":"INV-Fhr86L5w8CpR","amount":"5000","frontend_url":"https:\/\/playpay.flashmobile.co.id","signature":"9de5951c68692643acb7c465d91a93abeaca91d5"}');
 
             // const value = JSON.parse('{"status": 1, "message": "Success", "url": "https://dev.unipin.com/unibox/d/LDPW1674201556tQK3nQ0N33F1?lg=id", "signature": "9eb208297db7849f7f0f3698c0278fe1f83387a6bd53f1186b7a03266edec27e"}');
