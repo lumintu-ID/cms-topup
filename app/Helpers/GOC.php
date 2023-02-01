@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class Goc
 {
@@ -57,11 +58,11 @@ class Goc
             'sign' => $signature
         ]);
 
-
-        return response()->json([
-            'code' => 200,
-            'status' => 'SUCCESS',
-            'data' => $response->body(),
-        ], 200);
+        var_dump($response->body());
+        // return response()->json([
+        //     'code' => 200,
+        //     'status' => 'SUCCESS',
+        //     'data' => $response->body(),
+        // ], 200);
     }
 }
