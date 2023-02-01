@@ -42,7 +42,7 @@ class RazorGateWayService extends PaymentGatewayService
     return $dataAttribute;
   }
 
-  public function urlRedirect($dataParse)
+  public function urlRedirect(array $dataParse)
   {
     try {
       $plainText = $dataParse['amount']
@@ -75,11 +75,11 @@ class RazorGateWayService extends PaymentGatewayService
       if ($dataResponse['paymentUrl']) return $dataResponse['paymentUrl'];
     } catch (RequestException $error) {
       $responseError = json_decode($error->getResponse()->getBody()->getContents(), true);
-      echo 'Error message: ' . $responseError['message'];
+      echo 'Error message ' . $responseError['message'];
     }
   }
 
-  public function generateSignature($plainText)
+  public function generateSignature(string $plainText)
   {
     $signature = hash_hmac('sha256', $plainText, env("RAZOR_SECRET_KEY"));
     return $signature;

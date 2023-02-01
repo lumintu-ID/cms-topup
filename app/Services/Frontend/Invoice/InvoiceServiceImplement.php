@@ -4,6 +4,7 @@ namespace App\Services\Frontend\Invoice;
 
 use App\Repository\Frontend\Invoice\InvoiceRepository;
 use App\Services\Frontend\Payment\GocpayGatewayService;
+use App\Services\Frontend\Payment\GudangVoucherGatewayService;
 use App\Services\Frontend\Payment\MotionpayGatewayService;
 use App\Services\Frontend\Payment\RazorGateWayService;
 use App\Services\Frontend\Payment\UnipinGatewayService;
@@ -11,15 +12,16 @@ use Illuminate\Support\Str;
 
 class InvoiceServiceImplement implements InvoiceService
 {
-  private $_invoiceRepository, $_razorGateWayService, $_motionpayGateWayService, $_unipinGatewayService, $_gocpayGatewayService;
+  private $_invoiceRepository, $_razorGateWayService, $_motionpayGateWayService, $_unipinGatewayService, $_gocpayGatewayService, $_gudangVoucherGatewayService;
 
-  public function __construct(InvoiceRepository $invoiceRepository, RazorGateWayService $razorGateWayService, MotionpayGatewayService $motionpayGateWayService, UnipinGatewayService $unipinGatewayService, GocpayGatewayService $gocpayGatewayService)
+  public function __construct(InvoiceRepository $invoiceRepository, RazorGateWayService $razorGateWayService, MotionpayGatewayService $motionpayGateWayService, UnipinGatewayService $unipinGatewayService, GocpayGatewayService $gocpayGatewayService, GudangVoucherGatewayService $gudangVoucherGatewayService)
   {
     $this->_invoiceRepository = $invoiceRepository;
     $this->_razorGateWayService = $razorGateWayService;
     $this->_motionpayGateWayService = $motionpayGateWayService;
     $this->_unipinGatewayService = $unipinGatewayService;
     $this->_gocpayGatewayService = $gocpayGatewayService;
+    $this->_gudangVoucherGatewayService = $gudangVoucherGatewayService;
   }
 
   public function getInvoice($id)
@@ -62,25 +64,9 @@ class InvoiceServiceImplement implements InvoiceService
   {
     if (empty($dataPayment) || empty($dataGame)) return 'data is null';
 
-    $urlReturn = route('home');
-    $methodActionGet = "GET";
-
     switch (Str::upper($dataPayment['code_payment'])) {
       case env('GV_CODE_PAYMENT'):
-        $merchantId = env('GV_MERCHANT_ID');
-        $mercahtKey = env('GV_MERCHANT_KEY');
-        $sign = hash('md5', $merchantId . $dataPayment['total_price'] . $mercahtKey . $dataPayment['invoice']);
-        $dataAttribute = [
-          ['urlAction' => $dataPayment['url']],
-          ['methodAction' => $methodActionGet],
-          ['merchantid' => $merchantId],
-          ['custom' => $dataPayment['invoice']],
-          ['product' => $dataPayment['amount'] . ' ' . $dataPayment['name']],
-          ['amount' => $dataPayment['total_price']],
-          ['custom_redirect' => $urlReturn],
-          ['email' => $dataPayment['email']],
-          ['signature' => $sign],
-        ];
+        $dataAttribute = $this->_gudangVoucherGatewayService->generateDataParse($dataPayment);
 
         return json_encode($dataAttribute);
         break;

@@ -74,9 +74,12 @@ class PaymentController extends Controller
 
     public function parseToVendor(Request $request)
     {
+        // dd($urlRedirect = $this->_invoiceService->redirectToPayment($request->code, $request->all()));
         try {
             $urlRedirect = $this->_invoiceService->redirectToPayment($request->code, $request->all());
-            return redirect($urlRedirect);
+            if ($urlRedirect) {
+                return redirect($urlRedirect);
+            }
         } catch (\Throwable $th) {
             echo 'Prosess can not continue, internal error.';
         }

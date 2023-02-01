@@ -44,7 +44,7 @@ class MotionpayGatewayService extends PaymentGatewayService
       $firstName = $dataParse['user'];
       $lastName = $dataParse['user'];
       $email = $dataParse['email'];
-      $phone = $dataParse['phone'] ?? '082119673393';
+      $phone = $dataParse['phone'] ?? null;
       $orderId = $dataParse['invoice'];
       $numberReference = $dataParse['invoice'];
       $amount = (string)$dataParse['total_price'];
@@ -101,7 +101,7 @@ class MotionpayGatewayService extends PaymentGatewayService
     }
   }
 
-  public function generateSignature($plainText)
+  public function generateSignature(string $plainText)
   {
     $signature = hash('sha1', md5($plainText));
     return $signature;

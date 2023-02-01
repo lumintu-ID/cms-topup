@@ -3,6 +3,7 @@
 namespace App\Services\Frontend\Payment;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class UnipinGatewayService extends PaymentGatewayService
 {
@@ -59,13 +60,16 @@ class UnipinGatewayService extends PaymentGatewayService
       ]
     ];
 
-    $client = new Client();
-    $response = $client->request('POST', $this->urlPayment, [
-      'headers' => ['Content-type' => 'application/json'],
-      'body' => json_encode($payload),
-    ]);
-    $dataResponse = json_decode($response->getBody()->getContents(), true);
-    if ($dataResponse['url']) return $dataResponse['url'];
-    return $dataResponse;
+    try {
+      $client = new Client();
+      $response = $client->request('POST', $this->urlPayment, [
+        'headers' => ['Content-type' => 'application/json'],
+        'body' => json_encode($payload),
+      ]);
+      $dataResponse = json_decode($response->getBody()->getContents(), true);
+      if ($dataResponse['url']) return $dataResponse['url'];
+    } catch (RequestException $error) {
+      echo 'Error message: ' . $error->getCode() . ' ' . $error->getResponse()->getReasonPhrase();
+    }
   }
 }

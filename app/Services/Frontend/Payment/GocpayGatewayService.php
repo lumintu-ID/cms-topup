@@ -5,16 +5,16 @@ namespace App\Services\Frontend\Payment;
 
 class GocpayGatewayService extends PaymentGatewayService
 {
-  private $_merchantId;
-  private $_haskey;
-  private $_trxDateTime;
+  private $_merchantId, $_haskey, $_trxDateTime;
 
   public function __construct()
   {
     $this->_merchantId = env('GOC_MERCHANT_ID');
     $this->_haskey = env('GOC_HASHKEY');
     $this->urlReturn = route('home');
+    $this->urlPayment = env('GOC_URL_DEVELOPMENT');
   }
+
   public function generateDataParse($dataPayment)
   {
     $this->_trxDateTime = substr(\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('Y-m-d\TH:i:sP'), 0, -3);
@@ -27,7 +27,7 @@ class GocpayGatewayService extends PaymentGatewayService
       . $this->_haskey;
 
     $dataAttribute = [
-      ['urlAction' => $dataPayment['url']],
+      ['urlAction' => $this->urlPayment ?? $dataPayment['url']],
       ['methodAction' => $this->methodActionPost],
       ['merchantId' => $this->_merchantId],
       ['trxId' => $dataPayment['invoice']],
