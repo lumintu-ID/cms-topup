@@ -26,7 +26,8 @@ class GameRequest extends FormRequest
         return [
             'game_title' => 'required|string',
             'game_id' => 'required',
-            'cover' => 'required|file|image|mimes:jpeg,png,jpg|max:1048'
+            'cover' => 'required|file|image|mimes:jpeg,png,jpg|max:1048',
+            'is_active' => 'required'
         ];
     }
 }

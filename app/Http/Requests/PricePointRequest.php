@@ -24,7 +24,10 @@ class PricePointRequest extends FormRequest
     public function rules()
     {
         return [
-            'price_point' => 'required|string'
+            'price_point' => 'required|string',
+            'country' => 'required',
+            'amount' => 'required',
+            'price' => 'required',
         ];
     }
 }

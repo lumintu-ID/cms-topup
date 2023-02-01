@@ -15,6 +15,22 @@ return [
     |
     */
 
+    // 'paths' => ['api/*', 'sanctum/csrf-cookie'],
+
+    // 'allowed_methods' => ['POST'],
+
+    // 'allowed_origins' => ['https://dev.unipin.com/api/unibox/request', 'https://spg.flashmobile.co.id/switching_pg/'],
+
+    // 'allowed_origins_patterns' => [],
+
+    // 'allowed_headers' => ['content-type', 'accept'],
+
+    // 'exposed_headers' => [],
+
+    // 'max_age' => 60,
+
+    // 'supports_credentials' => true,
+
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
@@ -29,6 +45,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
+    'supports_credentials' => true,
 
 ];

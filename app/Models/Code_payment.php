@@ -9,5 +9,6 @@ class Code_payment extends Model
 {
     use HasFactory;
 
+    protected $table = 'code_payments';
     protected $guarded = [];
 }

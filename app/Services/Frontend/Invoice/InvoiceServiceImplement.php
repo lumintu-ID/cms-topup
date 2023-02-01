@@ -3,15 +3,36 @@
 namespace App\Services\Frontend\Invoice;
 
 use App\Repository\Frontend\Invoice\InvoiceRepository;
+use App\Services\Frontend\Payment\GocpayGatewayService;
+use App\Services\Frontend\Payment\GudangVoucherGatewayService;
+use App\Services\Frontend\Payment\MotionpayGatewayService;
+use App\Services\Frontend\Payment\RazorGateWayService;
+use App\Services\Frontend\Payment\UnipinGatewayService;
 use Illuminate\Support\Str;
 
 class InvoiceServiceImplement implements InvoiceService
 {
-  private $_invoiceRepository;
+  private $_invoiceRepository,
+    $_gocpayGatewayService,
+    $_gudangVoucherGatewayService,
+    $_motionpayGateWayService,
+    $_razorGateWayService,
+    $_unipinGatewayService;
 
-  public function __construct(InvoiceRepository $invoiceRepository)
-  {
+  public function __construct(
+    InvoiceRepository $invoiceRepository,
+    GocpayGatewayService $gocpayGatewayService,
+    GudangVoucherGatewayService $gudangVoucherGatewayService,
+    MotionpayGatewayService $motionpayGateWayService,
+    RazorGateWayService $razorGateWayService,
+    UnipinGatewayService $unipinGatewayService
+  ) {
     $this->_invoiceRepository = $invoiceRepository;
+    $this->_gocpayGatewayService = $gocpayGatewayService;
+    $this->_gudangVoucherGatewayService = $gudangVoucherGatewayService;
+    $this->_motionpayGateWayService = $motionpayGateWayService;
+    $this->_razorGateWayService = $razorGateWayService;
+    $this->_unipinGatewayService = $unipinGatewayService;
   }
 
   public function getInvoice($id)
@@ -27,189 +48,66 @@ class InvoiceServiceImplement implements InvoiceService
     $result['payment']['invoice'] = $dataTransaction->invoice;
     $result['payment']['user'] = $dataTransaction->id_player;
     $result['payment']['email'] = $dataTransaction->email;
+    $result['payment']['total_price'] = $dataTransaction->total_price;
     $result['attribute'] = $this->_getPaymentAttribute($result['payment'], $result['game']);
 
     return $result;
   }
 
+  public function redirectToPayment(string $codePayment = null, array $dataParse = null)
+  {
+    if (empty($dataParse)) return 'Prosess can not be continued, no value.';
+
+    switch (Str::upper(($codePayment))) {
+      case env("UNIPIN_CODE_PAYMENT"):
+        return $this->_unipinGatewayService->urlRedirect($dataParse);
+        break;
+      case env("RAZOR_CODE_PAYMENT"):
+        return $this->_razorGateWayService->urlRedirect($dataParse);
+        break;
+      default:
+        echo 'No code payment';
+        break;
+    }
+  }
+
   private function _getPaymentAttribute(array $dataPayment = null, array $dataGame = null)
   {
-    if (empty($dataPayment)) return 'data is null';
-
-    $urlReturn = route('home');
-    $methodActionPost = "POST";
-    $methodActionGet = "GET";
-    $trxDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('Y-m-d\TH:i:s');
-
-    $notifUrl = 'https://esi-paymandashboard.azurewebsites.net/api/v1/transaction/notify';
+    if (empty($dataPayment) || empty($dataGame)) return 'data is null';
 
     switch (Str::upper($dataPayment['code_payment'])) {
-      case env('GV_CODE_PAYMENT'):
-        $merchantId = env('GV_MERCHANT_ID');
-        $mercahtKey = env('GV_MERCHANT_KEY');
-        $sign = hash('md5', $merchantId . $dataPayment['price'] . $mercahtKey . $dataPayment['invoice']);
-        $dataAttribute = [
-          ['urlAction' => $dataPayment['url']],
-          ['methodAction' => $methodActionGet],
-          ['merchantid' => $merchantId],
-          ['custom' => $dataPayment['invoice']],
-          ['product' => $dataPayment['amount'] . ' ' . $dataPayment['name']],
-          ['amount' => $dataPayment['price']],
-          ['custom_redirect' => $urlReturn],
-          ['email' => $dataPayment['email']],
-          ['signature' => $sign],
-        ];
-
-        return json_encode($dataAttribute);
-        break;
-
-      case env('UNIPIN_CODE_PAYMENT'):
-        $guid = env('UNIPIN_DEV_GUID');
-        $secretKey = env('UNIPIN_DEV_SECRET_KEY');
-        $currency = 'IDR';
-        $reference =  $dataPayment['invoice'];
-        $urlAck = $notifUrl;
-        $denominations = $dataPayment['price'] . $dataPayment['amount'] . ' ' . $dataPayment['name'];
-        $signature = hash('sha256', $guid . $reference . $urlAck . $currency . $denominations . $secretKey);
-        $dataParse = [
-          'guid' => $guid,
-          'reference' => $reference,
-          'urlAck' => $urlAck,
-          'currency' => $currency,
-          'remark' => $dataGame['game_title'],
-          'signature' => $signature,
-          'denominations' => [
-            [
-              'amount' => $dataPayment['price'],
-              'description' => $dataPayment['amount'] . ' ' . $dataPayment['name']
-            ]
-          ]
-        ];
-        $dataRedirectTo = [
-          'methodAction' => $methodActionGet,
-          'idForm' => 'formRedirectUnp',
-          'inputElement' => [
-            'status',
-            'message',
-            'url',
-            'signature',
-          ]
-        ];
-        $dataAttribute = [
-          'methodAction' => $methodActionPost,
-          'urlAction' => $dataPayment['url'],
-          'dataParse' => $dataParse,
-          'dataRedirectTo' => $dataRedirectTo
-        ];
-
-        return json_encode($dataAttribute);
-        break;
-
       case env('GOC_CODE_PAYMENT'):
-        $merchantId = env('GOC_MERCHANT_ID');
-        $haskey = env('GOC_HASHKEY');
-        $trxDateTime = substr(\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('Y-m-d\TH:i:sP'), 0, -3);
-        $currency = "IDR";
-        $sign = hash('sha256', $merchantId . $dataPayment['invoice'] . $trxDateTime . $dataPayment['channel_id'] . $dataPayment['price'] . $currency . $haskey);
-        // $phone = '08777535648447';
-        // $phone = '082119673393';
-        $dataAttribute = [
-          ['urlAction' => $dataPayment['url']],
-          ['methodAction' => $methodActionPost],
-          ['merchantId' => $merchantId],
-          ['trxId' => $dataPayment['invoice']],
-          ['trxDateTime' => $trxDateTime],
-          ['channelId' => $dataPayment['channel_id']],
-          ['amount' => $dataPayment['price']],
-          ['currency' => $currency],
-          ['returnUrl' => $urlReturn],
-          ['name' => 'name'],
-          ['email' => $dataPayment['email']],
-          ['phone' => ($dataPayment['phone']) ? $dataPayment['phone'] : null],
-          ['userId' => 'userId'],
-          ['sign' => $sign],
-        ];
+        $dataAttribute = $this->_gocpayGatewayService->generateDataParse($dataPayment);
+
+        return json_encode($dataAttribute);
+        break;
+
+      case env('GV_CODE_PAYMENT'):
+        $dataAttribute = $this->_gudangVoucherGatewayService->generateDataParse($dataPayment);
 
         return json_encode($dataAttribute);
         break;
 
       case env("MOTIONPAY_CODE_PAYMENT"):
-        $dateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('YmdHis');
-        $merchantCode = env("MOTIONPAY_MERCHANT_CODE");
-        $firstName = $dataPayment['user'];
-        $lastName = $dataPayment['user'];
-        $email = $dataPayment['email'];
-        $phone = '082119673393';
-        $orderId = $dataPayment['invoice'];
-        $numberReference = $dataPayment['invoice'];
-        $amount = (string)$dataPayment['price'];
-        $currency = "IDR";
-        $itemDetails = $dataPayment['name'] . $dataPayment['amount'];
-        $datetimeRequest = $dateTime;
-        $paymentMethod = 'ALL';
-        $timeLimit = '60';
-        $thanksUrl = route('home');
-        $secretKey = env("MOTIONPAY_SECRET_KEY");
-        $plainText = $merchantCode
-          . $firstName
-          . $lastName
-          . $email
-          . $phone
-          . $orderId
-          . $numberReference
-          . $amount
-          . $currency
-          . $itemDetails
-          . $datetimeRequest
-          . $paymentMethod
-          . $timeLimit
-          . $notifUrl
-          . $thanksUrl
-          . $secretKey;
-        $signature = hash('sha1', md5($plainText));
-        $dataParse = [
-          'merchant_code' => $merchantCode,
-          'first_name' => $firstName,
-          'last_name' => $lastName,
-          'email' => $email,
-          'phone' => $phone,
-          'order_id' => $orderId,
-          'no_reference' => $numberReference,
-          'amount' => $amount,
-          'currency' => $currency,
-          'item_details' => $itemDetails,
-          'datetime_request' => $datetimeRequest,
-          'payment_method' => $paymentMethod,
-          'time_limit' => $timeLimit,
-          'notif_url' => $notifUrl,
-          'thanks_url' => $thanksUrl,
-          'signature' => $signature,
-        ];
-        $dataRedirectTo = [
-          'methodAction' => $methodActionPost,
-          'url' => route('payment.test'),
-          'idForm' => 'formRedirectMp',
-          'inputElement' => [
-            'trans_id',
-            'merchant_code',
-            'order_id',
-            'signature',
-          ]
-        ];
-        $dataAttribute = [
-          'methodAction' => $methodActionPost,
-          'urlAction' => $dataPayment['url'],
-          'dataParse' => $dataParse,
-          'dataRedirectTo' => $dataRedirectTo
-        ];
+        $dataAttribute = $this->_motionpayGateWayService->generateDataParse($dataPayment);
 
         return json_encode($dataAttribute);
         break;
 
-      case env("RAZE_NAME_PAYMENT"):
-        $dataAttribute = "Razer payment";
+      case env('UNIPIN_CODE_PAYMENT'):
+        $dataAttribute = $this->_unipinGatewayService->generateDataParse($dataPayment, $dataGame);
 
         return json_encode($dataAttribute);
+        break;
+
+      case env("RAZOR_CODE_PAYMENT"):
+        $dataAttribute = $this->_razorGateWayService->generateDataParse($dataPayment);
+
+        return json_encode($dataAttribute);
+        break;
+
+      default:
+        echo 'Internal error, payment can\'t find.';
         break;
     }
   }

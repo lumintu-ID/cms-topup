@@ -11,4 +11,9 @@ class PricePoint extends Model
     protected $keyType = "string";
     protected $primary = "id";
     protected $guarded = [];
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id', 'currency');
+    }
 }
