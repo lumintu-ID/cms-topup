@@ -7,9 +7,7 @@ use GuzzleHttp\Exception\RequestException;
 
 class RazorGateWayService extends PaymentGatewayService
 {
-  private $_applicationCode;
-  private $_version;
-  private $_hashType;
+  private $_applicationCode, $_version, $_hashType;
 
   public function __construct()
   {

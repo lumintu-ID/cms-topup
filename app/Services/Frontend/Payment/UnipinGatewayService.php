@@ -7,8 +7,7 @@ use GuzzleHttp\Exception\RequestException;
 
 class UnipinGatewayService extends PaymentGatewayService
 {
-  private $_guid;
-  private $_secretKey;
+  private $_guid, $_secretKey;
 
   public function __construct()
   {

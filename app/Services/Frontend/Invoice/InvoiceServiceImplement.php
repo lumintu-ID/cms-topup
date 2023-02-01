@@ -12,16 +12,27 @@ use Illuminate\Support\Str;
 
 class InvoiceServiceImplement implements InvoiceService
 {
-  private $_invoiceRepository, $_razorGateWayService, $_motionpayGateWayService, $_unipinGatewayService, $_gocpayGatewayService, $_gudangVoucherGatewayService;
+  private $_invoiceRepository,
+    $_gocpayGatewayService,
+    $_gudangVoucherGatewayService,
+    $_motionpayGateWayService,
+    $_razorGateWayService,
+    $_unipinGatewayService;
 
-  public function __construct(InvoiceRepository $invoiceRepository, RazorGateWayService $razorGateWayService, MotionpayGatewayService $motionpayGateWayService, UnipinGatewayService $unipinGatewayService, GocpayGatewayService $gocpayGatewayService, GudangVoucherGatewayService $gudangVoucherGatewayService)
-  {
+  public function __construct(
+    InvoiceRepository $invoiceRepository,
+    GocpayGatewayService $gocpayGatewayService,
+    GudangVoucherGatewayService $gudangVoucherGatewayService,
+    MotionpayGatewayService $motionpayGateWayService,
+    RazorGateWayService $razorGateWayService,
+    UnipinGatewayService $unipinGatewayService
+  ) {
     $this->_invoiceRepository = $invoiceRepository;
-    $this->_razorGateWayService = $razorGateWayService;
-    $this->_motionpayGateWayService = $motionpayGateWayService;
-    $this->_unipinGatewayService = $unipinGatewayService;
     $this->_gocpayGatewayService = $gocpayGatewayService;
     $this->_gudangVoucherGatewayService = $gudangVoucherGatewayService;
+    $this->_motionpayGateWayService = $motionpayGateWayService;
+    $this->_razorGateWayService = $razorGateWayService;
+    $this->_unipinGatewayService = $unipinGatewayService;
   }
 
   public function getInvoice($id)
@@ -65,14 +76,20 @@ class InvoiceServiceImplement implements InvoiceService
     if (empty($dataPayment) || empty($dataGame)) return 'data is null';
 
     switch (Str::upper($dataPayment['code_payment'])) {
+      case env('GOC_CODE_PAYMENT'):
+        $dataAttribute = $this->_gocpayGatewayService->generateDataParse($dataPayment);
+
+        return json_encode($dataAttribute);
+        break;
+
       case env('GV_CODE_PAYMENT'):
         $dataAttribute = $this->_gudangVoucherGatewayService->generateDataParse($dataPayment);
 
         return json_encode($dataAttribute);
         break;
 
-      case env('GOC_CODE_PAYMENT'):
-        $dataAttribute = $this->_gocpayGatewayService->generateDataParse($dataPayment);
+      case env("MOTIONPAY_CODE_PAYMENT"):
+        $dataAttribute = $this->_motionpayGateWayService->generateDataParse($dataPayment);
 
         return json_encode($dataAttribute);
         break;
@@ -80,11 +97,6 @@ class InvoiceServiceImplement implements InvoiceService
       case env('UNIPIN_CODE_PAYMENT'):
         $dataAttribute = $this->_unipinGatewayService->generateDataParse($dataPayment, $dataGame);
 
-        return json_encode($dataAttribute);
-        break;
-
-      case env("MOTIONPAY_CODE_PAYMENT"):
-        $dataAttribute = $this->_motionpayGateWayService->generateDataParse($dataPayment);
         return json_encode($dataAttribute);
         break;
 

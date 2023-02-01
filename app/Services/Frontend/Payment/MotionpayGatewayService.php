@@ -7,10 +7,7 @@ use GuzzleHttp\Exception\RequestException;
 
 class MotionpayGatewayService extends PaymentGatewayService
 {
-  private $_dateTime;
-  private $_merchantCode;
-  private $_secretKey;
-  private $_timeLimit;
+  private $_dateTime, $_merchantCode, $_secretKey, $_timeLimit;
 
   public function __construct()
   {
