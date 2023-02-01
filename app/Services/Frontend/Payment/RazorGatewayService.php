@@ -13,7 +13,7 @@ class RazorGateWayService extends PaymentGatewayService
   {
     $this->_version = 'v1';
     $this->_hashType = 'hmac-sha256';
-    $this->_applicationCode = ENV("RAZOR_MERCHANT_CODE");
+    $this->_applicationCode = env("RAZOR_MERCHANT_CODE");
     $this->urlPayment = env("RAZOR_URL_DEVELPOMENT");
     $this->urlReturn = route('home');
   }
