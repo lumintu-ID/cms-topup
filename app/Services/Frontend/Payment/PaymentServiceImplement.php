@@ -7,8 +7,7 @@ use App\Repository\Frontend\Payment\PaymentRepository;
 
 class PaymentServiceImplement implements PaymentService
 {
-  private $_paymentRepository;
-  private $_generalRepository;
+  private $_paymentRepository, $_generalRepository;
 
   public function __construct(PaymentRepository $paymentRepository, GeneralRepository $generalRepository)
   {
