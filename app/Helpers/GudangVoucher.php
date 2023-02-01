@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class GudangVoucher
 {
@@ -62,10 +63,12 @@ class GudangVoucher
 
         $response = Http::get('https://www.gudangvoucher.com/cpayment.php?merchantid=' . $Merchantid . '&custom=' . $custom . 'signature=' . $signature . '');
 
-        return response()->json([
-            'code' => 200,
-            'status' => 'SUCCESS',
-            'data' => $response->body(),
-        ], 200);
+
+        var_dump($response->body());
+        // return response()->json([
+        //     'code' => 200,
+        //     'status' => 'SUCCESS',
+        //     'data' => $response->body(),
+        // ], 200);
     }
 }

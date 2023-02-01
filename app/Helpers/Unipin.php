@@ -48,7 +48,7 @@ class Unipin
     {
         $guid = env('UNIPIN_DEV_GUID');
         $secret = env('UNIPIN_DEV_SECRET_KEY');
-        $url = env('https://dev.unipin.com/api/unibox/inquiry');
+        $url = 'https://dev.unipin.com/api/unibox/inquiry';
         $trxId = $request->invoice;
 
         $signature = hash('sha256', $guid . $trxId . $secret);
@@ -66,10 +66,12 @@ class Unipin
         ]);
 
 
-        return response()->json([
-            'code' => 200,
-            'status' => 'SUCCESS',
-            'data' => json_decode($response->getBody()->getContents(), true),
-        ], 200);
+        var_dump($response->getBody()->getContents());
+
+        // return response()->json([
+        //     'code' => 200,
+        //     'status' => 'SUCCESS',
+        //     'data' => json_decode($response->getBody()->getContents()),
+        // ], 200);
     }
 }
