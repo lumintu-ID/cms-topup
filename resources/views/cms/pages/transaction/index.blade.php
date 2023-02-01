@@ -51,6 +51,7 @@
                 <th>Invoice</th>
                 <th>Email</th>
                 <th>Bill For</th>
+                <th>Payment</th>
                 <th>Total</th>
                 <th>Status</th>
                 <th>Transaction</th>
@@ -63,6 +64,7 @@
                 <td>{{ $data->invoice }}</td>
                 <td>{{ $data->email }}</td>
                 <td>{{ $data->game->game_title }}</td>
+                <td>{{ $data->payment->name_channel }}</td>
                 <td>{{ $data->total_price }}</td>
                 <td>
                     @if ($data->status == 0)
