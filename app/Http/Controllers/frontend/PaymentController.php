@@ -68,7 +68,7 @@ class PaymentController extends Controller
 
             return response()->view('frontend.payment.confirmation', compact('data', 'activeLink'));
         } catch (\Throwable $th) {
-            dd($th);
+            abort(404);
         }
     }
 

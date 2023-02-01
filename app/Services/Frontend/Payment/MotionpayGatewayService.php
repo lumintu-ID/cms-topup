@@ -11,10 +11,10 @@ class MotionpayGatewayService extends PaymentGatewayService
 
   public function __construct()
   {
-    $this->urlPayment = env("MOTIONPAY_URL_DEVELOPMENT");
+    $this->_timeLimit = "60";
     $this->_merchantCode = env("MOTIONPAY_MERCHANT_CODE");
     $this->_secretKey = env("MOTIONPAY_SECRET_KEY");
-    $this->_timeLimit = "60";
+    $this->urlPayment = env("MOTIONPAY_URL_DEVELOPMENT");
   }
 
   public function generateDataParse(array $dataPayment)

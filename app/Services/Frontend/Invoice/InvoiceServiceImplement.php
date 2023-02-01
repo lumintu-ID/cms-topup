@@ -107,7 +107,8 @@ class InvoiceServiceImplement implements InvoiceService
         break;
 
       default:
-        echo 'Internal error, payment can\'t find.';
+        // echo 'Internal error, payment can\'t find.';
+        return abort(404);
         break;
     }
   }

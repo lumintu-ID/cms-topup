@@ -11,8 +11,8 @@ class GocpayGatewayService extends PaymentGatewayService
   {
     $this->_merchantId = env('GOC_MERCHANT_ID');
     $this->_haskey = env('GOC_HASHKEY');
-    $this->urlReturn = route('home');
     $this->urlPayment = env('GOC_URL_DEVELOPMENT');
+    $this->urlReturn = route('home');
   }
 
   public function generateDataParse($dataPayment)
