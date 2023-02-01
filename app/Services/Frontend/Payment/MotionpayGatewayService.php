@@ -2,6 +2,7 @@
 
 namespace App\Services\Frontend\Payment;
 
+use App\Models\Reference;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
@@ -91,7 +92,7 @@ class MotionpayGatewayService extends PaymentGatewayService
         'body' => json_encode($payload),
       ]);
       $dataResponse = json_decode($response->getBody()->getContents(), true);
-
+      $this->saveReference($dataResponse['trans_id'], $dataResponse['order_id']);
       return $dataResponse;
     } catch (RequestException $error) {
       echo 'Error message: ' . $error;
@@ -102,5 +103,17 @@ class MotionpayGatewayService extends PaymentGatewayService
   {
     $signature = hash('sha1', md5($plainText));
     return $signature;
+  }
+
+  private function saveReference(string $trasnId, string $orderId)
+  {
+    try {
+      $checkInvoice = Reference::where('invoice', $orderId)->first();
+      if ($checkInvoice) return;
+      Reference::create(['invoice' => $orderId, 'reference' => $trasnId]);
+      return;
+    } catch (\Throwable $th) {
+      echo 'Internal error, please try again';
+    }
   }
 }
