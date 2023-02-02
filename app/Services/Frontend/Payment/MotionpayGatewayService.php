@@ -5,6 +5,7 @@ namespace App\Services\Frontend\Payment;
 use App\Models\Reference;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\DB;
 
 class MotionpayGatewayService extends PaymentGatewayService
 {
@@ -107,12 +108,15 @@ class MotionpayGatewayService extends PaymentGatewayService
 
   private function saveReference(string $trasnId, string $orderId)
   {
+    DB::beginTransaction();
     try {
       $checkInvoice = Reference::where('invoice', $orderId)->first();
       if ($checkInvoice) return;
       Reference::create(['invoice' => $orderId, 'reference' => $trasnId]);
+      DB::commit();
       return;
     } catch (\Throwable $th) {
+      DB::rollback();
       echo 'Internal error, please try again';
     }
   }
