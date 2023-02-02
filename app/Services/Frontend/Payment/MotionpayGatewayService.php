@@ -2,8 +2,10 @@
 
 namespace App\Services\Frontend\Payment;
 
+use App\Models\Reference;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\DB;
 
 class MotionpayGatewayService extends PaymentGatewayService
 {
@@ -11,10 +13,10 @@ class MotionpayGatewayService extends PaymentGatewayService
 
   public function __construct()
   {
-    $this->urlPayment = env("MOTIONPAY_URL_DEVELOPMENT");
+    $this->_timeLimit = "60";
     $this->_merchantCode = env("MOTIONPAY_MERCHANT_CODE");
     $this->_secretKey = env("MOTIONPAY_SECRET_KEY");
-    $this->_timeLimit = "60";
+    $this->urlPayment = env("MOTIONPAY_URL_DEVELOPMENT");
   }
 
   public function generateDataParse(array $dataPayment)
@@ -47,8 +49,8 @@ class MotionpayGatewayService extends PaymentGatewayService
       $amount = (string)$dataParse['total_price'];
       $currency = $this->currencyIDR;
       $itemDetails =  $dataParse['amount'] . ' ' . $dataParse['name'];
-      $paymentMethod = 'ALL';
-      $thanksUrl = route('home');
+      $paymentMethod = $dataParse['channel_id'] ?? 'ALL';
+      $thanksUrl = route('payment.confirmation.info');
       $plainText = $merchantCode
         . $firstName
         . $lastName
@@ -86,12 +88,12 @@ class MotionpayGatewayService extends PaymentGatewayService
       ];
 
       $client = new Client();
-      $response = $client->request('POST', $this->urlPayment, [
+      $response = $client->request($this->methodActionPost, $this->urlPayment, [
         'headers' => ['Content-type' => 'application/json'],
         'body' => json_encode($payload),
       ]);
       $dataResponse = json_decode($response->getBody()->getContents(), true);
-
+      $this->saveReference($dataResponse['trans_id'], $dataResponse['order_id']);
       return $dataResponse;
     } catch (RequestException $error) {
       echo 'Error message: ' . $error;
@@ -102,5 +104,20 @@ class MotionpayGatewayService extends PaymentGatewayService
   {
     $signature = hash('sha1', md5($plainText));
     return $signature;
+  }
+
+  private function saveReference(string $trasnId, string $orderId)
+  {
+    DB::beginTransaction();
+    try {
+      $checkInvoice = Reference::where('invoice', $orderId)->first();
+      if ($checkInvoice) return;
+      Reference::create(['invoice' => $orderId, 'reference' => $trasnId]);
+      DB::commit();
+      return;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      echo 'Internal error, please try again';
+    }
   }
 }

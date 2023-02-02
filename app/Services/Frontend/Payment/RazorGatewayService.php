@@ -11,11 +11,11 @@ class RazorGateWayService extends PaymentGatewayService
 
   public function __construct()
   {
-    $this->_applicationCode = ENV("RAZOR_MERCHANT_CODE");
-    $this->urlPayment = env("RAZOR_URL_DEVELPOMENT");
     $this->_version = 'v1';
-    $this->urlReturn = route('home');
     $this->_hashType = 'hmac-sha256';
+    $this->_applicationCode = env("RAZOR_MERCHANT_CODE");
+    $this->urlPayment = env("RAZOR_URL_DEVELPOMENT");
+    $this->urlReturn = route('home');
   }
 
   public function generateDataParse(array $dataPayment)
