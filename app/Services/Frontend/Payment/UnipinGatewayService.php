@@ -11,9 +11,9 @@ class UnipinGatewayService extends PaymentGatewayService
 
   public function __construct()
   {
-    $this->_guid = env('UNIPIN_DEV_GUID');
-    $this->_secretKey = env('UNIPIN_DEV_SECRET_KEY');
-    $this->urlPayment = env('UNIPIN_DEV_URL');
+    $this->_guid = env('UNIPIN_GUID_DEVELOPMENT');
+    $this->_secretKey = env('UNIPIN_SECRET_KEY_DEVELOPMENT');
+    $this->urlPayment = env('UNIPIN_URL_DEVELPOMENT');
   }
 
   public function generateDataParse(array $dataPayment, array $dataGame = null)

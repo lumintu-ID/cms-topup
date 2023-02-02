@@ -54,27 +54,26 @@ class PaymentController extends Controller
 
             return redirect()->route('home');
         } catch (\Throwable $th) {
-            dd($th);
+            abort(500);
         }
     }
 
     public function confirmation(Request $request)
     {
         try {
-            if (!$request->query('invoice')) return 'not found';
+            if (!$request->query('invoice')) return 'Not found';
 
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
             $activeLink = $this->activeLink;
 
             return response()->view('frontend.payment.confirmation', compact('data', 'activeLink'));
         } catch (\Throwable $th) {
-            dd($th);
+            abort(404);
         }
     }
 
     public function parseToVendor(Request $request)
     {
-        // dd($urlRedirect = $this->_invoiceService->redirectToPayment($request->code, $request->all()));
         try {
             $urlRedirect = $this->_invoiceService->redirectToPayment($request->code, $request->all());
             if ($urlRedirect) {
@@ -82,6 +81,19 @@ class PaymentController extends Controller
             }
         } catch (\Throwable $th) {
             echo 'Prosess can not continue, internal error.';
+        }
+    }
+
+    public function infoPayment(Request $request)
+    {
+        try {
+            if ($request) {
+                $data = $this->_invoiceService->confrimInfo($request->all());
+                echo $data['message'];
+                return;
+            }
+        } catch (\Throwable $th) {
+            abort(403);
         }
     }
 }
