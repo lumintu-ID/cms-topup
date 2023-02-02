@@ -49,7 +49,7 @@ class MotionpayGatewayService extends PaymentGatewayService
       $currency = $this->currencyIDR;
       $itemDetails =  $dataParse['amount'] . ' ' . $dataParse['name'];
       $paymentMethod = 'ALL';
-      $thanksUrl = route('home');
+      $thanksUrl = route('payment.confirmation.info');
       $plainText = $merchantCode
         . $firstName
         . $lastName
@@ -87,7 +87,7 @@ class MotionpayGatewayService extends PaymentGatewayService
       ];
 
       $client = new Client();
-      $response = $client->request('POST', $this->urlPayment, [
+      $response = $client->request($this->methodActionPost, $this->urlPayment, [
         'headers' => ['Content-type' => 'application/json'],
         'body' => json_encode($payload),
       ]);

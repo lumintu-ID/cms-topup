@@ -71,6 +71,20 @@ class InvoiceServiceImplement implements InvoiceService
     }
   }
 
+  public function confrimInfo(array $dataRequest)
+  {
+    $data = [
+      'message' => 'Payment success, thanks.'
+    ];
+    if ($dataRequest['trans_id']) {
+      $data['message'] = 'Payment success, thanks.';
+      $data['payment'] = 'Motionpay';
+      return $data;
+    }
+
+    return $data;
+  }
+
   private function _getPaymentAttribute(array $dataPayment = null, array $dataGame = null)
   {
     if (empty($dataPayment) || empty($dataGame)) return 'data is null';

@@ -41,6 +41,7 @@ Route::get('/payment', [PaymentFrontend::class, 'index'])->name('payment');
 Route::get('/payment/{slug}', [PaymentFrontend::class, 'index'])->name('payment.games');
 Route::post('/payment-vendor/{code}', [PaymentFrontend::class, 'parseToVendor'])->name('payment.parse.vendor');
 Route::get('/confirmation', [PaymentFrontend::class, 'confirmation'])->name('payment.confirmation');
+Route::post('/confirmation', [PaymentFrontend::class, 'infoPayment'])->name('payment.confirmation.info');
 Route::post('/transaction', [FrontendTransactionController::class, 'transaction'])->name('payment.transaction');
 
 Route::get('/administrator/login', [AuthController::class, 'index'])->name('login');
