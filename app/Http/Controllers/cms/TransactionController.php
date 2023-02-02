@@ -60,6 +60,8 @@ class TransactionController extends Controller
         DB::beginTransaction();
         try {
 
+            Log::info('info', ['data' => $request->all()]);
+
             if ($request->trans_id) {
                 // Motion Pay
 
