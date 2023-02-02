@@ -43,8 +43,5 @@ class MotionPay
                 'paid_time' => $request->datetime_payment
             ]);
         };
-
-        Log::info('info', ['data' => $request->all()]);
-        EventsTransaction::dispatch($request->order_id);
     }
 }
