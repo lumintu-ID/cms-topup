@@ -49,7 +49,7 @@ class MotionpayGatewayService extends PaymentGatewayService
       $amount = (string)$dataParse['total_price'];
       $currency = $this->currencyIDR;
       $itemDetails =  $dataParse['amount'] . ' ' . $dataParse['name'];
-      $paymentMethod = 'ALL';
+      $paymentMethod = $dataParse['channel_id'] ?? 'ALL';
       $thanksUrl = route('payment.confirmation.info');
       $plainText = $merchantCode
         . $firstName
