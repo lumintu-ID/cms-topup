@@ -12,6 +12,16 @@
       "assets/app.59e0f7e9.css"
     ]
   },
+  "resources/js/payment.js": {
+    "file": "assets/payment.0e4e70ef.js",
+    "src": "resources/js/payment.js",
+    "isEntry": true
+  },
+  "resources/js/confirmation.js": {
+    "file": "assets/confirmation.18144b49.js",
+    "src": "resources/js/confirmation.js",
+    "isEntry": true
+  },
   "resources/js/app.css": {
     "file": "assets/app.59e0f7e9.css",
     "src": "resources/js/app.css"

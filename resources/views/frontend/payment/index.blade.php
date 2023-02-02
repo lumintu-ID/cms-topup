@@ -47,5 +47,6 @@
 @endsection
 
 @section('js-utilities')
-  @include('frontend.payment._js-script')
+  <script src="{{ asset('assets/website/js/jquery-3.5.1.slim.min.js') }}"></script>
+  @vite(['resources/js/payment.js'])
 @endsection
