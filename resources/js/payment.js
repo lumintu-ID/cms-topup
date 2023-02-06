@@ -3,7 +3,7 @@
 $(document).ready(function () {
   const baseUrl = window.location.origin;
   const dataGame = JSON.parse(document.getElementsByClassName('games-info__body')[0].dataset.game);
-  const categoryPayment = JSON.parse(document.getElementsByClassName('payment-list')[0].dataset.paymentcategory);
+  const categoryPayment = JSON.parse(document.getElementById('nav-tab-payment').dataset.paymentcategory);
   const textInfo = JSON.parse(document.getElementsByClassName('player-input')[0].dataset.infotext);
   let player;
 
@@ -11,14 +11,9 @@ $(document).ready(function () {
   $(".input-feedback.input-country").text(textInfo.infoTextInput.country);
   $(".modal-body #nameGame span").text(dataGame.title);
   $(".modal-body #nameGame :input").val(dataGame.id);
-  $("#nav-payment").hide();
+  $("#nav-tab-payment").hide();
+  $(".info-payment").hide();
   $("#formCheckout").hide();
-  // $("#nav-tabContent").click('click nav tab');
-
-  console.log($("#nav-tab"));
-  // $("#clearNav").click(function () {
-  //   $("#nav-tab").load();
-  // });
 
   const changeModalTitle = (title) => {
     $("#modalPaymentLabel").text();
@@ -32,10 +27,7 @@ $(document).ready(function () {
     return;
   }
 
-
-
   listNavTab(categoryPayment);
-  // $("#nav-tabContent").click('click nav tab');
   showHideElement({ showElement: '#formCheckout' })
 
 
@@ -139,8 +131,10 @@ $(document).ready(function () {
   });
 
   $(".input-form__country .form-select").change(async function () {
-    $("#nav-payment").hide();
     $("#paymentLoader, #paymentLoader .spinner-border").addClass('mt-5').show();
+    $("#nav-tab-payment").hide();
+    $(".info-payment").hide();
+    $(".info-payment").empty();
     $(".payment-list").empty();
     $(".price-list").empty();
     clearPayment();
@@ -148,32 +142,31 @@ $(document).ready(function () {
       await fetch(`${baseUrl}/api/v1/payment?country=${this.value}&game_id=${dataGame.id}`)
         .then((response) => {
           if (response.status === 404) {
-            addRemoveClass({ element: ".payment-list", addClass: "justify-content-center", removeClass: "justify-content-start" })
-            $("#nav-payment").hide();
-            $(".payment-list").append(textInfo.noPayment);
+            addRemoveClass({ element: ".info-payment", addClass: "justify-content-center" })
+            $("#nav-tab-payment").hide();
+            $(".info-payment").show();
+            $(".info-payment").empty();
+            $(".info-payment").append(textInfo.noPayment);
+            console.log(textInfo.noPayment);
             return;
           }
           return response.json();
         })
         .then((data) => {
-          $("#nav-payment").show();
-          const dataPayment = data.data;
+          $("#nav-tab-payment").show();
+          $(".info-payment").hide();
           addRemoveClass({ element: ".payment-list", addClass: "justify-content-start", removeClass: "justify-content-center" })
-          // $("#nav-tabContent").empty();
+          const dataPayment = data.data;
+          $("#paymentLoader, #paymentLoader .spinner-border").removeClass('mt-5').hide();
           $(".payment-list").empty();
+          $("#nav-tab .nav-link").click(function () {
+            $(".price-list").empty();
+            $(".payment-list__items").children().prop("checked", false);
+            clearItems();
+          });
           dataPayment.map(({ payment }) => {
             addTabContent(payment, categoryPayment);
-
-            // $(".payment-list").append(`
-            //   <div class="col">
-            //     <div class="payment-list__items" data-payment="${payment.payment_id}">
-            //       <input type="radio" id="${payment.payment_id}" name="payment-id" value="${payment.payment_id}">
-            //       <img src="${payment.logo_channel}" title="${payment.name_channel}" alt="${payment.name_channel}" class="ps-2">
-            //     </div>
-            //   </div>
-            // `);
           });
-          $("#paymentLoader, #paymentLoader .spinner-border").removeClass('mt-5').hide();
           $("#formCheckout").hide();
           $("#infoCaution").show();
           $(".payment-list__items").click(function () {
@@ -217,12 +210,15 @@ $(document).ready(function () {
           });
         })
         .catch((error) => {
-          $("#nav-payment").hide();
+          $("#nav-tab-payment").hide();
           $("#paymentLoader, #paymentLoader .spinner-border").removeClass('mt-5').hide();
           $(".payment-list").empty();
           $(".payment-list").addClass("justify-content-center");
           $(".payment-list").append(textInfo.noPayment);
           $(".price-list").empty();
+          $(".info-payment").show();
+
+          console.log(textInfo.noPayment);
         });
     }
 
