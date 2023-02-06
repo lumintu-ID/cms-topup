@@ -11,7 +11,14 @@ $(document).ready(function () {
   $(".input-feedback.input-country").text(textInfo.infoTextInput.country);
   $(".modal-body #nameGame span").text(dataGame.title);
   $(".modal-body #nameGame :input").val(dataGame.id);
+  $("#nav-payment").hide();
   $("#formCheckout").hide();
+  // $("#nav-tabContent").click('click nav tab');
+
+  console.log($("#nav-tab"));
+  // $("#clearNav").click(function () {
+  //   $("#nav-tab").load();
+  // });
 
   const changeModalTitle = (title) => {
     $("#modalPaymentLabel").text();
@@ -25,7 +32,12 @@ $(document).ready(function () {
     return;
   }
 
+
+
+  listNavTab(categoryPayment);
+  // $("#nav-tabContent").click('click nav tab');
   showHideElement({ showElement: '#formCheckout' })
+
 
   $("#btnConfirm").prop("disabled", false);
   $("#btnConfirm").click(function () {
@@ -127,6 +139,7 @@ $(document).ready(function () {
   });
 
   $(".input-form__country .form-select").change(async function () {
+    $("#nav-payment").hide();
     $("#paymentLoader, #paymentLoader .spinner-border").addClass('mt-5').show();
     $(".payment-list").empty();
     $(".price-list").empty();
@@ -136,23 +149,29 @@ $(document).ready(function () {
         .then((response) => {
           if (response.status === 404) {
             addRemoveClass({ element: ".payment-list", addClass: "justify-content-center", removeClass: "justify-content-start" })
+            $("#nav-payment").hide();
             $(".payment-list").append(textInfo.noPayment);
             return;
           }
           return response.json();
         })
         .then((data) => {
+          $("#nav-payment").show();
           const dataPayment = data.data;
           addRemoveClass({ element: ".payment-list", addClass: "justify-content-start", removeClass: "justify-content-center" })
-          dataPayment.map((data) => {
-            $(".payment-list").append(`
-              <div class="col">
-                <div class="payment-list__items" data-payment="${data.payment.payment_id}">
-                  <input type="radio" id="${data.payment.payment_id}" name="payment-id" value="${data.payment.payment_id}">
-                  <img src="${data.payment.logo_channel}" title="${data.payment.name_channel}" alt="${data.payment.name_channel}" class="ps-2">
-                </div>
-              </div>
-            `);
+          // $("#nav-tabContent").empty();
+          $(".payment-list").empty();
+          dataPayment.map(({ payment }) => {
+            addTabContent(payment, categoryPayment);
+
+            // $(".payment-list").append(`
+            //   <div class="col">
+            //     <div class="payment-list__items" data-payment="${payment.payment_id}">
+            //       <input type="radio" id="${payment.payment_id}" name="payment-id" value="${payment.payment_id}">
+            //       <img src="${payment.logo_channel}" title="${payment.name_channel}" alt="${payment.name_channel}" class="ps-2">
+            //     </div>
+            //   </div>
+            // `);
           });
           $("#paymentLoader, #paymentLoader .spinner-border").removeClass('mt-5').hide();
           $("#formCheckout").hide();
@@ -198,6 +217,7 @@ $(document).ready(function () {
           });
         })
         .catch((error) => {
+          $("#nav-payment").hide();
           $("#paymentLoader, #paymentLoader .spinner-border").removeClass('mt-5').hide();
           $(".payment-list").empty();
           $(".payment-list").addClass("justify-content-center");
@@ -208,8 +228,18 @@ $(document).ready(function () {
 
     return;
   });
+
+
 });
 
+const addTabContent = ({ category_id, payment_id, name_channel, logo_channel }) => {
+  $("#nav-" + category_id + " .payment-list").append(`<div class="col">
+      <div class="payment-list__items" data-payment="${payment_id}">
+        <input type="radio" id="${payment_id}" name="payment-id" value="${payment_id}">
+        <img src="${logo_channel}" title="${name_channel}" alt="${name_channel}" class="ps-2">
+      </div>
+    </div>`);
+}
 const clearPayment = () => {
   $(".modal-body #payment span").text('');
   $(".modal-body #payment input[name=payment]").val('');
@@ -239,4 +269,23 @@ const addRemoveClass = ({ element = null, addClass = null, removeClass = null })
   $(element).removeClass(removeClass);
   $(element).addClass(addClass);
   return;
+}
+
+const listNavTab = (data) => {
+  data.map(({ category, id }, index) => {
+    if (index == 0) {
+      $("#nav-tab").append(`<button class="nav-link active" id="nav-${id}-tab" data-bs-toggle="tab" data-bs-target="#nav-${id}" type="button" role="tab" aria-controls="nav-${id}" aria-selected="true">${category}</button>`);
+      $("#nav-tabContent").append(`<div class="tab-pane fade show active" id="nav-${id}" role="tabpanel" aria-labelledby="nav-${id}-tab" tabindex="0">
+      <div class="payment-list row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2"></div>
+      </div>`)
+      return;
+    }
+
+    $("#nav-tab").append(`<button class="nav-link" id="nav-${id}-tab" data-bs-toggle="tab" data-bs-target="#nav-${id}" type="button" role="tab" aria-controls="nav-${id}" aria-selected="true">${category}</button>`);
+    $("#nav-tabContent").append(`<div class="tab-pane fade show" id="nav-${id}" role="tabpanel" aria-labelledby="nav-${id}-tab" tabindex="0">
+    <div class="payment-list row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2"></div>
+    </div>`)
+
+    return;
+  });
 }
