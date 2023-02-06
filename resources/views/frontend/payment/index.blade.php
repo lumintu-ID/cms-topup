@@ -12,28 +12,14 @@
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
-  {{-- <nav class="mt-4">
-    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-      <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">E-Money</button>
-      <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">E-Wallet</button>
-      <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Carrier Billing</button>
-      <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Internet Banking</button>
-      <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Direct Bank Transfer</button>
-    </div>
-  </nav>
-  <div class="payment-list row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2" data-paymentcategory="{{ $categoryPayment }}">
-    <div class="tab-content" id="nav-tabContent">
-      <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
-        <div class="price-list row row-cols-1 row-cols-md-3 row-cols-lg-4 gx-1 gx-md-3 gy-2"></div>
-        
-      </div>
-      <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione nemo consequatur soluta sed inventore, mollitia fugiat possimus quidem fugit rerum itaque a iure accusamus. Dolorem modi sequi dolor sint facere.</div>
-      <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">...</div>
-      <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">...</div>
-    </div>
-  </div> --}}
-  <div class="payment-list row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2" data-paymentcategory="{{ $categoryPayment }}"></div>
-  <div class="price-list row row-cols-1 row-cols-md-3 row-cols-lg-4 gx-1 gx-md-3 gy-2"></div>
+  <div id="nav-tab-payment" data-paymentcategory="{{ $categoryPayment }}">
+    <nav class="mt-4">
+      <div class="nav nav-tabs" id="nav-tab" role="tablist"></div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent"></div>
+  </div>
+  <div class="info-payment row row-cols-1 my-5"></div>
+  <div class="price-list row row-cols-1 row-cols-md-3 row-cols-lg-4 gx-1 gx-md-3 gy-2 mb-2"></div>
 </section>
 <section class="section-total-payment container-fluid container-lg py-lg-4">
   @include('frontend.payment._total-payment')
@@ -47,5 +33,6 @@
 @endsection
 
 @section('js-utilities')
-  @include('frontend.payment._js-script')
+  <script src="{{ asset('assets/website/js/jquery-3.5.1.slim.min.js') }}"></script>
+  @vite(['resources/js/payment.js'])
 @endsection

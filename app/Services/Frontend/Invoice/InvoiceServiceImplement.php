@@ -74,10 +74,10 @@ class InvoiceServiceImplement implements InvoiceService
   public function confrimInfo(array $dataRequest)
   {
     $data = [
-      'message' => 'Payment success, thanks.'
+      'message' => 'No info'
     ];
     if ($dataRequest['trans_id']) {
-      $data['message'] = 'Payment success, thanks.';
+      $data['message'] = ($dataRequest['status_desc'] == 'failed') ? 'Payment ' . $dataRequest['status_desc'] . ', please try again.' : 'Payment success, thanks';
       $data['payment'] = 'Motionpay';
       return $data;
     }
