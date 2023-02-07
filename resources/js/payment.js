@@ -44,6 +44,16 @@ $(document).ready(function () {
       return;
     }
 
+    if ($(".modal-body #playerName input[name=username]").val() == '' && $("#idPlayer").val() != '') {
+
+      showHideElement({ showElement: '#infoCaution', hideElement: '#formCheckout' });
+      $(".info-caution__empty-country, .info-caution__empty-payment, .info-caution__empty-item").attr('hidden', true);
+      $(".info-caution__empty-player")
+        .removeAttr('hidden')
+        .text(textInfo.alert.checkIdPlayer);
+      return;
+    }
+
     if ($(".input-form__country .form-select").val() == '' || !$(".input-form__country .form-select").val()) {
       showHideElement({ showElement: '#infoCaution', hideElement: '#formCheckout' });
       $(".info-caution__empty-player, .info-caution__empty-payment, .info-caution__empty-item").attr('hidden', true);
@@ -70,6 +80,7 @@ $(document).ready(function () {
         .text(textInfo.alert.item);
       return;
     }
+
 
     changeModalTitle(textInfo.titleModal.purchase);
     showHideElement({ showElement: '#formCheckout', hideElement: '#infoCaution' });

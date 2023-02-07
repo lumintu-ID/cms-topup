@@ -25,6 +25,7 @@ class PaymentController extends Controller
         ],
         'alert' => [
             'idPlayer' => 'Id player is required',
+            'checkIdPlayer' => 'Please check your id',
             'country' => 'Country must be choosed',
             'payment' => 'Payment must be choosed',
             'item' => 'Item must be choosed',

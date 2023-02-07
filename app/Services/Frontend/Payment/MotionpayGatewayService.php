@@ -23,6 +23,10 @@ class MotionpayGatewayService extends PaymentGatewayService
   {
     $response = $this->getDataToRedirect($dataPayment);
 
+    if ($response['va_number']) {
+      return route('home');
+    }
+
     $dataAttribute = [
       ['methodAction' => $this->methodActionPost],
       ['urlAction' => $response['frontend_url']],
@@ -92,9 +96,12 @@ class MotionpayGatewayService extends PaymentGatewayService
         'headers' => ['Content-type' => 'application/json'],
         'body' => json_encode($payload),
       ]);
+
       $dataResponse = json_decode($response->getBody()->getContents(), true);
-      $this->saveReference($dataResponse['trans_id'], $dataResponse['order_id']);
+
+      // dd($dataResponse);
       return $dataResponse;
+      $this->saveReference($dataResponse['trans_id'], $dataResponse['order_id']);
     } catch (RequestException $error) {
       echo 'Error message: ' . $error;
     }
