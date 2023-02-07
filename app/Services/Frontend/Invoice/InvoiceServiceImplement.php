@@ -105,7 +105,7 @@ class InvoiceServiceImplement implements InvoiceService
       case env("MOTIONPAY_CODE_PAYMENT"):
         $dataAttribute = $this->_motionpayGateWayService->generateDataParse($dataPayment);
 
-        return json_encode($dataAttribute);
+        return $dataAttribute;
         break;
 
       case env('UNIPIN_CODE_PAYMENT'):

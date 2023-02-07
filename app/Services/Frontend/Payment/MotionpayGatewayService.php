@@ -21,10 +21,12 @@ class MotionpayGatewayService extends PaymentGatewayService
 
   public function generateDataParse(array $dataPayment)
   {
+
     $response = $this->getDataToRedirect($dataPayment);
 
-    if ($response['va_number']) {
-      return route('home');
+    if (!empty($response['va_number'])) {
+
+      return $response;
     }
 
     $dataAttribute = [
@@ -36,7 +38,7 @@ class MotionpayGatewayService extends PaymentGatewayService
       ['signature' => $response['signature']],
     ];
 
-    return $dataAttribute;
+    return json_encode($dataAttribute);
   }
 
   private function getDataToRedirect(array $dataParse)
@@ -99,7 +101,6 @@ class MotionpayGatewayService extends PaymentGatewayService
 
       $dataResponse = json_decode($response->getBody()->getContents(), true);
 
-      // dd($dataResponse);
       return $dataResponse;
       $this->saveReference($dataResponse['trans_id'], $dataResponse['order_id']);
     } catch (RequestException $error) {
