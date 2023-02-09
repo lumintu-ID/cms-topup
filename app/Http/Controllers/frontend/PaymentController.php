@@ -67,6 +67,8 @@ class PaymentController extends Controller
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
             $activeLink = $this->activeLink;
 
+            // dd($data);
+
             if (!empty($data['attribute']['va_number'])) {
                 return view('frontend.payment.confirmation-va', compact('data', 'activeLink'));
             }

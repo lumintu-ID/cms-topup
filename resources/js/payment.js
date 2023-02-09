@@ -81,7 +81,28 @@ $(document).ready(function () {
       return;
     }
 
+    if ($(".phone").length > 0) {
+      // const phone = $(".phone input[name=phone]").val();
+      // if (phone) {
+      //   createPhoneInputOnModal('phone', phone);
+      //   return;
+      // }
+      // console.log('phone harus disi');
+      // return;
+      console.log($(".phone"));
+      if ($(".modal-body #phone").length <= 0) {
+        createTestOnModal();
+        $(".modal-body #phone span").text($(".phone input[name=phone]").val());
+        $(".modal-body #phone input[name=phone]").val($(".phone input[name=phone]").val());
+        console.log($(".phone input[name=phone]").val());
+        return;
+      }
 
+      console.log($(".phone input[name=phone]").val());
+      $(".modal-body #phone span").text($(".phone input[name=phone]").val());
+      $(".modal-body #phone input[name=phone]").val($(".phone input[name=phone]").val());
+      // console.log($(".modal-body #phone input[name=phone]").val());
+    }
     changeModalTitle(textInfo.titleModal.purchase);
     showHideElement({ showElement: '#formCheckout', hideElement: '#infoCaution' });
     return;
@@ -126,7 +147,7 @@ $(document).ready(function () {
         $("#idPlayer").prop('disabled', true);
       })
       .catch(e => {
-        console.log(e);
+        console.error(e);
       });
   });
 
@@ -148,6 +169,7 @@ $(document).ready(function () {
     $(".info-payment").empty();
     $(".payment-list").empty();
     $(".price-list").empty();
+    $(".phone").empty();
     clearPayment();
     if (this.value) {
       await fetch(`${baseUrl}/api/v1/payment?country=${this.value}&game_id=${dataGame.id}`)
@@ -158,7 +180,6 @@ $(document).ready(function () {
             $(".info-payment").show();
             $(".info-payment").empty();
             $(".info-payment").append(textInfo.noPayment);
-            console.log(textInfo.noPayment);
             return;
           }
           return response.json();
@@ -171,6 +192,7 @@ $(document).ready(function () {
           $("#paymentLoader, #paymentLoader .spinner-border").removeClass('mt-5').hide();
           $(".payment-list").empty();
           $("#nav-tab .nav-link").click(function () {
+            removeElement({ classElement: 'phone' })
             $(".price-list").empty();
             $(".payment-list__items").children().prop("checked", false);
             clearItems();
@@ -182,9 +204,11 @@ $(document).ready(function () {
           $("#infoCaution").show();
           $(".payment-list__items").click(function () {
             clearItems();
+            $(".modal-body #phone").remove();
+            // console.log($(".modal-body #amount"));
             $(this).children().prop("checked", true);
             const { payment, price } = dataPayment.find(({ payment }) => payment.payment_id == this.dataset.payment);
-
+            createPhoneInput(payment);
             $(".price-list").empty();
             $(".modal-body #payment span").text(payment.name_channel);
             $(".modal-body #payment input[name=payment]").val(payment.name_channel);
@@ -193,17 +217,7 @@ $(document).ready(function () {
             $("#infoCaution").show();
 
             price.map((data) => {
-              $(".price-list").append(`
-                <div class="col">
-                  <div class="amount-price__wrap d-flex justify-content-between p-2" data-priceid="${data.price_id}">
-                    <div class="amount-price__name-item">
-                      <input type="radio" id="${data.price_id}" name="price-id" value="${data.price_id}">
-                      ${data.amount} ${data.name}
-                    </div>
-                    <div class="amount-price__price" id="price">${data.price}</div>
-                  </div>
-                </div>`
-              );
+              $(".price-list").append(`<div class="col"><div class="amount-price__wrap d-flex justify-content-between p-2" data-priceid="${data.price_id}"><div class="amount-price__name-item"><input type="radio" id="${data.price_id}" name="price-id" value="${data.price_id}"> ${data.amount} ${data.name}</div><div class="amount-price__price" id="price">${data.price}</div></div></div>`);
             });
 
             $(".amount-price__wrap").click(function () {
@@ -228,8 +242,6 @@ $(document).ready(function () {
           $(".payment-list").append(textInfo.noPayment);
           $(".price-list").empty();
           $(".info-payment").show();
-
-          console.log(textInfo.noPayment);
         });
     }
 
@@ -239,20 +251,75 @@ $(document).ready(function () {
 
 });
 
-const addTabContent = ({ category_id, payment_id, name_channel, logo_channel }) => {
-  $("#nav-" + category_id + " .payment-list").append(`<div class="col">
-      <div class="payment-list__items" data-payment="${payment_id}">
-        <input type="radio" id="${payment_id}" name="payment-id" value="${payment_id}">
-        <img src="${logo_channel}" title="${name_channel}" alt="${name_channel}" class="ps-2">
-      </div>
-    </div>`);
+const createPhoneInput = ({ phone_required }) => {
+  const className = "phone";
+  $("." + className).remove();
+  if (phone_required) {
+    $(".payment-list").after(`
+    <div class="${className} row row-cols-1">
+        <div class="col col-md-4 input-group">
+          <div class="input-form__phone row px-2 pt-3 pt-md-0 ps-md-3">
+            <input type="text" class="form-control" aria-label="phone number" aria-describedby="inputGroup-sizing-sm" placeholder="Phone Number" name="${className}">
+            <div class="input-feedback ps-1 py-0">Please insert phone number</div>
+          </div>
+        </div>
+      </div>`);
+    return;
+  }
+  return;
 }
+
+const createTestOnModal = () => {
+
+  $(".modal-body .checkout-confirm__info").before(`
+    <div class="row justify-content-around mb-2" id="phone">
+      <div class="col-6">
+        Phone :
+      </div>
+      <div class="col-4 text-end">
+        <span></span>
+      </div>
+      <input type="text" name="phone" hidden>
+    </div>
+  `);
+  return;
+}
+
+// const createPhoneInputOnModal = (idName, value) => {
+//   console.log($("." + idName));
+//   $(".modal-body #" + idName).remove();
+//   $(".modal-body .checkout-confirm__info").before(`
+//   <div class="row justify-content-around mb-2" id="phone">
+//             <div class="col-6">
+//               Phone :
+//             </div>
+//             <div class="col-4 text-end">
+//               <span>${value}</span>
+//             </div>
+//             <input type="text" name="phone" value=${value} hidden>
+//           </div>`);
+
+//   return;
+// }
+
+const removeElement = ({ idElement = null, classElement = null }) => {
+  if (idElement) $("#" + idElement).remove();
+  if (classElement) $("." + classElement).remove();
+  return;
+}
+
+const addTabContent = ({ category_id, payment_id, name_channel, logo_channel }) => {
+  $("#nav-" + category_id + " .payment-list").append(`<div class="col"><div class="payment-list__items" data-payment="${payment_id}"><input type="radio" id="${payment_id}" name="payment-id" value="${payment_id}"><img src="${logo_channel}" title="${name_channel}" alt="${name_channel}" class="ps-2"></div></div>`);
+  return;
+}
+
 const clearPayment = () => {
   $(".modal-body #payment span").text('');
   $(".modal-body #payment input[name=payment]").val('');
   $(".modal-body #payment input[name=payment_id]").val('');
   $(".modal-body #amount span").text('');
   $(".modal-body #amount :input").val('');
+  $(".modal-body #phone").remove();
   clearItems();
   return;
 }
@@ -282,16 +349,12 @@ const listNavTab = (data) => {
   data.map(({ category, id }, index) => {
     if (index == 0) {
       $("#nav-tab").append(`<button class="nav-link active" id="nav-${id}-tab" data-bs-toggle="tab" data-bs-target="#nav-${id}" type="button" role="tab" aria-controls="nav-${id}" aria-selected="true">${category}</button>`);
-      $("#nav-tabContent").append(`<div class="tab-pane fade show active" id="nav-${id}" role="tabpanel" aria-labelledby="nav-${id}-tab" tabindex="0">
-      <div class="payment-list row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2"></div>
-      </div>`)
+      $("#nav-tabContent").append(`<div class="tab-pane fade show active" id="nav-${id}" role="tabpanel" aria-labelledby="nav-${id}-tab" tabindex="0"><div class="payment-list row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2"></div></div>`)
       return;
     }
 
     $("#nav-tab").append(`<button class="nav-link" id="nav-${id}-tab" data-bs-toggle="tab" data-bs-target="#nav-${id}" type="button" role="tab" aria-controls="nav-${id}" aria-selected="true">${category}</button>`);
-    $("#nav-tabContent").append(`<div class="tab-pane fade show" id="nav-${id}" role="tabpanel" aria-labelledby="nav-${id}-tab" tabindex="0">
-    <div class="payment-list row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2"></div>
-    </div>`)
+    $("#nav-tabContent").append(`<div class="tab-pane fade show" id="nav-${id}" role="tabpanel" aria-labelledby="nav-${id}-tab" tabindex="0"><div class="payment-list row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2"></div></div>`)
 
     return;
   });

@@ -13,7 +13,7 @@
           <p class="info-caution__empty-item" hidden></p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="button__cancel" data-bs-dismiss="modal">Tutup</button>
+          <button type="button" class="button__cancel" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
       <form action="{{ route('payment.transaction') }}" method="post" id="formCheckout">
@@ -135,7 +135,9 @@
             <input type="text" name="payment_id" hidden>
           </div> --}}
           <div class="row checkout-confirm__info mt-2">
-            <p>*Pastikan ID Player dan item yang dipilih sudah sesuai.</p>
+            <div class="col-12">
+              <p>*Pastikan ID Player dan item yang dipilih sudah sesuai.</p>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
