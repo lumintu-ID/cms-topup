@@ -14,6 +14,7 @@ $(document).ready(function () {
   $("#nav-tab-payment").hide();
   $(".info-payment").hide();
   $("#formCheckout").hide();
+  initInputPhone();
 
   const changeModalTitle = (title) => {
     $("#modalPaymentLabel").text();
@@ -37,7 +38,7 @@ $(document).ready(function () {
 
     if ($("#idPlayer").val() == '') {
       showHideElement({ showElement: '#infoCaution', hideElement: '#formCheckout' });
-      $(".info-caution__empty-country, .info-caution__empty-payment, .info-caution__empty-item").attr('hidden', true);
+      $(".info-caution__empty-country, .info-caution__empty-payment, .info-caution__empty-phone, .info-caution__empty-item").attr('hidden', true);
       $(".info-caution__empty-player")
         .removeAttr('hidden')
         .text(textInfo.alert.idPlayer);
@@ -47,7 +48,7 @@ $(document).ready(function () {
     if ($(".modal-body #playerName input[name=username]").val() == '' && $("#idPlayer").val() != '') {
 
       showHideElement({ showElement: '#infoCaution', hideElement: '#formCheckout' });
-      $(".info-caution__empty-country, .info-caution__empty-payment, .info-caution__empty-item").attr('hidden', true);
+      $(".info-caution__empty-country, .info-caution__empty-payment, .info-caution__empty-phone, .info-caution__empty-item").attr('hidden', true);
       $(".info-caution__empty-player")
         .removeAttr('hidden')
         .text(textInfo.alert.checkIdPlayer);
@@ -56,7 +57,7 @@ $(document).ready(function () {
 
     if ($(".input-form__country .form-select").val() == '' || !$(".input-form__country .form-select").val()) {
       showHideElement({ showElement: '#infoCaution', hideElement: '#formCheckout' });
-      $(".info-caution__empty-player, .info-caution__empty-payment, .info-caution__empty-item").attr('hidden', true);
+      $(".info-caution__empty-player, .info-caution__empty-payment, .info-caution__empty-phone, .info-caution__empty-item").attr('hidden', true);
       $(".info-caution__empty-country")
         .removeAttr('hidden')
         .text(textInfo.alert.country);
@@ -65,44 +66,35 @@ $(document).ready(function () {
 
     if ($(".modal-body #payment input[name=payment]").val() == '' || $(".payment-list").children().length <= 0) {
       showHideElement({ showElement: '#infoCaution', hideElement: '#formCheckout' });
-      $(".info-caution__empty-player, .info-caution__empty-country, .info-caution__empty-item").attr('hidden', true);
+      $(".info-caution__empty-player, .info-caution__empty-country, .info-caution__empty-item, .info-caution__empty-phone").attr('hidden', true);
       $(".info-caution__empty-payment")
         .removeAttr('hidden')
         .text(textInfo.alert.payment);
       return;
     }
 
+    if ($(".modal-body #phone").length > 0) {
+      if ($(".input-form__phone input[name=phone]").val() == '') {
+        showHideElement({ showElement: '#infoCaution', hideElement: '#formCheckout' });
+        $(".info-caution__empty-player, .info-caution__empty-country, .info-caution__empty-payment, .info-caution__empty-item").attr('hidden', true);
+        $(".info-caution__empty-phone")
+          .removeAttr('hidden')
+          .text(textInfo.alert.phone);
+        return;
+      }
+      $(".modal-body #phone :input").val($(".input-form__phone input[name=phone]").val());
+      $(".modal-body #phone span").text($(".input-form__phone input[name=phone]").val());
+    }
+
     if ($(".modal-body #price input[name=price]").val() == '') {
       showHideElement({ showElement: '#infoCaution', hideElement: '#formCheckout' });
-      $(".info-caution__empty-player, .info-caution__empty-country, .info-caution__empty-payment").attr('hidden', true);
+      $(".info-caution__empty-player, .info-caution__empty-country, .info-caution__empty-payment, .info-caution__empty-phone").attr('hidden', true);
       $(".info-caution__empty-item")
         .removeAttr('hidden')
         .text(textInfo.alert.item);
       return;
     }
 
-    if ($(".phone").length > 0) {
-      // const phone = $(".phone input[name=phone]").val();
-      // if (phone) {
-      //   createPhoneInputOnModal('phone', phone);
-      //   return;
-      // }
-      // console.log('phone harus disi');
-      // return;
-      console.log($(".phone"));
-      if ($(".modal-body #phone").length <= 0) {
-        createTestOnModal();
-        $(".modal-body #phone span").text($(".phone input[name=phone]").val());
-        $(".modal-body #phone input[name=phone]").val($(".phone input[name=phone]").val());
-        console.log($(".phone input[name=phone]").val());
-        return;
-      }
-
-      console.log($(".phone input[name=phone]").val());
-      $(".modal-body #phone span").text($(".phone input[name=phone]").val());
-      $(".modal-body #phone input[name=phone]").val($(".phone input[name=phone]").val());
-      // console.log($(".modal-body #phone input[name=phone]").val());
-    }
     changeModalTitle(textInfo.titleModal.purchase);
     showHideElement({ showElement: '#formCheckout', hideElement: '#infoCaution' });
     return;
@@ -170,6 +162,7 @@ $(document).ready(function () {
     $(".payment-list").empty();
     $(".price-list").empty();
     $(".phone").empty();
+
     clearPayment();
     if (this.value) {
       await fetch(`${baseUrl}/api/v1/payment?country=${this.value}&game_id=${dataGame.id}`)
@@ -205,7 +198,6 @@ $(document).ready(function () {
           $(".payment-list__items").click(function () {
             clearItems();
             $(".modal-body #phone").remove();
-            // console.log($(".modal-body #amount"));
             $(this).children().prop("checked", true);
             const { payment, price } = dataPayment.find(({ payment }) => payment.payment_id == this.dataset.payment);
             createPhoneInput(payment);
@@ -252,25 +244,17 @@ $(document).ready(function () {
 });
 
 const createPhoneInput = ({ phone_required }) => {
-  const className = "phone";
-  $("." + className).remove();
   if (phone_required) {
-    $(".payment-list").after(`
-    <div class="${className} row row-cols-1">
-        <div class="col col-md-4 input-group">
-          <div class="input-form__phone row px-2 pt-3 pt-md-0 ps-md-3">
-            <input type="text" class="form-control" aria-label="phone number" aria-describedby="inputGroup-sizing-sm" placeholder="Phone Number" name="${className}">
-            <div class="input-feedback ps-1 py-0">Please insert phone number</div>
-          </div>
-        </div>
-      </div>`);
+    $(".wrap-phone").show({
+      complete: createTestOnModal()
+    });
     return;
   }
+  $(".wrap-phone").hide();
   return;
 }
 
 const createTestOnModal = () => {
-
   $(".modal-body .checkout-confirm__info").before(`
     <div class="row justify-content-around mb-2" id="phone">
       <div class="col-6">
@@ -283,6 +267,28 @@ const createTestOnModal = () => {
     </div>
   `);
   return;
+}
+
+const resetPhoneElement = () => {
+  $(".input-form__phone input[name=phone]").val('');
+}
+
+const initInputPhone = () => {
+  $(".wrap-phone").append(`
+  <div class="col col-md-4 input-group">
+    <div class="input-form__phone row px-2 pt-3 pt-md-0 ps-md-3">
+      <input type="text" class="form-control" aria-label="phone number" aria-describedby="inputGroup-sizing-sm" placeholder="Phone Number" name="phone">
+      <div class="input-feedback ps-1 py-0">Please insert phone number</div>
+    </div>
+  </div>`);
+  clearWrapPhone();
+  return;
+}
+
+const clearWrapPhone = () => {
+  $(".wrap-phone").hide({
+    done: resetPhoneElement()
+  });
 }
 
 // const createPhoneInputOnModal = (idName, value) => {
@@ -325,6 +331,8 @@ const clearPayment = () => {
 }
 
 const clearItems = () => {
+  clearWrapPhone();
+  $(".wrap-phone").hide();
   $(".modal-body #price span").text('');
   $(".modal-body #price input[name=price]").val('');
   $(".total-payment__nominal").text('0');

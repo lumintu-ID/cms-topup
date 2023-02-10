@@ -25,7 +25,8 @@ class MotionpayGatewayService extends PaymentGatewayService
     $response = $this->getDataToRedirect($dataPayment);
 
     if (!empty($response['va_number'])) {
-
+      $this->saveReferenceVa($response);
+      // dd($response);
       return $response;
     }
 
@@ -127,5 +128,17 @@ class MotionpayGatewayService extends PaymentGatewayService
       DB::rollback();
       echo 'Internal error, please try again';
     }
+  }
+
+  private function saveReferenceVa($data)
+  {
+
+    // DB::beginTransaction();
+    try {
+      dd($data['va_number'], $data['order_id'], $data['expired_time']);
+    } catch (\Throwable $th) {
+      dd($th);
+    }
+    return 'save add';
   }
 }

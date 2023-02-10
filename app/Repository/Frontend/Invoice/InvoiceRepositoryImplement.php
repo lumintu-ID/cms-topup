@@ -19,6 +19,7 @@ class InvoiceRepositoryImplement implements InvoiceRepository
       'id_player',
       'price_id',
       'email',
+      'phone',
       'total_price',
       'created_at as date'
     )

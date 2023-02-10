@@ -19,6 +19,7 @@
     <div class="tab-content" id="nav-tabContent"></div>
   </div>
   <div class="info-payment row row-cols-1 my-5"></div>
+  <div class="wrap-phone row row-cols-1"></div>
   <div class="price-list row row-cols-1 row-cols-md-3 row-cols-lg-4 gx-1 gx-md-3 gy-2 mb-2"></div>
 </section>
 <section class="section-total-payment container-fluid container-lg py-lg-4">

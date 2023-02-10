@@ -10,6 +10,7 @@
           <p class="info-caution__empty-player" hidden></p>
           <p class="info-caution__empty-country" hidden></p>
           <p class="info-caution__empty-payment" hidden></p>
+          <p class="info-caution__empty-phone" hidden></p>
           <p class="info-caution__empty-item" hidden></p>
         </div>
         <div class="modal-footer">
