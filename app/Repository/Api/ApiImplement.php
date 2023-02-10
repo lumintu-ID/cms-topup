@@ -37,6 +37,9 @@ class ApiImplement implements ApiRepository
         $priceData = [];
         foreach ($payment as $pay) {
             $price = Price::select('price_id', 'payment_id', 'game_id', 'name', 'amount', 'price')->where('payment_id', $pay->payment_id)->where('game_id', $gameId)->orderBy('price', 'asc')->get();
+
+
+
             $p = array(
                 "code_pay" => $pay->code_pay->code_payment,
                 "category_id" => $pay->category->category_id,
@@ -47,6 +50,7 @@ class ApiImplement implements ApiRepository
                 "name_channel" => $pay->name_channel,
                 "logo_channel" => url('/image/' . $pay->logo_channel),
                 "url"   => $pay->url,
+                "phone_required" => ($pay->channel_id == "94" || $pay->channel_id == "SPIN") ? true : false,
             );
 
 
