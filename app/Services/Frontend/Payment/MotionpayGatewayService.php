@@ -3,6 +3,7 @@
 namespace App\Services\Frontend\Payment;
 
 use App\Models\Reference;
+use App\Models\VirtualAccount;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +27,6 @@ class MotionpayGatewayService extends PaymentGatewayService
 
     if (!empty($response['va_number'])) {
       $this->saveReferenceVa($response);
-      // dd($response);
       return $response;
     }
 
@@ -132,13 +132,16 @@ class MotionpayGatewayService extends PaymentGatewayService
 
   private function saveReferenceVa($data)
   {
-
-    // DB::beginTransaction();
+    DB::beginTransaction();
     try {
-      dd($data['va_number'], $data['order_id'], $data['expired_time']);
+      $checkInvoice = VirtualAccount::where('invoice', $data['order_id'])->first();
+      if ($checkInvoice) return;
+      VirtualAccount::create(['invoice' => $data['order_id'], 'VA' => $data['va_number'], 'expired_time' => $data['expired_time']]);
+      DB::commit();
+      return;
     } catch (\Throwable $th) {
+      DB::rollback();
       dd($th);
     }
-    return 'save add';
   }
 }
