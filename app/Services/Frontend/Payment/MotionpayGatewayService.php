@@ -3,6 +3,8 @@
 namespace App\Services\Frontend\Payment;
 
 use App\Models\Reference;
+use App\Models\VirtualAccount;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\DB;
@@ -21,21 +23,40 @@ class MotionpayGatewayService extends PaymentGatewayService
 
   public function generateDataParse(array $dataPayment)
   {
-    $response = $this->getDataToRedirect($dataPayment);
+    try {
+      $response = $this->_getDataToRedirect($dataPayment);
 
-    $dataAttribute = [
-      ['methodAction' => $this->methodActionPost],
-      ['urlAction' => $response['frontend_url']],
-      ['trans_id' => $response['trans_id']],
-      ['merchant_code' => $response['merchant_code']],
-      ['order_id' => $response['order_id']],
-      ['signature' => $response['signature']],
-    ];
+      if (!empty($response['va_number'])) {
+        if (!$this->_checkSignature($response, $response['va_number'])) throw new Exception('Invalid Signature', 403);
 
-    return $dataAttribute;
+        $this->_saveReferenceVa($response);
+        return $response;
+      }
+
+      if (!$this->_checkSignature($response)) throw new Exception('Invalid Signature', 403);
+
+      $dataAttribute = [
+        ['methodAction' => $this->methodActionPost],
+        ['urlAction' => $response['frontend_url']],
+        ['trans_id' => $response['trans_id']],
+        ['merchant_code' => $response['merchant_code']],
+        ['order_id' => $response['order_id']],
+        ['signature' => $response['signature']],
+      ];
+
+      return json_encode($dataAttribute);
+    } catch (\Exception $error) {
+      abort($error->getCode(), $error->getMessage());
+    }
   }
 
-  private function getDataToRedirect(array $dataParse)
+  public function generateSignature(string $plainText = null)
+  {
+    $signature = hash('sha1', md5($plainText));
+    return $signature;
+  }
+
+  private function _getDataToRedirect(array $dataParse)
   {
     try {
       $this->_dateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('YmdHis');
@@ -92,21 +113,50 @@ class MotionpayGatewayService extends PaymentGatewayService
         'headers' => ['Content-type' => 'application/json'],
         'body' => json_encode($payload),
       ]);
+
       $dataResponse = json_decode($response->getBody()->getContents(), true);
-      $this->saveReference($dataResponse['trans_id'], $dataResponse['order_id']);
+
+      $this->_saveReference($dataResponse['trans_id'], $dataResponse['order_id']);
       return $dataResponse;
     } catch (RequestException $error) {
       echo 'Error message: ' . $error;
     }
   }
 
-  public function generateSignature(string $plainText)
+  private function _checkSignature($dataResponse, $vaNumber = null)
   {
-    $signature = hash('sha1', md5($plainText));
-    return $signature;
+    $plainText = null;
+
+    if (empty($vaNumber)) {
+      $plainText = $dataResponse['trans_id']
+        . $dataResponse['merchant_code']
+        . $dataResponse['order_id']
+        . $dataResponse['no_reference']
+        . $dataResponse['amount']
+        . $dataResponse['frontend_url'];
+    } else {
+      $plainText = $dataResponse['trans_id']
+        . $dataResponse['merchant_code']
+        . $dataResponse['order_id']
+        . $dataResponse['no_reference']
+        . $dataResponse['amount']
+        . $dataResponse['frontend_url']
+        . $dataResponse['fm_refnum']
+        . $dataResponse['payment_method']
+        . $dataResponse['va_number']
+        . $dataResponse['expired_time']
+        . $dataResponse['status_code']
+        . $dataResponse['status_desc'];
+    }
+
+    $signatureMerchat = $this->generateSignature($plainText . $this->_secretKey);
+
+    if ($dataResponse['signature'] == $signatureMerchat) return true;
+
+    return false;
   }
 
-  private function saveReference(string $trasnId, string $orderId)
+  private function _saveReference(string $trasnId, string $orderId)
   {
     DB::beginTransaction();
     try {
@@ -117,7 +167,22 @@ class MotionpayGatewayService extends PaymentGatewayService
       return;
     } catch (\Throwable $th) {
       DB::rollback();
-      echo 'Internal error, please try again';
+      abort(500, 'Internal error, please try again');
+    }
+  }
+
+  private function _saveReferenceVa($data)
+  {
+    DB::beginTransaction();
+    try {
+      $checkInvoice = VirtualAccount::where('invoice', $data['order_id'])->first();
+      if ($checkInvoice) return;
+      VirtualAccount::create(['invoice' => $data['order_id'], 'VA' => $data['va_number'], 'expired_time' => $data['expired_time']]);
+      DB::commit();
+      return;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      abort(500);
     }
   }
 }

@@ -7,10 +7,19 @@
 }
 
 .input-form__player>.form-control:focus,
-.input-form__country>.form-select:focus {
+.input-form__country>.form-select:focus,
+.input-form__phone>.form-control:focus {
   border-color: colors.$color-fourth;
   outline: .1rem;
   box-shadow: 0 0 0 0.2rem transparentize($color: colors.$color-fourth, $amount: .8);
+}
+
+.input-form__phone {
+  animation: fadein 1s;
+
+  &>input::placeholder {
+    font-size: .9rem;
+  }
 }
 
 .nav-tabs {
@@ -63,7 +72,7 @@
 }
 
 .payment-list {
-  min-height: 10vh;
+  min-height: 7vh;
 
   &__items {
     display: flex;
@@ -133,6 +142,7 @@
   padding: .1rem 0 .5rem 1rem;
   font-size: .8rem;
   font-style: italic;
+  color: lighten($color: $black, $amount: 20);
 
   &.invalid {
     color: colors.$color-second;
