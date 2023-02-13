@@ -68,25 +68,11 @@ class PaymentController extends Controller
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
             $activeLink = $this->activeLink;
 
-            // dd($data);
-
-            if (!empty($data['attribute']['va_number'])) {
-                return view('frontend.payment.confirmation-va', compact('data', 'activeLink'));
-            }
+            if (!empty($data['attribute']['va_number'])) return view('frontend.payment.confirmation-va', compact('data', 'activeLink'));
 
             return response()->view('frontend.payment.confirmation', compact('data', 'activeLink'));
         } catch (\Throwable $th) {
-            abort(404);
-        }
-    }
-
-    public function vaPayment(Request $request)
-    {
-        try {
-            dd($request);
-            return 'va payment';
-        } catch (\Throwable $th) {
-            throw $th;
+            abort(403, $th->getMessage());
         }
     }
 
