@@ -22,24 +22,37 @@ class MotionpayGatewayService extends PaymentGatewayService
 
   public function generateDataParse(array $dataPayment)
   {
+    try {
+      $response = $this->getDataToRedirect($dataPayment);
 
-    $response = $this->getDataToRedirect($dataPayment);
+      if (empty($dataResponse)) {
+        dd('Invalid transaction');
+        return;
+      }
 
-    if (!empty($response['va_number'])) {
-      $this->saveReferenceVa($response);
-      return $response;
+      if ($this->generateSignatureVa($response) != $response['signature']) {
+        dd('Invalid transaction');
+        return;
+      }
+
+      if (!empty($response['va_number'])) {
+        $this->_saveReferenceVa($response);
+        return $response;
+      }
+
+      $dataAttribute = [
+        ['methodAction' => $this->methodActionPost],
+        ['urlAction' => $response['frontend_url']],
+        ['trans_id' => $response['trans_id']],
+        ['merchant_code' => $response['merchant_code']],
+        ['order_id' => $response['order_id']],
+        ['signature' => $response['signature']],
+      ];
+
+      return json_encode($dataAttribute);
+    } catch (\Throwable $th) {
+      throw $th;
     }
-
-    $dataAttribute = [
-      ['methodAction' => $this->methodActionPost],
-      ['urlAction' => $response['frontend_url']],
-      ['trans_id' => $response['trans_id']],
-      ['merchant_code' => $response['merchant_code']],
-      ['order_id' => $response['order_id']],
-      ['signature' => $response['signature']],
-    ];
-
-    return json_encode($dataAttribute);
   }
 
   private function getDataToRedirect(array $dataParse)
@@ -103,7 +116,7 @@ class MotionpayGatewayService extends PaymentGatewayService
       $dataResponse = json_decode($response->getBody()->getContents(), true);
 
       return $dataResponse;
-      $this->saveReference($dataResponse['trans_id'], $dataResponse['order_id']);
+      $this->_saveReference($dataResponse['trans_id'], $dataResponse['order_id']);
     } catch (RequestException $error) {
       echo 'Error message: ' . $error;
     }
@@ -115,7 +128,26 @@ class MotionpayGatewayService extends PaymentGatewayService
     return $signature;
   }
 
-  private function saveReference(string $trasnId, string $orderId)
+  public function generateSignatureVa($dataResponse)
+  {
+    $plainText = $dataResponse['trans_id']
+      . $dataResponse['order_id']
+      . $dataResponse['no_reference']
+      . $dataResponse['amount']
+      . $dataResponse['frontend_url']
+      . $dataResponse['refnum']
+      . $dataResponse['payment_method']
+      . $dataResponse['va_number']
+      . $dataResponse['expired_time']
+      . $dataResponse['status_code']
+      . $dataResponse['status_desc']
+      . $this->_secretKey;
+
+    $signature = $this->generateSignature($plainText);
+    return $signature;
+  }
+
+  private function _saveReference(string $trasnId, string $orderId)
   {
     DB::beginTransaction();
     try {
@@ -130,7 +162,7 @@ class MotionpayGatewayService extends PaymentGatewayService
     }
   }
 
-  private function saveReferenceVa($data)
+  private function _saveReferenceVa($data)
   {
     DB::beginTransaction();
     try {
