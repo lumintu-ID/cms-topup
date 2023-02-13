@@ -2,8 +2,11 @@
 
 namespace App\Services\Frontend\Payment;
 
+use App\Models\Reference;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\DB;
 
 class RazorGateWayService extends PaymentGatewayService
 {
@@ -26,7 +29,6 @@ class RazorGateWayService extends PaymentGatewayService
     $customerId = $dataPayment['user'];
     $currencyCode = 'IDR';
     $description = $dataPayment['amount'] . ' ' . $dataPayment['name'];
-
     $dataAttribute = [
       ['methodAction' => $this->methodActionPost],
       ['urlAction' => $urlAction],
@@ -70,7 +72,15 @@ class RazorGateWayService extends PaymentGatewayService
         ]
       ]);
       $dataResponse = json_decode($response->getBody()->getContents(), true);
-      if ($dataResponse['paymentUrl']) return $dataResponse['paymentUrl'];
+
+      if (!$this->_checkSignature($dataResponse)) {
+        throw new Exception('Invalid Signature', 403);
+      }
+
+      if ($dataResponse['paymentUrl']) {
+        $this->_saveReference($dataResponse['paymentId'], $dataResponse['referenceId']);
+        return $dataResponse['paymentUrl'];
+      }
     } catch (RequestException $error) {
       $responseError = json_decode($error->getResponse()->getBody()->getContents(), true);
       echo 'Error message ' . $responseError['message'];
@@ -81,5 +91,37 @@ class RazorGateWayService extends PaymentGatewayService
   {
     $signature = hash_hmac('sha256', $plainText, env("RAZOR_SECRET_KEY"));
     return $signature;
+  }
+
+  private function _checkSignature($dataResponse)
+  {
+    $plainText = $dataResponse['amount']
+      . $dataResponse['applicationCode']
+      . $dataResponse['currencyCode']
+      . $dataResponse['hashType']
+      . $dataResponse['paymentId']
+      . $dataResponse['paymentUrl']
+      . $dataResponse['referenceId']
+      . $dataResponse['version'];
+    $signatureMerchat = $this->generateSignature($plainText);
+
+    if ($dataResponse['signature'] == $signatureMerchat) return true;
+
+    return false;
+  }
+
+  private function _saveReference(string $paymentId, string $orderId)
+  {
+    DB::beginTransaction();
+    try {
+      $checkInvoice = Reference::where('invoice', $orderId)->first();
+      if ($checkInvoice) return;
+      Reference::create(['invoice' => $orderId, 'reference' => $paymentId]);
+      DB::commit();
+      return;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      abort(500, 'Internal error, please try again');
+    }
   }
 }

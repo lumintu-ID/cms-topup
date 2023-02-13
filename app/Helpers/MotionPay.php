@@ -3,6 +3,8 @@
 namespace App\Helpers;
 
 use App\Models\Price;
+use GuzzleHttp\Client;
+use App\Models\Reference;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
@@ -43,5 +45,32 @@ class MotionPay
                 'paid_time' => $request->datetime_payment
             ]);
         };
+    }
+
+    public static function Check($request)
+    {
+        $url = "https://spg.flashmobile.co.id/switching_pg/check_status.php";
+        $merchanCode = env('MOTIONPAY_MERCHANT_CODE');
+        $secret = env('MOTIONPAY_SECRET_KEY');
+        $orderId = $request->invoice;
+        $transId = Reference::where('invoice', $orderId)->first();
+
+        $signature =  $signature = hash('sha1', md5($merchanCode . $orderId . $transId->reference . $secret));
+
+        $data = [
+            'merchant_code' => $merchanCode,
+            'order_id'      => $orderId,
+            'trans_id'      => $transId->reference,
+            'signature'     => $signature
+        ];
+
+        $client = new Client();
+        $response = $client->request('POST', $url, [
+            'headers'   => ['Content-type' => 'application/json'],
+            'body'      => json_encode($data),
+        ]);
+
+
+        var_dump($response->getBody()->getContents());
     }
 }

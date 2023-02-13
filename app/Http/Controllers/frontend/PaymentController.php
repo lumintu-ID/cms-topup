@@ -14,20 +14,22 @@ class PaymentController extends Controller
     private $activeLink = 'payment';
     private $dataset = [
         'infoTextInput' => [
-            'idPlayer' => 'Please input your id',
-            'country' => 'Please choose your country',
-            'warning' => 'ID Player is required',
-            'playerNotFound' => 'error, please try again'
+            'idPlayer' => 'Please input your id.',
+            'country' => 'Please choose your country.',
+            'warning' => 'ID Player is required.',
+            'playerNotFound' => 'Error, please try again.'
         ],
         'titleModal' => [
             'purchase' => 'Detail Purchases',
             'alertInfo' => 'Alert',
         ],
         'alert' => [
-            'idPlayer' => 'Id player is required',
-            'country' => 'Country must be choosed',
-            'payment' => 'Payment must be choosed',
-            'item' => 'Item must be choosed',
+            'idPlayer' => 'Id player is required.',
+            'checkIdPlayer' => 'Please check your id.',
+            'country' => 'Country must be choosed.',
+            'payment' => 'Payment must be choosed.',
+            'phone' => 'Phone number is required.',
+            'item' => 'Item must be choosed.',
         ],
         'noPayment' => 'Payment not avaliable',
     ];
@@ -66,9 +68,13 @@ class PaymentController extends Controller
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
             $activeLink = $this->activeLink;
 
+            if (!empty($data['attribute']['va_number'])) {
+                return view('frontend.payment.confirmation-va', compact('data', 'activeLink'));
+            }
+
             return response()->view('frontend.payment.confirmation', compact('data', 'activeLink'));
-        } catch (\Throwable $th) {
-            abort(404);
+        } catch (\Throwable $error) {
+            abort($error->getCode(), $error->getMessage());
         }
     }
 
@@ -79,8 +85,8 @@ class PaymentController extends Controller
             if ($urlRedirect) {
                 return redirect($urlRedirect);
             }
-        } catch (\Throwable $th) {
-            echo 'Prosess can not continue, internal error.';
+        } catch (\Throwable $error) {
+            abort($error->getCode(), $error->getMessage());
         }
     }
 
@@ -92,8 +98,8 @@ class PaymentController extends Controller
                 echo $data['message'];
                 return;
             }
-        } catch (\Throwable $th) {
-            abort(403);
+        } catch (\Throwable $error) {
+            abort($error->getCode(), $error->getMessage());
         }
     }
 }
