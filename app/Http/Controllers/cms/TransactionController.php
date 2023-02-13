@@ -155,6 +155,9 @@ class TransactionController extends Controller
         } else if ($code_payment->code_payment == 'UNIPIN') {
 
             Unipin::Check($request);
+        } else if ($code_payment->code_payment == 'MOTIONPAY') {
+
+            MotionPay::Check($request);
         } else {
             return response()->json([
                 'code' => 200,
