@@ -16,21 +16,8 @@ $(document).ready(function () {
   $("#formCheckout").hide();
   initInputPhone();
 
-  const changeModalTitle = (title) => {
-    $("#modalPaymentLabel").text();
-    $("#modalPaymentLabel").text(title);
-    return;
-  }
-
-  const showHideElement = ({ showElement = null, hideElement = null }) => {
-    $(showElement).show();
-    $(hideElement).hide();
-    return;
-  }
-
   listNavTab(categoryPayment);
   showHideElement({ showElement: '#formCheckout' })
-
 
   $("#btnConfirm").prop("disabled", false);
   $("#btnConfirm").click(function () {
@@ -236,12 +223,40 @@ $(document).ready(function () {
           $(".info-payment").show();
         });
     }
-
     return;
   });
-
-
 });
+
+const changeModalTitle = (title) => {
+  $("#modalPaymentLabel").text();
+  $("#modalPaymentLabel").text(title);
+  return;
+}
+
+const showHideElement = ({ showElement = null, hideElement = null }) => {
+  $(showElement).show();
+  $(hideElement).hide();
+  return;
+}
+
+const listNavTab = (data) => {
+  data.map(({ category, id }, index) => {
+    if (index == 0) {
+      $("#nav-tab").append(`<button class="nav-link active" id="nav-${id}-tab" data-bs-toggle="tab" data-bs-target="#nav-${id}" type="button" role="tab" aria-controls="nav-${id}" aria-selected="true">${category}</button>`);
+      $("#nav-tabContent").append(`<div class="tab-pane fade show active" id="nav-${id}" role="tabpanel" aria-labelledby="nav-${id}-tab" tabindex="0"><div class="payment-list row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2"></div></div>`)
+      return;
+    }
+
+    $("#nav-tab").append(`<button class="nav-link" id="nav-${id}-tab" data-bs-toggle="tab" data-bs-target="#nav-${id}" type="button" role="tab" aria-controls="nav-${id}" aria-selected="true">${category}</button>`);
+    $("#nav-tabContent").append(`<div class="tab-pane fade show" id="nav-${id}" role="tabpanel" aria-labelledby="nav-${id}-tab" tabindex="0"><div class="payment-list row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2"></div></div>`)
+    return;
+  });
+}
+
+const addTabContent = ({ category_id, payment_id, name_channel, logo_channel }) => {
+  $("#nav-" + category_id + " .payment-list").append(`<div class="col"><div class="payment-list__items" data-payment="${payment_id}"><input type="radio" id="${payment_id}" name="payment-id" value="${payment_id}"><img src="${logo_channel}" title="${name_channel}" alt="${name_channel}" class="ps-2"></div></div>`);
+  return;
+}
 
 const createPhoneInput = ({ phone_required }) => {
   if (phone_required) {
@@ -255,32 +270,12 @@ const createPhoneInput = ({ phone_required }) => {
 }
 
 const createTestOnModal = () => {
-  $(".modal-body .checkout-confirm__info").before(`
-    <div class="row justify-content-around mb-2" id="phone">
-      <div class="col-6">
-        Phone :
-      </div>
-      <div class="col-4 text-end">
-        <span></span>
-      </div>
-      <input type="text" name="phone" hidden>
-    </div>
-  `);
+  $(".modal-body .checkout-confirm__info").before(`<div class="row justify-content-around mb-2" id="phone"><div class="col-6">Phone :</div><div class="col-4 text-end"><span></span></div><input type="text" name="phone" hidden></div>`);
   return;
 }
 
-const resetPhoneElement = () => {
-  $(".input-form__phone input[name=phone]").val('');
-}
-
 const initInputPhone = () => {
-  $(".wrap-phone").append(`
-  <div class="col col-md-4 input-group">
-    <div class="input-form__phone row px-2 pt-3 pt-md-0 ps-md-3">
-      <input type="text" class="form-control" aria-label="phone number" aria-describedby="inputGroup-sizing-sm" placeholder="Phone Number" name="phone">
-      <div class="input-feedback ps-1 py-0">Please insert phone number</div>
-    </div>
-  </div>`);
+  $(".wrap-phone").append(`<div class="col col-md-4 col-lg-3 input-group"><div class="input-form__phone row px-2 pt-3 pt-md-0 ps-md-3"><input type="text" class="form-control" aria-label="phone number" aria-describedby="inputGroup-sizing-sm" placeholder="Phone Number" name="phone"><div class="input-feedback ps-1 py-0">Please insert phone number</div></div></div>`);
   clearWrapPhone();
   return;
 }
@@ -291,31 +286,13 @@ const clearWrapPhone = () => {
   });
 }
 
-// const createPhoneInputOnModal = (idName, value) => {
-//   console.log($("." + idName));
-//   $(".modal-body #" + idName).remove();
-//   $(".modal-body .checkout-confirm__info").before(`
-//   <div class="row justify-content-around mb-2" id="phone">
-//             <div class="col-6">
-//               Phone :
-//             </div>
-//             <div class="col-4 text-end">
-//               <span>${value}</span>
-//             </div>
-//             <input type="text" name="phone" value=${value} hidden>
-//           </div>`);
-
-//   return;
-// }
+const resetPhoneElement = () => {
+  $(".input-form__phone input[name=phone]").val('');
+}
 
 const removeElement = ({ idElement = null, classElement = null }) => {
   if (idElement) $("#" + idElement).remove();
   if (classElement) $("." + classElement).remove();
-  return;
-}
-
-const addTabContent = ({ category_id, payment_id, name_channel, logo_channel }) => {
-  $("#nav-" + category_id + " .payment-list").append(`<div class="col"><div class="payment-list__items" data-payment="${payment_id}"><input type="radio" id="${payment_id}" name="payment-id" value="${payment_id}"><img src="${logo_channel}" title="${name_channel}" alt="${name_channel}" class="ps-2"></div></div>`);
   return;
 }
 
@@ -332,7 +309,6 @@ const clearPayment = () => {
 
 const clearItems = () => {
   clearWrapPhone();
-  $(".wrap-phone").hide();
   $(".modal-body #price span").text('');
   $(".modal-body #price input[name=price]").val('');
   $(".total-payment__nominal").text('0');
@@ -351,19 +327,4 @@ const addRemoveClass = ({ element = null, addClass = null, removeClass = null })
   $(element).removeClass(removeClass);
   $(element).addClass(addClass);
   return;
-}
-
-const listNavTab = (data) => {
-  data.map(({ category, id }, index) => {
-    if (index == 0) {
-      $("#nav-tab").append(`<button class="nav-link active" id="nav-${id}-tab" data-bs-toggle="tab" data-bs-target="#nav-${id}" type="button" role="tab" aria-controls="nav-${id}" aria-selected="true">${category}</button>`);
-      $("#nav-tabContent").append(`<div class="tab-pane fade show active" id="nav-${id}" role="tabpanel" aria-labelledby="nav-${id}-tab" tabindex="0"><div class="payment-list row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2"></div></div>`)
-      return;
-    }
-
-    $("#nav-tab").append(`<button class="nav-link" id="nav-${id}-tab" data-bs-toggle="tab" data-bs-target="#nav-${id}" type="button" role="tab" aria-controls="nav-${id}" aria-selected="true">${category}</button>`);
-    $("#nav-tabContent").append(`<div class="tab-pane fade show" id="nav-${id}" role="tabpanel" aria-labelledby="nav-${id}-tab" tabindex="0"><div class="payment-list row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2"></div></div>`)
-
-    return;
-  });
 }
