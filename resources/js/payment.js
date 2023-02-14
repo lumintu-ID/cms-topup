@@ -275,7 +275,7 @@ const createTestOnModal = () => {
 }
 
 const initInputPhone = () => {
-  $(".wrap-phone").append(`<div class="col col-md-4 col-lg-3 input-group"><div class="input-form__phone row px-2 pt-3 pt-md-0 ps-md-3"><input type="text" class="form-control" aria-label="phone number" aria-describedby="inputGroup-sizing-sm" placeholder="Phone Number" name="phone"><div class="input-feedback ps-1 py-0">Please insert phone number</div></div></div>`);
+  $(".wrap-phone").append(`<div class="col col-md-4 col-lg-3 input-group"><div class="input-form__phone row px-2 pt-3 pt-md-0 ps-md-3"><input type="text" class="form-control" aria-label="phone number" aria-describedby="inputGroup-sizing-sm" placeholder="Phone Number" name="phone"><div class="input-feedback ps-1">Please insert phone number</div></div></div>`);
   clearWrapPhone();
   return;
 }
