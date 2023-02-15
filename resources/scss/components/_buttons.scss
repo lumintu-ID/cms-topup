@@ -11,7 +11,7 @@
   font-weight: map-get(fonts.$font-weight, bold);
   cursor: pointer;
   vertical-align: middle;
-  
+
 }
 
 @mixin button-esi($color) {
@@ -62,13 +62,24 @@
 }
 
 .button__cancel {
+  // @include button-esi(colors.$color-first);
+
+  // // background-color: #DCDCDC;
+  // &:hover {
+  //   color: transparentize($black, .3);
+  //   background-color: $white;
+  //   outline: 2px solid transparentize($black, .9);
+  // }
+
   @include button-esi(colors.$color-first);
 
-  // background-color: #DCDCDC;
+  color: transparentize($black, .5);
+  background-color: darken($color: $white, $amount: 2);
+  outline: 2px solid transparentize($color: colors.$color-first, $amount: .5);
+
   &:hover {
     color: transparentize($black, .3);
-    background-color: $white;
-    outline: 2px solid transparentize($black, .9);
+    outline: 2px solid transparentize($black, .7);
   }
 }
 
