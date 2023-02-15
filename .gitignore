@@ -1,10 +1,7 @@
 /node_modules
 /public/hot
 /public/storage
-<<<<<<< HEAD
-=======
 /public/build
->>>>>>> frontend
 /storage/*.key
 /vendor
 .env
