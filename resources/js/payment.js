@@ -163,7 +163,11 @@ $(document).ready(function () {
 
     clearPayment();
     if (this.value) {
-      await fetch(`${baseUrl}/api/v1/payment?country=${this.value}&game_id=${dataGame.id}`)
+      const urlPayment = new URL(`${baseUrl}/api/v1/payment`);
+      urlPayment.searchParams.set('country', this.value);
+      urlPayment.searchParams.set('game_id', dataGame.id);
+
+      await fetch(urlPayment)
         .then((response) => {
           if (response.status === 404) {
             addRemoveClass({ element: ".info-payment", addClass: "justify-content-center" })
