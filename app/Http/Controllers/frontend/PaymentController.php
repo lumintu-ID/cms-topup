@@ -62,7 +62,7 @@ class PaymentController extends Controller
 
     public function confirmation(Request $request)
     {
-        try {
+//         try {
             if (!$request->query('invoice')) return 'Not found';
 
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
@@ -73,9 +73,9 @@ class PaymentController extends Controller
             }
 
             return response()->view('frontend.payment.confirmation', compact('data', 'activeLink'));
-        } catch (\Throwable $error) {
-            abort($error->getCode(), $error->getMessage());
-        }
+//         } catch (\Throwable $error) {
+//             abort($error->getCode(), $error->getMessage());
+//         }
     }
 
     public function parseToVendor(Request $request)
