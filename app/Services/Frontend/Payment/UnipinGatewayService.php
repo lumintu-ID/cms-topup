@@ -66,6 +66,7 @@ class UnipinGatewayService extends PaymentGatewayService
         'body' => json_encode($payload),
       ]);
       $dataResponse = json_decode($response->getBody()->getContents(), true);
+        dd($dataResponse);
       if ($dataResponse['url']) return $dataResponse['url'];
     } catch (RequestException $error) {
       echo 'Error message: ' . $error->getCode() . ' ' . $error->getResponse()->getReasonPhrase();
