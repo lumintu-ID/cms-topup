@@ -8,6 +8,7 @@ use App\Services\Frontend\Payment\GudangVoucherGatewayService;
 use App\Services\Frontend\Payment\MotionpayGatewayService;
 use App\Services\Frontend\Payment\RazorGateWayService;
 use App\Services\Frontend\Payment\UnipinGatewayService;
+use Exception;
 use Illuminate\Support\Str;
 
 class InvoiceServiceImplement implements InvoiceService
@@ -35,23 +36,27 @@ class InvoiceServiceImplement implements InvoiceService
     $this->_unipinGatewayService = $unipinGatewayService;
   }
 
-  public function getInvoice($id)
+  public function getInvoice(string $id)
   {
-    $dataTransaction = $this->_invoiceRepository->getTransactionById($id);
-    $dataPayment = $this->_invoiceRepository->getDetailPrice($dataTransaction->price_id)->toArray();
+    try {
+      $dataTransaction = $this->_invoiceRepository->getTransactionById($id);
+      $dataPayment = $this->_invoiceRepository->getDetailPrice($dataTransaction->price_id)->toArray();
 
-    $result['invoice'] = $dataTransaction->toArray();
-    $result['game'] = $this->_invoiceRepository->getGameInfo($dataTransaction->game_id);
-    $result['payment'] = $dataPayment;
-    $result['payment']['invoice'] = $dataTransaction->invoice;
-    $result['payment']['user'] = $dataTransaction->id_player;
-    $result['payment']['email'] = $dataTransaction->email;
-    $result['payment']['phone'] = $dataTransaction->phone;
-    $result['payment']['ppn'] = $this->_invoiceRepository->getAllDataPpn()[0]['ppn'];
-    $result['payment']['total_price'] = $dataTransaction->total_price;
-    $result['attribute'] = $this->_getPaymentAttribute($result['payment'], $result['game']);
+      $result['invoice'] = $dataTransaction->toArray();
+      $result['game'] = $this->_invoiceRepository->getGameInfo($dataTransaction->game_id);
+      $result['payment'] = $dataPayment;
+      $result['payment']['invoice'] = $dataTransaction->invoice;
+      $result['payment']['user'] = $dataTransaction->id_player;
+      $result['payment']['email'] = $dataTransaction->email;
+      $result['payment']['phone'] = $dataTransaction->phone;
+      $result['payment']['ppn'] = $this->_invoiceRepository->getAllDataPpn()[0]['ppn'];
+      $result['payment']['total_price'] = $dataTransaction->total_price;
+      $result['attribute'] = $this->_getPaymentAttribute($result['payment'], $result['game']);
 
-    return $result;
+      return $result;
+    } catch (\Exception $error) {
+      throw new Exception('Not uyoeywoi', 404);
+    }
   }
 
   public function redirectToPayment(string $codePayment = null, array $dataParse = null)
@@ -103,8 +108,8 @@ class InvoiceServiceImplement implements InvoiceService
         break;
 
       case env("MOTIONPAY_CODE_PAYMENT"):
-        $dataAttribute = $this->_motionpayGateWayService->generateDataParse($dataPayment);
 
+        $dataAttribute = $this->_motionpayGateWayService->generateDataParse($dataPayment);
         return $dataAttribute;
         break;
 
@@ -121,7 +126,6 @@ class InvoiceServiceImplement implements InvoiceService
         break;
 
       default:
-        // echo 'Internal error, payment can\'t find.';
         return abort(404, 'Payment can\'t find.');
         break;
     }

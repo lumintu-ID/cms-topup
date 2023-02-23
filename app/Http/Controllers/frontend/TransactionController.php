@@ -32,6 +32,7 @@ class TransactionController extends Controller
 
     public function transaction(TransactionRequest $request)
     {
+        // dd('controller transaksi');
         DB::beginTransaction();
         try {
 

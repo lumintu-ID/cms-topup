@@ -43,18 +43,18 @@ class PaymentController extends Controller
     public function index(Request $request)
     {
         try {
+            $activeLink = $this->activeLink;
             if ($request->slug) {
                 $slug = $request->slug;
                 $dataGame = $this->_paymentService->getDataGame($slug);
                 $countries = $this->_paymentService->getAllDataCountry();
-                $activeLink = $this->activeLink;
                 $textAttribute = json_encode($this->dataset);
                 $categoryPayment = json_encode($this->_paymentService->getAllCategoryPayment());
 
                 return view('frontend.payment.index', compact('countries', 'dataGame', 'activeLink', 'textAttribute', 'categoryPayment'));
             }
 
-            return redirect()->route('home');
+            return view('frontend.payment.check-invoice', compact('activeLink'));
         } catch (\Throwable $th) {
             abort(500);
         }
@@ -65,8 +65,8 @@ class PaymentController extends Controller
         try {
             if (!$request->query('invoice')) return 'Not found';
 
-            $data = $this->_invoiceService->getInvoice($request->query('invoice'));
             $activeLink = $this->activeLink;
+            $data = $this->_invoiceService->getInvoice($request->query('invoice'));
 
             if (!empty($data['attribute']['va_number'])) {
                 return view('frontend.payment.confirmation-va', compact('data', 'activeLink'));
