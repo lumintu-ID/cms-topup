@@ -9,7 +9,7 @@
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app.6fa64323.css"
+      "assets/app.183cb5b7.css"
     ]
   },
   "resources/js/payment.js": {
@@ -22,8 +22,13 @@
     "src": "resources/js/confirmation.js",
     "isEntry": true
   },
+  "resources/js/confirmation-va.js": {
+    "file": "assets/confirmation-va.5d1fc70d.js",
+    "src": "resources/js/confirmation-va.js",
+    "isEntry": true
+  },
   "resources/js/app.css": {
-    "file": "assets/app.6fa64323.css",
+    "file": "assets/app.183cb5b7.css",
     "src": "resources/js/app.css"
   }
 }
