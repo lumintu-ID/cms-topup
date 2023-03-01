@@ -3,83 +3,97 @@
   <section class="container-fluid container-lg py-3">
     <div class="row justify-content-center pt-3">
       <div class="col-12 col-md-10">
-        <div class="box-invoice-va">
-          <div class="box-invoice-va__header text-center p-4">
-            Detail Purchases
-          </div>
-          <div class="box-invoice-va__body">
-            <div class="row justify-content-between  ">
-              <div class="col-12 col-sm-4 p-2 ps-1 ">
-                <div class="title__invoice">No Invoice</div>
-                {{ $data['invoice']['invoice'] }}
-              </div>
-              <div class="col-12 col-sm-3 col-xl-2 p-2 ps-1">
-                <div class="title__invoice-date">Date Purchased 
-                  <br> 
-                  <span>
-                    {{ date('d-m-Y', strtotime($data['invoice']['date'])) }}</div>
-                  </span>
-              </div>
+        <div class="box-invoice-va d-flex align-items-center justify-content-center text-uppercase">
+
+          @if (isset($data) && $data['attribute']['status_desc'] !== null)
+          
+            <div class="box-invoice-va__header text-center p-4">
+              Detail Purchases
             </div>
-            <div class="row">
-              <div class="col-12">
-                <div class="wrap_info row row-cols-4 justify-content-evenly bg-white pt-2 px-md-2">
-                  <div class="col-12 col-md-3 py-2 py-md-4">
-                    <div class="title">Games</div>
-                    {{ $data['game']['game_title'] }}
-                  </div>
-                  <div class="col-12 col-md-3 py-2 py-md-4">
-                    <div class="title">Player ID</div>
-                    {{ $data['invoice']['id_player'] }}
-                  </div>
-                  <div class="col-12 col-md-3 py-2 py-md-4">
-                    <div class="title">Item</div>
-                    {{ $data['payment']['amount'].' '.$data['payment']['name'] }}
-                  </div>
-                  <div class="col-12 col-md-3 py-2 py-md-4">
-                    <div class="title">Total</div>
-                    {{ $data['payment']['price'] }}
+            <div class="box-invoice-va__body">
+              <div class="row justify-content-between  ">
+                <div class="col-12 col-sm-4 p-2 ps-1 ">
+                  <div class="title__invoice">No Invoice</div>
+                  {{ $data['invoice']['invoice'] }}
+                </div>
+                <div class="col-12 col-sm-3 col-xl-2 p-2 ps-1">
+                  <div class="title__invoice-date">Date Purchased 
+                    <br> 
+                    <span>
+                      {{ date('d-m-Y H:s:i', strtotime($data['invoice']['date'])) }}</div>
+                    </span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="wrap_info row row-cols-4 justify-content-evenly bg-white py-2 px-md-2">
+                    <div class="col-12 col-md-3 py-2 py-md-4">
+                      <div class="title">Games</div>
+                      {{ $data['game']['game_title'] }}
+                    </div>
+                    <div class="col-12 col-md-3 py-2 py-md-4">
+                      <div class="title">Player ID</div>
+                      {{ $data['invoice']['id_player'] }}
+                    </div>
+                    <div class="col-12 col-md-3 py-2 py-md-4">
+                      <div class="title">Item</div>
+                      {{ $data['payment']['amount'].' '.$data['payment']['name'] }}
+                    </div>
+                    <div class="col-12 col-md-3 py-2 py-md-4">
+                      <div class="title">Total</div>
+                      {{ $data['payment']['price'] }}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
-                <div class="wrap_info row row-cols-4 justify-content-around bg-white pt-2 px-md-2">
-                  <div class="col-12 col-md-4 col-lg-3 py-2 py-md-4">
-                    <div class="title">No Virtual Account</div>
-                    {{ $data['attribute']['va_number'] }}
-                  </div>
-                  <div class="col-12 col-md-3 py-2 py-md-4">
-                    <div class="title">Payment</div>
-                    {{ $data['payment']['name_channel'] }}
-                  </div>
-                  <div class="status-payment col-12 col-md-2 col-lg-3 py-2 py-md-4">
-                    <div class="title ">Status</div>
-                    <div class="text-uppercase">
-                      <div class="status__pending">
-                        {{ $data['attribute']['status_desc'] }}
+              <div class="row">
+                <div class="col-12">
+                  <div class="wrap_info row row-cols-4 justify-content-around bg-white pt-2 px-md-2">
+                    <div class="col-12 col-md-4 col-lg-3 py-2 py-md-4">
+                      <div class="title">No Virtual Account</div>
+                      {{ $data['attribute']['va_number'] }}
+                    </div>
+                    <div class="col-12 col-md-3 py-2 py-md-4">
+                      <div class="title">Payment</div>
+                      {{ $data['payment']['name_channel'] }}
+                    </div>
+                    <div class="status-payment col-12 col-md-2 col-lg-3 py-2 py-md-4">
+                      <div class="title ">Status</div>
+                      <div class="text-uppercase">
+                        <div class="status__pending">
+                          {{ $data['attribute']['status_desc'] }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="expire-date col-12 col-md-3 py-2 py-md-4">
+                      <div class="title">Expire Date</div>
+                      {{-- <div class="status__pending"> --}}
+                        {{ date('d-m-Y, G:i:s', strtotime($data['attribute']['expired_time'])) }}
+                      {{-- </div> --}}
+
+                      {{-- @php
+                          
+                          $mytime = Carbon\Carbon::now();
+                          echo $mytime->toDateTimeString();
+                      @endphp --}}
+                      {{-- <p class="status__left-time">2 hours 45 minute left (dummy info).</p> --}}
+                      <div class="status__left-time" id="leftTime">
+                        {{ $data['attribute']['leftTime'] }}
+                        {{-- 2 hours 45 minute left (dummy info). --}}
                       </div>
                     </div>
                   </div>
-                  <div class="expire-date col-12 col-md-3 py-2 py-md-4">
-                    <div class="title">Expire Date</div>
-                    {{-- <div class="status__pending"> --}}
-                      {{ date('d-m-Y, G:i:s', strtotime($data['attribute']['expired_time'])) }}
-                    {{-- </div> --}}
-                    <p class="status__left-time">2 hours 45 minute left (dummy info).</p>
-                  </div>
                 </div>
               </div>
             </div>
+            <hr class="mx-3">
+            <div class="box-invoice-va__footer">
+              *Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odio, saepe alias laborum quisquam, sunt magnam ducimus eum, esse quas pariatur temporibus similique sed cupiditate laboriosam delectus suscipit nobis quis adipisci.
+            </div>
           </div>
-          <hr class="mx-3">
-          <div class="box-invoice-va__footer">
-            
-            *Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odio, saepe alias laborum quisquam, sunt magnam ducimus eum, esse quas pariatur temporibus similique sed cupiditate laboriosam delectus suscipit nobis quis adipisci.
-            
-          </div>
-        </div>
+        @else
+          {{ $alert }}
+        @endif
       </div>
     </div>
     {{-- <div class="row justify-content-center">
@@ -137,7 +151,7 @@
   </section>
 @endsection
 
-{{-- @section('js-utilities')
+@section('js-utilities')
   <script src="{{ asset('assets/website/js/jquery-3.5.1.slim.min.js') }}"></script>
-  @vite(['resources/js/confirmation.js'])
-@endsection --}}
+  @vite(['resources/js/confirmation-va.js'])
+@endsection

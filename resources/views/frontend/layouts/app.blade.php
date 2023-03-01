@@ -19,7 +19,7 @@
   <body>
     @include('frontend.partials.loader-page')
     @include('frontend.partials.header')
-    <main class="container-fluid container-lg">
+    <main class="container-fluid container-lg position-relative">
       @yield('content')
       @include('frontend.partials.section-support')
     </main>
