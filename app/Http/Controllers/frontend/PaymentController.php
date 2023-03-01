@@ -68,13 +68,17 @@ class PaymentController extends Controller
             $activeLink = $this->activeLink;
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
 
+            if (empty($data['attribute'])) {
+                return view('frontend.payment.confirmation-success', compact('data', 'activeLink'));
+            }
+
             if (!empty($data['attribute']['va_number'])) {
                 return view('frontend.payment.confirmation-va', compact('data', 'activeLink'));
             }
 
             return response()->view('frontend.payment.confirmation', compact('data', 'activeLink'));
         } catch (\Throwable $error) {
-            abort($error->getCode(), $error->getMessage());
+            abort(404);
         }
     }
 
@@ -101,5 +105,10 @@ class PaymentController extends Controller
         } catch (\Throwable $error) {
             abort($error->getCode(), $error->getMessage());
         }
+    }
+
+    public function success()
+    {
+        echo 'success page';
     }
 }
