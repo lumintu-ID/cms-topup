@@ -40,6 +40,7 @@ class InvoiceServiceImplement implements InvoiceService
   {
     try {
       $dataTransaction = $this->_invoiceRepository->getTransactionById($id);
+      if (!$dataTransaction) throw new Exception('No data', 404);
       $dataPayment = $this->_invoiceRepository->getDetailPrice($dataTransaction->price_id)->toArray();
 
       $result['invoice'] = $dataTransaction->toArray();
@@ -51,11 +52,16 @@ class InvoiceServiceImplement implements InvoiceService
       $result['payment']['phone'] = $dataTransaction->phone;
       $result['payment']['ppn'] = $this->_invoiceRepository->getAllDataPpn()[0]['ppn'];
       $result['payment']['total_price'] = $dataTransaction->total_price;
-      $result['attribute'] = $this->_getPaymentAttribute($result['payment'], $result['game']);
+
+      if ($dataTransaction['status'] == 0) {
+        $result['attribute'] = $this->_getPaymentAttribute($result['payment'], $result['game']);
+        return $result;
+      }
 
       return $result;
     } catch (\Exception $error) {
-      throw new Exception('Not uyoeywoi', 404);
+      // dd($error);
+      throw new Exception('No data', 404);
     }
   }
 

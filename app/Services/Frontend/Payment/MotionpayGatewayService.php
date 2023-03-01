@@ -199,9 +199,9 @@ class MotionpayGatewayService extends PaymentGatewayService
 
   private function _calculateLeftTime($expireDate)
   {
-    $expire_time = Carbon::createFromFormat('Y-m-d H:i:s', $expireDate);
+    $expireTime = Carbon::createFromFormat('Y-m-d H:i:s', $expireDate);
     $current =  Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now());
-    $leftTime = Carbon::parse($current)->diffForHumans($expire_time);
+    $leftTime = Carbon::parse($current)->diffForHumans($expireTime);
     return $leftTime;
   }
 
