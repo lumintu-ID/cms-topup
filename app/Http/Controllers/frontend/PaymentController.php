@@ -11,8 +11,8 @@ class PaymentController extends Controller
 {
     private $_invoiceService;
     private $_paymentService;
-    private $activeLink = 'payment';
-    private $dataset = [
+    private $_activeLink = 'payment';
+    private $_dataset = [
         'infoTextInput' => [
             'idPlayer' => 'Please input your id.',
             'country' => 'Please choose your country.',
@@ -30,6 +30,7 @@ class PaymentController extends Controller
             'payment' => 'Payment must be choosed.',
             'phone' => 'Phone number is required.',
             'item' => 'Item must be choosed.',
+            'notAvaliable' => 'Data not avaliable'
         ],
         'noPayment' => 'Payment not avaliable',
     ];
@@ -43,12 +44,12 @@ class PaymentController extends Controller
     public function index(Request $request)
     {
         try {
-            $activeLink = $this->activeLink;
+            $activeLink = $this->_activeLink;
             if ($request->slug) {
                 $slug = $request->slug;
                 $dataGame = $this->_paymentService->getDataGame($slug);
                 $countries = $this->_paymentService->getAllDataCountry();
-                $textAttribute = json_encode($this->dataset);
+                $textAttribute = json_encode($this->_dataset);
                 $categoryPayment = json_encode($this->_paymentService->getAllCategoryPayment());
 
                 return view('frontend.payment.index', compact('countries', 'dataGame', 'activeLink', 'textAttribute', 'categoryPayment'));
@@ -65,18 +66,18 @@ class PaymentController extends Controller
         try {
             if (!$request->query('invoice')) return 'Not found';
 
-            $activeLink = $this->activeLink;
+            $activeLink = $this->_activeLink;
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
-
+            $alert = $this->_dataset['alert']['notAvaliable'];
             if (empty($data['attribute'])) {
-                return view('frontend.payment.confirmation-success', compact('data', 'activeLink'));
+                return view('frontend.payment.confirmation-success', compact('data', 'activeLink', 'alert'));
             }
 
             if (!empty($data['attribute']['va_number'])) {
-                return view('frontend.payment.confirmation-va', compact('data', 'activeLink'));
+                return view('frontend.payment.confirmation-va', compact('data', 'activeLink', 'alert'));
             }
 
-            return response()->view('frontend.payment.confirmation', compact('data', 'activeLink'));
+            return response()->view('frontend.payment.confirmation', compact('data', 'activeLink', 'alert'));
         } catch (\Throwable $error) {
             abort(404);
         }
@@ -105,10 +106,5 @@ class PaymentController extends Controller
         } catch (\Throwable $error) {
             abort($error->getCode(), $error->getMessage());
         }
-    }
-
-    public function success()
-    {
-        echo 'success page';
     }
 }

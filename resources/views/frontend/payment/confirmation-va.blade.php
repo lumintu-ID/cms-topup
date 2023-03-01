@@ -3,7 +3,7 @@
   <section class="container-fluid container-lg py-3">
     <div class="row justify-content-center pt-3">
       <div class="col-12 col-md-10">
-        <div class="box-invoice-va">
+        <div class="box-invoice-va d-flex align-items-center justify-content-center text-uppercase">
 
           @if (isset($data) && $data['attribute']['status_desc'] !== null)
           
@@ -91,9 +91,8 @@
               *Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odio, saepe alias laborum quisquam, sunt magnam ducimus eum, esse quas pariatur temporibus similique sed cupiditate laboriosam delectus suscipit nobis quis adipisci.
             </div>
           </div>
-         
         @else
-          data tidak ada
+          {{ $alert }}
         @endif
       </div>
     </div>

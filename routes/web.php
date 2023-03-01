@@ -41,7 +41,6 @@ Route::prefix('payment')->group(function () {
     Route::get('/invoice', [PaymentFrontend::class, 'index'])->name('payment');
     Route::prefix('confirmation')->group(function () {
         Route::get('/', [PaymentFrontend::class, 'confirmation'])->name('payment.confirmation');
-        Route::get('/success', [PaymentFrontend::class, 'success'])->name('payment.confirmation.success');
         Route::post('/', [PaymentFrontend::class, 'infoPayment'])->name('payment.confirmation.info');
         Route::post('/va', [PaymentFrontend::class, 'vaPayment'])->name('payment.confirmation.va');
     });
