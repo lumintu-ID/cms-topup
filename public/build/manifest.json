@@ -9,11 +9,11 @@
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app.cbec3006.css"
+      "assets/app.183cb5b7.css"
     ]
   },
   "resources/js/payment.js": {
-    "file": "assets/payment.c8089ce2.js",
+    "file": "assets/payment.2fba9e0f.js",
     "src": "resources/js/payment.js",
     "isEntry": true
   },
@@ -22,8 +22,13 @@
     "src": "resources/js/confirmation.js",
     "isEntry": true
   },
+  "resources/js/confirmation-va.js": {
+    "file": "assets/confirmation-va.5d1fc70d.js",
+    "src": "resources/js/confirmation-va.js",
+    "isEntry": true
+  },
   "resources/js/app.css": {
-    "file": "assets/app.cbec3006.css",
+    "file": "assets/app.183cb5b7.css",
     "src": "resources/js/app.css"
   }
 }

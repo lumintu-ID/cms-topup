@@ -2,6 +2,7 @@
 
 namespace App\Services\Frontend\Payment;
 
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
@@ -59,17 +60,27 @@ class UnipinGatewayService extends PaymentGatewayService
       ]
     ];
 
-//     try {
+    try {
       $client = new Client();
       $response = $client->request('POST', $this->urlPayment, [
         'headers' => ['Content-type' => 'application/json'],
         'body' => json_encode($payload),
       ]);
       $dataResponse = json_decode($response->getBody()->getContents(), true);
-        dd($dataResponse);
+
+      if (!$this->_checkSignature($dataResponse)) throw new Exception('Invalid Signature', 403);
       if ($dataResponse['url']) return $dataResponse['url'];
-//     } catch (RequestException $error) {
-//       echo 'Error message: ' . $error->getCode() . ' ' . $error->getResponse()->getReasonPhrase();
-//     }
+    } catch (RequestException $error) {
+      echo 'Error message: ' . $error->getCode() . ' ' . $error->getResponse()->getReasonPhrase();
+    }
+  }
+
+  private function _checkSignature($dataResponse)
+  {
+    $signature = hash('sha256', $dataResponse['status'] . $dataResponse['message'] . $dataResponse['url'] . $this->_secretKey);
+
+    if ($signature == $dataResponse['signature']) return true;
+
+    return false;
   }
 }

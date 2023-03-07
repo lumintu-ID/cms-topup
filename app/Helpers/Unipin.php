@@ -66,7 +66,7 @@ class Unipin
         ]);
 
 
-        var_dump($response->getBody()->getContents());
+        dd($response->getBody()->getContents());
 
         // return response()->json([
         //     'code' => 200,

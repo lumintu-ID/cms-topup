@@ -37,12 +37,16 @@ use App\Http\Controllers\frontend\TransactionController as FrontendTransactionCo
 
 Route::get('/', [HomeFrontend::class, 'index'])->name('home');
 Route::get('/games', [GameFrontend::class, 'index'])->name('games');
-Route::get('/payment', [PaymentFrontend::class, 'index'])->name('payment');
-Route::get('/payment/{slug}', [PaymentFrontend::class, 'index'])->name('payment.games');
+Route::prefix('payment')->group(function () {
+    Route::get('/invoice', [PaymentFrontend::class, 'index'])->name('payment');
+    Route::prefix('confirmation')->group(function () {
+        Route::get('/', [PaymentFrontend::class, 'confirmation'])->name('payment.confirmation');
+        Route::post('/', [PaymentFrontend::class, 'infoPayment'])->name('payment.confirmation.info');
+        Route::post('/va', [PaymentFrontend::class, 'vaPayment'])->name('payment.confirmation.va');
+    });
+    Route::get('/{slug}', [PaymentFrontend::class, 'index'])->name('payment.games');
+});
 Route::post('/payment-vendor/{code}', [PaymentFrontend::class, 'parseToVendor'])->name('payment.parse.vendor');
-Route::get('/confirmation', [PaymentFrontend::class, 'confirmation'])->name('payment.confirmation');
-Route::post('/confirmation', [PaymentFrontend::class, 'infoPayment'])->name('payment.confirmation.info');
-Route::post('/confirmation-va', [PaymentFrontend::class, 'vaPayment'])->name('payment.confirmation.va');
 Route::post('/transaction', [FrontendTransactionController::class, 'transaction'])->name('payment.transaction');
 
 Route::get('/administrator/login', [AuthController::class, 'index'])->name('login');
