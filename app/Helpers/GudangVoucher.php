@@ -64,7 +64,7 @@ class GudangVoucher
         $response = Http::get('https://www.gudangvoucher.com/cpayment.php?merchantid=' . $Merchantid . '&custom=' . $custom . 'signature=' . $signature . '');
 
 
-        var_dump($response->body());
+        dd($response->body());
         // return response()->json([
         //     'code' => 200,
         //     'status' => 'SUCCESS',

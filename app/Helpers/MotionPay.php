@@ -71,6 +71,6 @@ class MotionPay
         ]);
 
 
-        var_dump($response->getBody()->getContents());
+        dd($response->getBody()->getContents());
     }
 }
