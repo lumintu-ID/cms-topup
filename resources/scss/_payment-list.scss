@@ -9,9 +9,14 @@
 .input-form__player>.form-control:focus,
 .input-form__country>.form-select:focus,
 .input-form__phone>.form-control:focus {
-  border-color: colors.$color-fourth;
+  border-color: lighten($color: colors.$color-fourth, $amount: 30);
   outline: .1rem;
-  box-shadow: 0 0 0 0.2rem transparentize($color: colors.$color-fourth, $amount: .8);
+  box-shadow: 0 0 0 0.15rem transparentize($color: colors.$color-fourth, $amount: .8);
+}
+
+.input-form__player>button#btnCheckId {
+  border-top-right-radius: .5rem;
+  border-bottom-right-radius: .5rem;
 }
 
 .input-form__phone {
@@ -23,28 +28,32 @@
 }
 
 .nav-tabs {
+
+  border-bottom: 1px darken($color: #ffffff, $amount: 30) solid;
+
   & .nav-link {
     font-size: .8rem;
     color: lighten($color: $black, $amount: 50);
     padding: .5rem;
+    transition: unset;
 
     &.active {
+      margin-bottom: -1px;
       color: colors.$color-third;
-      border-top-color: colors.$color-third;
-      border-left-color: colors.$color-third;
-      border-right-color: colors.$color-third;
+      border-top-color: darken($color: $white, $amount: 30);
+      border-left-color: darken($color: $white, $amount: 30);
+      border-right-color: darken($color: $white, $amount: 30);
+      border-bottom: unset;
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
-
-      margin-bottom: -1px;
-      border-bottom: unset;
       transition: unset;
 
       &:hover {
         color: colors.$color-third;
-        border-top-color: colors.$color-third;
-        border-left-color: colors.$color-third;
-        border-right-color: colors.$color-third;
+        border-top-color: darken($color: $white, $amount: 30);
+        border-left-color: darken($color: $white, $amount: 30);
+        border-right-color: darken($color: $white, $amount: 30);
+        transform: unset;
       }
     }
 
@@ -54,6 +63,7 @@
       border-left-color: transparent;
       border-right-color: transparent;
       border-bottom: none;
+      transform: scale(1.05);
       // margin-bottom: -1px;
       // border-bottom: unset;
       // transition: unset;
@@ -61,7 +71,7 @@
       // border: unset;
     }
 
-    transition: unset;
+
   }
 }
 
@@ -139,7 +149,7 @@
 }
 
 .input-feedback {
-  padding: .1rem 0 .5rem 1rem;
+  padding: .2rem 0 .5rem 1rem;
   font-size: .8rem;
   font-style: italic;
   color: lighten($color: $black, $amount: 20);

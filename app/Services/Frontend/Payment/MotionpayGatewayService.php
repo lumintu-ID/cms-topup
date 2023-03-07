@@ -2,8 +2,8 @@
 
 namespace App\Services\Frontend\Payment;
 
-use App\Models\Reference;
-use App\Models\VirtualAccount;
+use App\Repository\Frontend\Payment\MotionpayRepository;
+use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -11,25 +11,38 @@ use Illuminate\Support\Facades\DB;
 
 class MotionpayGatewayService extends PaymentGatewayService
 {
-  private $_dateTime, $_merchantCode, $_secretKey, $_timeLimit;
+  private $_dateTime, $_merchantCode, $_secretKey, $_timeLimitVa, $_motionpayRepository, $_statusPending, $_statusSuccess, $_statusFailed;
 
-  public function __construct()
+  public function __construct(MotionpayRepository $motionpayRepository)
   {
-    $this->_timeLimit = "60";
+    $this->_motionpayRepository = $motionpayRepository;
     $this->_merchantCode = env("MOTIONPAY_MERCHANT_CODE");
     $this->_secretKey = env("MOTIONPAY_SECRET_KEY");
     $this->urlPayment = env("MOTIONPAY_URL_DEVELOPMENT");
+    $this->_timeLimitVa = 60;
+    $this->_statusPending = 'Pending';
+    $this->_statusSuccess = 'Success';
+    $this->_statusFailed = null;
   }
 
   public function generateDataParse(array $dataPayment)
   {
     try {
+
+      if ($this->_checkInvoice($dataPayment['invoice'])) {
+        $dataVa = $this->_checkInvoice($dataPayment['invoice']);
+        $dataVa['leftTime'] = $this->_calculateLeftTime($dataVa['expired_time']);
+
+        return $dataVa;
+      }
+
       $response = $this->_getDataToRedirect($dataPayment);
 
       if (!empty($response['va_number'])) {
         if (!$this->_checkSignature($response, $response['va_number'])) throw new Exception('Invalid Signature', 403);
 
         $this->_saveReferenceVa($response);
+        $response['leftTime'] = $this->_calculateLeftTime($response['expired_time']);
         return $response;
       }
 
@@ -59,7 +72,7 @@ class MotionpayGatewayService extends PaymentGatewayService
   private function _getDataToRedirect(array $dataParse)
   {
     try {
-      $this->_dateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('YmdHis');
+      $this->_dateTime = Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('YmdHis');
       $merchantCode = $this->_merchantCode;
       $firstName = $dataParse['user'];
       $lastName = $dataParse['user'];
@@ -84,7 +97,7 @@ class MotionpayGatewayService extends PaymentGatewayService
         . $itemDetails
         . $this->_dateTime
         . $paymentMethod
-        . $this->_timeLimit
+        . $this->_timeLimitVa
         . $this->urlNotify
         . $thanksUrl
         . $this->_secretKey;
@@ -102,7 +115,7 @@ class MotionpayGatewayService extends PaymentGatewayService
         'item_details' => $itemDetails,
         'datetime_request' => $this->_dateTime,
         'payment_method' => $paymentMethod,
-        'time_limit' => $this->_timeLimit,
+        'time_limit' => $this->_timeLimitVa,
         'notif_url' => $this->urlNotify,
         'thanks_url' => $thanksUrl,
         'signature' => $this->generateSignature($plainText)
@@ -160,9 +173,8 @@ class MotionpayGatewayService extends PaymentGatewayService
   {
     DB::beginTransaction();
     try {
-      $checkInvoice = Reference::where('invoice', $orderId)->first();
-      if ($checkInvoice) return;
-      Reference::create(['invoice' => $orderId, 'reference' => $trasnId]);
+      if ($this->_motionpayRepository->checkReference($orderId)) return;
+      $this->_motionpayRepository->saveReference($trasnId, $orderId);
       DB::commit();
       return;
     } catch (\Throwable $th) {
@@ -175,14 +187,52 @@ class MotionpayGatewayService extends PaymentGatewayService
   {
     DB::beginTransaction();
     try {
-      $checkInvoice = VirtualAccount::where('invoice', $data['order_id'])->first();
-      if ($checkInvoice) return;
-      VirtualAccount::create(['invoice' => $data['order_id'], 'VA' => $data['va_number'], 'expired_time' => $data['expired_time']]);
+      if ($this->_motionpayRepository->checkReferenceVa($data['order_id'])) return;
+      $this->_motionpayRepository->saveReferenceVa($data);
       DB::commit();
       return;
     } catch (\Throwable $th) {
       DB::rollback();
       abort(500);
     }
+  }
+
+  private function _calculateLeftTime($expireDate)
+  {
+    $expireTime = Carbon::createFromFormat('Y-m-d H:i:s', $expireDate);
+    $current =  Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now());
+    $leftTime = Carbon::parse($current)->diffForHumans($expireTime);
+    return $leftTime;
+  }
+
+  private function _checkInvoice(string $id)
+  {
+    $dataInvoice = $this->_motionpayRepository->getInvoceVa($id);
+    $dataStatusTransaction = $this->_motionpayRepository->getStatusTransaction($id);
+
+    if (!empty($dataInvoice['expired_time'])) {
+      $now = Carbon::createFromTimeString(Carbon::now());
+      $expired_time = Carbon::createFromTimeString($dataInvoice['expired_time']);
+
+      if ($now > $expired_time) {
+        $dataInvoice['status_desc'] = $this->_statusFailed;
+        return $dataInvoice;
+      }
+
+      $dataInvoice['status_desc'] = $this->_statusPending;
+
+      return $dataInvoice;
+    }
+
+    if (!empty($dataInvoice['number_va']) && $dataStatusTransaction['status'] == 0) {
+      $dataInvoice['status_desc'] = $this->_statusPending;
+      return $dataInvoice;
+    }
+
+    if (!empty($dataInvoice['number_va']) && $dataStatusTransaction['status'] == 1) {
+      $dataInvoice['status_desc'] = $this->_statusSuccess;
+      return $dataInvoice;
+    }
+    return;
   }
 }

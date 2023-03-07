@@ -21,7 +21,8 @@
 
   // SECTION FOR HOMEPAGE
   &-games,
-  &-promo-info {
+  &-promo-info,
+  &-invoice {
     @extend .section-home;
     @include box-shadow-section();
 

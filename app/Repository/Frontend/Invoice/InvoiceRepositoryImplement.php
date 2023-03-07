@@ -21,6 +21,7 @@ class InvoiceRepositoryImplement implements InvoiceRepository
       'email',
       'phone',
       'total_price',
+      'status',
       'created_at as date'
     )
       ->where('invoice', $id)

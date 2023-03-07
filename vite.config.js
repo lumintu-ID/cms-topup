@@ -10,6 +10,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/payment.js',
                 'resources/js/confirmation.js',
+                'resources/js/confirmation-va.js',
             ],
             refresh: true,
         }),

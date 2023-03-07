@@ -15,7 +15,6 @@ $(document).ready(function () {
   $(".info-payment").hide();
   $("#formCheckout").hide();
   initInputPhone();
-
   listNavTab(categoryPayment);
   showHideElement({ showElement: '#formCheckout' })
 
@@ -61,6 +60,8 @@ $(document).ready(function () {
     }
 
     if ($(".modal-body #phone").length > 0) {
+      const patternPhone = /^0?8[1-9]{1}\d{1}[\s-]?\d{4}[\s-]?\d{2,5}$/gm;
+
       if ($(".input-form__phone input[name=phone]").val() == '') {
         showHideElement({ showElement: '#infoCaution', hideElement: '#formCheckout' });
         $(".info-caution__empty-player, .info-caution__empty-country, .info-caution__empty-payment, .info-caution__empty-item").attr('hidden', true);
@@ -69,6 +70,16 @@ $(document).ready(function () {
           .text(textInfo.alert.phone);
         return;
       }
+
+      if (!patternPhone.test($(".input-form__phone input[name=phone]").val())) {
+        showHideElement({ showElement: '#infoCaution', hideElement: '#formCheckout' });
+        $(".info-caution__empty-player, .info-caution__empty-country, .info-caution__empty-payment, .info-caution__empty-item").attr('hidden', true);
+        $(".info-caution__empty-phone")
+          .removeAttr('hidden')
+          .text('Phone number is invalid');
+        return;
+      };
+
       $(".modal-body #phone :input").val($(".input-form__phone input[name=phone]").val());
       $(".modal-body #phone span").text($(".input-form__phone input[name=phone]").val());
     }
@@ -152,7 +163,11 @@ $(document).ready(function () {
 
     clearPayment();
     if (this.value) {
-      await fetch(`${baseUrl}/api/v1/payment?country=${this.value}&game_id=${dataGame.id}`)
+      const urlPayment = new URL(`${baseUrl}/api/v1/payment`);
+      urlPayment.searchParams.set('country', this.value);
+      urlPayment.searchParams.set('game_id', dataGame.id);
+
+      await fetch(urlPayment)
         .then((response) => {
           if (response.status === 404) {
             addRemoveClass({ element: ".info-payment", addClass: "justify-content-center" })
@@ -261,7 +276,7 @@ const addTabContent = ({ category_id, payment_id, name_channel, logo_channel }) 
 const createPhoneInput = ({ phone_required }) => {
   if (phone_required) {
     $(".wrap-phone").show({
-      complete: createTestOnModal()
+      complete: createPhoneOnModal()
     });
     return;
   }
@@ -269,13 +284,13 @@ const createPhoneInput = ({ phone_required }) => {
   return;
 }
 
-const createTestOnModal = () => {
+const createPhoneOnModal = () => {
   $(".modal-body .checkout-confirm__info").before(`<div class="row justify-content-around mb-2" id="phone"><div class="col-6">Phone :</div><div class="col-4 text-end"><span></span></div><input type="text" name="phone" hidden></div>`);
   return;
 }
 
 const initInputPhone = () => {
-  $(".wrap-phone").append(`<div class="col col-md-4 col-lg-3 input-group"><div class="input-form__phone row px-2 pt-3 pt-md-0 ps-md-3"><input type="text" class="form-control" aria-label="phone number" aria-describedby="inputGroup-sizing-sm" placeholder="Phone Number" name="phone"><div class="input-feedback ps-1 py-0">Please insert phone number</div></div></div>`);
+  $(".wrap-phone").append(`<div class="col col-md-4 col-lg-3 input-group"><div class="input-form__phone row px-2 pt-3 pt-md-0 ps-md-3"><input type="text" class="form-control" aria-label="phone number" aria-describedby="inputGroup-sizing-sm" placeholder="Phone Number" name="phone"><div class="input-feedback ps-1">Please insert phone number</div></div></div>`);
   clearWrapPhone();
   return;
 }
