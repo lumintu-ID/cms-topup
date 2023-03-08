@@ -28,6 +28,7 @@ class MotionpayGatewayService extends PaymentGatewayService
   public function generateDataParse(array $dataPayment)
   {
     try {
+      // dd($this->_checkInvoice($dataPayment['invoice']));
 
       if ($this->_checkInvoice($dataPayment['invoice'])) {
         $dataVa = $this->_checkInvoice($dataPayment['invoice']);
@@ -35,6 +36,8 @@ class MotionpayGatewayService extends PaymentGatewayService
 
         return $dataVa;
       }
+
+      // dd($dataPayment);
 
       $response = $this->_getDataToRedirect($dataPayment);
 
@@ -207,8 +210,8 @@ class MotionpayGatewayService extends PaymentGatewayService
 
   private function _checkInvoice(string $id)
   {
-    $dataInvoice = $this->_motionpayRepository->getInvoceVa($id);
     $dataStatusTransaction = $this->_motionpayRepository->getStatusTransaction($id);
+    $dataInvoice = $this->_motionpayRepository->getInvoceVa($id);
 
     if (!empty($dataInvoice['expired_time'])) {
       $now = Carbon::createFromTimeString(Carbon::now());
@@ -233,6 +236,7 @@ class MotionpayGatewayService extends PaymentGatewayService
       $dataInvoice['status_desc'] = $this->_statusSuccess;
       return $dataInvoice;
     }
+
     return;
   }
 }
