@@ -79,11 +79,11 @@
                 <td>
                     <button data-bs-toggle="modal" data-bs-target="#Detail" onclick="Detail({{ $data }})"
                     class="btn btn-sm btn-info">Detail</button>  
-                    {{-- <form action="{{ route('cms.transaction.check') }}" method="post">
+                    <form action="{{ route('cms.transaction.check') }}" method="post">
                         @csrf
                         <input type="hidden" value="{{ $data->invoice }}" name="invoice">
                         <button type="submit" class="btn btn-block btn-gray-800">Check</button>
-                    </form> --}}
+                    </form>
                 </td>
             </tr>
             @endforeach
