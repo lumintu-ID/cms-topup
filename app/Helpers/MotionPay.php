@@ -71,6 +71,49 @@ class MotionPay
         ]);
 
 
-        dd($response->getBody()->getContents());
+        $result = $response->getBody()->getContents();
+
+
+        $json = '{
+            "trans_id":"f01mvr7gk",
+            "merchant_code":"FmSample",
+            "order_id":"INV-Kyokip9BNYlr",
+            "amount":"55000.00",
+            "payment_method":"va_bca",
+            "mask_card":"",
+            "va_number":"15055Kyokip9BNYlr",
+            "time_limit":"60",
+            "status_code":"201",
+            "status_desc":"pending",
+            "fm_refnum":"f01mvr7gk",
+            "datetime_payment":"",
+            "approval_code":"",
+            "signature":"1eff3ce3d07726874979357428245ced97c3470b"
+        }';
+
+        // Mengkonversi JSON string ke array PHP
+        $data = json_decode($json, true);
+
+
+
+        echo "Status Motion Pay <br>";
+        echo "<hr>";
+        // echo "trans_id: " . $data['trans_id'] . "<br>";
+        // echo "merchant_code: " . $data['merchant_code'] . "<br>";
+        echo "order_id: " . $data['order_id'] . "<br>";
+        echo "amount: " . $data['amount'] . "<br>";
+        echo "payment_method: " . $data['payment_method'] . "<br>";
+        echo "mask_card: " . $data['mask_card'] . "<br>";
+        echo "va_number: " . $data['va_number'] . "<br>";
+        echo "time_limit: " . $data['time_limit'] . "<br>";
+        echo "status_code: " . $data['status_code'] . "<br>";
+        echo "status_desc: " . $data['status_desc'] . "<br>";
+        // echo "fm_refnum: " . $data['fm_refnum'] . "<br>";
+        echo "datetime_payment: " . $data['datetime_payment'] . "<br>";
+        echo "approval_code: " . $data['approval_code'] . "<br>";
+        // echo "signature: " . $data['signature'] . "<br>";
+
+        echo "<hr>";
+        echo "---------------------Detail Transaction-------------------- <br>";
     }
 }

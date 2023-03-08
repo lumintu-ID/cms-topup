@@ -278,15 +278,12 @@
             url: "{{ route('cms.transaction.check') }}",
             type: "POST",
             success: function(resp){
-                if (resp.code == 200) {
-                    $('#INV').html(inv)
-                    $("#getCode").html(resp.data);
-                    jQuery("#Detail").modal('show');
-                }else{
-                    $("#getCode").html(resp.message);
-                    $('#myModalLabel').html(inv)
-                    jQuery("#getCodeModal").modal('show');
-                }
+                $("#getCode").html(resp);
+                $('#myModalLabel').html(inv)
+                console.log(inv)
+                console.log(resp)
+                jQuery("#getCodeModal").modal('show');
+                
             },
             error: function (e) {
                 console.log('Error:', e);

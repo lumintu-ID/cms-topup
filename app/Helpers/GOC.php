@@ -60,35 +60,55 @@ class Goc
 
         $result = $response->body();
 
-        dd($result);
 
-        // if ($result->status == 100) {
-        //     $status = 1;
-        //     Log::info('Success Transaction Paid', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Success Transaction Paid with GOC Invoice ' . $request->trxId]);
-        // } else {
+        $json = '{
+            "inquiryStatus":100,
+            "merchantId":"Esp5373790",
+            "trxId":"INV-mMYzRKVdoVWy",
+            "channelId":18,
+            "amount":55000,
+            "currency":"IDR",
+            "status":103,
+            "paidDate":"-",
+            "paidAmount":0,
+            "paidCurrency":"-",
+            "referenceId":"C8AC14C10DF64C5390262B5DB5DA4890"
+        }';
 
-        //     $status = 2;
-        //     Log::info('Cancel Transaction Paid', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Cancel Transaction Paid with GOC Invoice ' . $request->trxId]);
-        // };
+        $data = json_decode($json, true);
 
-        // $trx = Transaction::where('invoice', $result->trxId)->update([
-        //     'status' => $status
-        // ]);
+        if ($data['inquiryStatus'] == 100) {
 
-        // $detail = Transaction::where('invoice', $result->trxId)->first();
 
-        // $price = Price::with('payment', 'pricepoint')->where('price_id', $detail->price_id)->first();
+            $status = '';
+            if ($data['status'] == 100) {
+                $status = "the transaction has been successfully paid by customer.";
+            } else if ($data['status'] == 102) {
+                $status = "payment request has been successfully received by GOCPay and waiting for payment by customer.";
+            } else {
+                $status = "payment request has been forwarded to payment channel and waiting for payment by customer.";
+            }
 
-        // TransactionDetail::create([
-        //     'detail_id' => Str::uuid(),
-        //     'invoice_id' => $detail->invoice,
-        //     'player_id' => $detail->id_Player,
-        //     'game_id' => $detail->game_id,
-        //     'ppi' => $price->pricepoint->price_point,
-        //     'method' => $price->payment->name_channel,
-        //     'amount' => $price->amount . ' ' . $price->name,
-        //     'total_paid' => $detail->total_price,
-        //     'paid_time' => $result->paidDate,
-        // ]);
+            echo "Status GOC <br>";
+            echo "<hr>";
+            echo "Status Inquiry: " . $data['inquiryStatus'] . "<br>";
+            // echo "ID Merchant: " . $data['merchantId'] . "<br>";
+            echo "ID Transaksi: " . $data['trxId'] . "<br>";
+            echo "Jumlah: " . $data['amount'] . "<br>";
+            echo "Mata Uang: " . $data['currency'] . "<br>";
+            echo "Status Code: " . $data['status'] . "<br>";
+            echo "Status: " . $status . "<br>";
+            echo "Tanggal Pembayaran: " . $data['paidDate'] . "<br>";
+            echo "Jumlah Pembayaran: " . $data['paidAmount'] . "<br>";
+            echo "Mata Uang Pembayaran: " . $data['paidCurrency'] . "<br>";
+            // echo "ID Referensi: " . $data['referenceId'] . "<br>";
+
+            echo "<hr>";
+            echo "---------------------Detail Transaction-------------------- <br>";
+        } else if ($data['inquiryStatus'] == 201) {
+            echo "transaction not found";
+        } else {
+            echo "some thing wrong";
+        }
     }
 }
