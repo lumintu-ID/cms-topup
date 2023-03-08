@@ -59,8 +59,8 @@ class Razor
 
     public static function Check($request)
     {
-        $applicationCode = 'WG12Nu61SaXhQieGcmW7yYWhKp9xBwvn';
-        $seceretkey =  'tYyzhR6ypAuEnFBY1Jt7dvtEhM9cTbaK';
+        $applicationCode = env('RAZOR_MERCHANT_CODE');
+        $seceretkey =  env('RAZOR_SECRET_KEY');
         $hashType = 'hmac-sha256';
         $referenceId = $request->invoice;
         $version = 'v1';
