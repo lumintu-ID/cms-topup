@@ -79,11 +79,11 @@
                 <td>
                     <button data-bs-toggle="modal" data-bs-target="#Detail" onclick="Detail({{ $data }})"
                     class="btn btn-sm btn-info">Detail</button>  
-                    <form action="{{ route('cms.transaction.check') }}" method="post">
+                    {{-- <form action="{{ route('cms.transaction.check') }}" method="post">
                         @csrf
                         <input type="hidden" value="{{ $data->invoice }}" name="invoice">
                         <button type="submit" class="btn btn-block btn-gray-800">Check</button>
-                    </form>
+                    </form> --}}
                 </td>
             </tr>
             @endforeach
@@ -278,15 +278,12 @@
             url: "{{ route('cms.transaction.check') }}",
             type: "POST",
             success: function(resp){
-                if (resp.code == 200) {
-                    $('#INV').html(inv)
-                    $("#getCode").html(resp.data);
-                    jQuery("#Detail").modal('show');
-                }else{
-                    $("#getCode").html(resp.message);
-                    $('#myModalLabel').html(inv)
-                    jQuery("#getCodeModal").modal('show');
-                }
+                $("#getCode").html(resp);
+                $('#myModalLabel').html(inv)
+                console.log(inv)
+                console.log(resp)
+                jQuery("#getCodeModal").modal('show');
+                
             },
             error: function (e) {
                 console.log('Error:', e);
