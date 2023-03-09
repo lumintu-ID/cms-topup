@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class RazorGateWayService extends PaymentGatewayService
 {
-  private $_applicationCode, $_version, $_hashType, $_addZero;
+  private $_applicationCode, $_version, $_hashType;
 
   public function __construct()
   {
@@ -19,7 +19,6 @@ class RazorGateWayService extends PaymentGatewayService
     $this->_applicationCode = env("RAZOR_MERCHANT_CODE");
     $this->urlPayment = env("RAZOR_URL_DEVELPOMENT");
     $this->urlReturn = route('home');
-    $this->_addZero = "00";
   }
 
   public function generateDataParse(array $dataPayment)
@@ -46,7 +45,7 @@ class RazorGateWayService extends PaymentGatewayService
   public function urlRedirect(array $dataParse)
   {
     try {
-      $plainText = $dataParse['amount'] . $this->_addZero
+      $plainText = $dataParse['amount']
         . $this->_applicationCode
         . $dataParse['currencyCode']
         . $dataParse['customerId']
@@ -63,7 +62,7 @@ class RazorGateWayService extends PaymentGatewayService
           "applicationCode" => $this->_applicationCode,
           "referenceId" => $dataParse['referenceId'],
           "version" => $this->_version,
-          "amount" => $dataParse['amount'] . $this->_addZero,
+          "amount" => $dataParse['amount'],
           "currencyCode" => $dataParse['currencyCode'],
           "returnUrl" => $this->urlReturn,
           "description" => $dataParse['description'],
