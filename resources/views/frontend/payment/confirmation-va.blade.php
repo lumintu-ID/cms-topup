@@ -3,7 +3,7 @@
   <section class="container-fluid container-lg py-3">
     <div class="row justify-content-center pt-3">
       <div class="col-12 col-md-10">
-        <div class="box-invoice-va d-flex align-items-center justify-content-center text-uppercase">
+        <div class="box-invoice-va text-uppercase">
 
           @if (isset($data) && $data['attribute']['status_desc'] !== null)
           

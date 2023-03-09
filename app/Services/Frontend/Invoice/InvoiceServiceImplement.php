@@ -8,6 +8,7 @@ use App\Services\Frontend\Payment\GudangVoucherGatewayService;
 use App\Services\Frontend\Payment\MotionpayGatewayService;
 use App\Services\Frontend\Payment\RazorGateWayService;
 use App\Services\Frontend\Payment\UnipinGatewayService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Str;
 
@@ -18,7 +19,8 @@ class InvoiceServiceImplement implements InvoiceService
     $_gudangVoucherGatewayService,
     $_motionpayGateWayService,
     $_razorGateWayService,
-    $_unipinGatewayService;
+    $_unipinGatewayService,
+    $_expireInvoiceTimeMinute;
 
   public function __construct(
     InvoiceRepository $invoiceRepository,
@@ -34,6 +36,7 @@ class InvoiceServiceImplement implements InvoiceService
     $this->_motionpayGateWayService = $motionpayGateWayService;
     $this->_razorGateWayService = $razorGateWayService;
     $this->_unipinGatewayService = $unipinGatewayService;
+    $this->_expireInvoiceTimeMinute = 60;
   }
 
   public function getInvoice(string $id)
@@ -41,6 +44,12 @@ class InvoiceServiceImplement implements InvoiceService
     try {
       $dataTransaction = $this->_invoiceRepository->getTransactionById($id);
       if (!$dataTransaction) throw new Exception('No data', 404);
+
+      $now = Carbon::createFromTimeString(Carbon::now());
+      $expireInvoice = Carbon::createFromFormat('Y-m-d H:i:s', $dataTransaction['date'])->addMinutes($this->_expireInvoiceTimeMinute);
+
+      if ($now >= $expireInvoice->toDateTimeString()) throw new Exception('No data', 404);
+
       $dataPayment = $this->_invoiceRepository->getDetailPrice($dataTransaction->price_id)->toArray();
 
       $result['invoice'] = $dataTransaction->toArray();
@@ -60,7 +69,6 @@ class InvoiceServiceImplement implements InvoiceService
 
       return $result;
     } catch (\Exception $error) {
-      // dd($error);
       throw new Exception('No data', 404);
     }
   }

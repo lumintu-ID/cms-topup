@@ -61,14 +61,39 @@ class GudangVoucher
 
 
 
-        $response = Http::get('https://www.gudangvoucher.com/cpayment.php?merchantid=' . $Merchantid . '&custom=' . $custom . 'signature=' . $signature . '');
+        $response = Http::get('https://www.gudangvoucher.com/cpayment.php?merchantid=' . $Merchantid . '&custom=' . $custom . '&signature=' . $signature);
 
 
-        dd($response->body());
-        // return response()->json([
-        //     'code' => 200,
-        //     'status' => 'SUCCESS',
-        //     'data' => $response->body(),
-        // ], 200);
+        $data = $response->body();
+
+        $xml = '<trans_doc>
+                    <merchant_id>70</merchant_id>
+                    <reference>GV35519829368965</reference>
+                    <custom>bf9420a484471d8e119ceb3651d339cf</custom>
+                    <amount currency="IDR" nominal="150000"/>
+                    <signature>369e14b0836303071d873285c911913a</signature>
+                    <status>SUCCESS</status>
+                </trans_doc>';
+
+        // Mengurai data XML menjadi objek
+        $data = simplexml_load_string($data);
+
+        if ($data->status == null) {
+            // Menampilkan data
+
+            echo "Status Gudang Voucher <br>";
+            echo "<hr>";
+            echo "Merchant ID: " . $data->merchant_id . "<br>";
+            echo "Reference: " . $data->reference . "<br>";
+            echo "Custom: " . $data->custom . "<br>";
+            echo "Amount: " . $data->amount->attributes()->nominal . " " . $data->amount->attributes()->currency . "<br>";
+            echo "Signature: " . $data->signature . "<br>";
+            echo "Status: " . $data->status . "<br>";
+
+            echo "<hr>";
+            echo "---------------------Detail Transaction-------------------- <br>";
+        } else {
+            echo "transaction not found";
+        }
     }
 }

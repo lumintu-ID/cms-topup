@@ -158,6 +158,8 @@ class TransactionController extends Controller
         } else if ($code_payment->code_payment == 'MOTIONPAY') {
 
             MotionPay::Check($request);
+        } else if ($code_payment->code_payment == 'RAZOR') {
+            Razor::Check($request);
         } else {
             return response()->json([
                 'code' => 200,
