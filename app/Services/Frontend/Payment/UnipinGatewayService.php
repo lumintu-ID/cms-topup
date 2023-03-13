@@ -34,6 +34,12 @@ class UnipinGatewayService extends PaymentGatewayService
     return $dataAttribute;
   }
 
+  function generateSignature(string $plainText = null)
+  {
+    $signature = hash('sha256', $plainText);
+    return $signature;
+  }
+
   public function urlRedirect($dataParse)
   {
     $guid = $this->_guid;
@@ -43,7 +49,7 @@ class UnipinGatewayService extends PaymentGatewayService
     $urlAck = $this->urlNotify;
     $amount = $dataParse['total_price'];
     $denominations = $amount . $dataParse['description'];
-    $signature = hash('sha256', $guid . $reference . $urlAck . $currency . $denominations . $secretKey);
+    $signature = $this->generateSignature($guid . $reference . $urlAck . $currency . $denominations . $secretKey);
 
     $payload = [
       'guid' => $guid,
@@ -77,7 +83,8 @@ class UnipinGatewayService extends PaymentGatewayService
 
   private function _checkSignature($dataResponse)
   {
-    $signature = hash('sha256', $dataResponse['status'] . $dataResponse['message'] . $dataResponse['url'] . $this->_secretKey);
+    $signature = $this->generateSignature($dataResponse['status'] . $dataResponse['message'] . $dataResponse['url'] . $this->_secretKey);
+    // $signature = hash('sha256', $dataResponse['status'] . $dataResponse['message'] . $dataResponse['url'] . $this->_secretKey);
 
     if ($signature == $dataResponse['signature']) return true;
 

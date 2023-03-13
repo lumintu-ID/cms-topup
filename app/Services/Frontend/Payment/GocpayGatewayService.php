@@ -46,7 +46,7 @@ class GocpayGatewayService extends PaymentGatewayService
     return $dataAttribute;
   }
 
-  public function generateSignature($plainText)
+  public function generateSignature($plainText = null)
   {
     $signature = hash('sha256', $plainText);
     return $signature;

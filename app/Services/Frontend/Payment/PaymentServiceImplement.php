@@ -7,12 +7,10 @@ use App\Repository\Frontend\Payment\PaymentRepository;
 
 class PaymentServiceImplement implements PaymentService
 {
-  private $_paymentRepository, $_generalRepository;
-
-  public function __construct(PaymentRepository $paymentRepository, GeneralRepository $generalRepository)
-  {
-    $this->_paymentRepository = $paymentRepository;
-    $this->_generalRepository = $generalRepository;
+  public function __construct(
+    private PaymentRepository $_paymentRepository,
+    private GeneralRepository $_generalRepository
+  ) {
   }
 
   public function getAllCategoryPayment()

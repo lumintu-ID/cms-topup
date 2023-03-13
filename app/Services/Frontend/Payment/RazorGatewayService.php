@@ -88,7 +88,7 @@ class RazorGateWayService extends PaymentGatewayService
     }
   }
 
-  public function generateSignature(string $plainText)
+  public function generateSignature(string $plainText = null)
   {
     $signature = hash_hmac('sha256', $plainText, env("RAZOR_SECRET_KEY"));
     return $signature;

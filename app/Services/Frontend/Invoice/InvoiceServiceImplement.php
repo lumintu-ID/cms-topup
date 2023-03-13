@@ -14,29 +14,16 @@ use Illuminate\Support\Str;
 
 class InvoiceServiceImplement implements InvoiceService
 {
-  private $_invoiceRepository,
-    $_gocpayGatewayService,
-    $_gudangVoucherGatewayService,
-    $_motionpayGateWayService,
-    $_razorGateWayService,
-    $_unipinGatewayService,
-    $_expireInvoiceTimeMinute;
+  private $_expireInvoiceTimeMinute = 10;
 
   public function __construct(
-    InvoiceRepository $invoiceRepository,
-    GocpayGatewayService $gocpayGatewayService,
-    GudangVoucherGatewayService $gudangVoucherGatewayService,
-    MotionpayGatewayService $motionpayGateWayService,
-    RazorGateWayService $razorGateWayService,
-    UnipinGatewayService $unipinGatewayService
+    private InvoiceRepository $_invoiceRepository,
+    private GocpayGatewayService $_gocpayGatewayService,
+    private GudangVoucherGatewayService $_gudangVoucherGatewayService,
+    private MotionpayGatewayService $_motionpayGateWayService,
+    private RazorGateWayService $_razorGateWayService,
+    private UnipinGatewayService $_unipinGatewayService
   ) {
-    $this->_invoiceRepository = $invoiceRepository;
-    $this->_gocpayGatewayService = $gocpayGatewayService;
-    $this->_gudangVoucherGatewayService = $gudangVoucherGatewayService;
-    $this->_motionpayGateWayService = $motionpayGateWayService;
-    $this->_razorGateWayService = $razorGateWayService;
-    $this->_unipinGatewayService = $unipinGatewayService;
-    $this->_expireInvoiceTimeMinute = 60;
   }
 
   public function getInvoice(string $id)

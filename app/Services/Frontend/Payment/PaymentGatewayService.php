@@ -2,7 +2,7 @@
 
 namespace App\Services\Frontend\Payment;
 
-class PaymentGatewayService
+abstract class PaymentGatewayService
 {
   protected $urlReturn, $urlPayment, $codePayment;
   protected $urlNotify = 'https://esi-paymandashboard.azurewebsites.net/api/v1/transaction/notify';
@@ -10,17 +10,6 @@ class PaymentGatewayService
   protected $methodActionGet = 'GET';
   protected $currencyIDR = 'IDR';
 
-  public function __construct()
-  {
-  }
-
-  protected function generateSignature(string $plaintText)
-  {
-    return 'generate signature';
-  }
-
-  public function getDate()
-  {
-    return 'get date or time';
-  }
+  abstract protected function generateDataParse(array $dataPayment);
+  abstract protected function generateSignature(string $plaintText = null);
 }
