@@ -140,6 +140,8 @@ Route::middleware(['auth', 'access'])->group(function () {
 
     // price point
     Route::get('/administrator/pricepoint', [PricePointController::class, 'index'])->name('cms.pricepoint');
+    Route::get('/administrator/pricepoint/add', [PricePointController::class, 'add'])->name('cms.pricepoint.add');
+    Route::get('/administrator/pricepoint/{id}', [PricePointController::class, 'list'])->name('cms.pricepoint.list');
     Route::post('/administrator/pricepoint', [PricePointController::class, 'store'])->name('cms.pricepoint.store');
     Route::patch('/administrator/pricepoint', [PricePointController::class, 'update'])->name('cms.pricepoint.update');
     Route::delete('/administrator/pricepoint', [PricePointController::class, 'destroy'])->name('cms.pricepoint.delete');

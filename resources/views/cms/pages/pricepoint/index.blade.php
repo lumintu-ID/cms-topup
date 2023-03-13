@@ -6,7 +6,6 @@
 
 <button type="button" class="btn btn-block btn-gray-800 mb-3" data-bs-toggle="modal" data-bs-target="#add" onclick="add()">Add</button>
 
-
 @if ($errors->any())
     <div class="p-3">
         @foreach ($errors->all() as $error)
@@ -101,6 +100,8 @@
                     
                 </div>
                 <div class="modal-body row">
+                    <input type="hidden" name="game" value="{{ $game }}">
+
                     <div class="col-md-12 mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Country</label>
                         <select class="form-select" name="country" id="country" aria-label="Default select example" required>
