@@ -72,7 +72,7 @@
                     @elseif($data->status == 1)
                         <span class="fw-bold text-success">Paid</span>
                     @else
-                        <span class="fw-bold text-danger">Cancelled</span>
+                        <span class="fw-bold text-danger">Fail</span>
                     @endif 
                 </td>
                 <td>{{ $data->created_at }}</td>
