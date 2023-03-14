@@ -69,6 +69,8 @@ class PaymentController extends Controller
             $activeLink = $this->_activeLink;
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
             $alert = $this->_dataset['alert']['notAvaliable'];
+
+            // dd($data);
             if (empty($data['attribute'])) {
                 return view('frontend.payment.confirmation-success', compact('data', 'activeLink', 'alert'));
             }
