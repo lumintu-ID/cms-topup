@@ -48,7 +48,7 @@ class GeneralRepositoryImplement implements GeneralRepository
 
   public function getAllBanner(int $limit = 5)
   {
-    $data = Banner::select(
+    return $data = Banner::select(
       'id_banner as id',
       'banner as name',
     )->get();
