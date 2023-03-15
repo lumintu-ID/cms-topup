@@ -7,9 +7,12 @@ use App\Repository\Frontend\Payment\PaymentRepositoryImplement;
 use App\Services\Frontend\Payment\PaymentService;
 use App\Services\Frontend\Payment\PaymentServiceImplement;
 use App\Services\Frontend\Payment\PaymentGatewayService;
+use App\Services\Frontend\Payment\MotionpayGatewayService;
+
+use App\Services\Frontend\Payment\GudangVoucher\GudangVoucherGatewayService;
+use App\Services\Frontend\Payment\GudangVoucher\GudangVoucherGatewayImplement;
 use App\Services\Frontend\Payment\Gocpay\GocpayGatewayService;
 use App\Services\Frontend\Payment\Gocpay\GocpayGatewayImplement;
-use App\Services\Frontend\Payment\MotionpayGatewayService;
 use App\Services\Frontend\Payment\Razer\RazerGatewayService;
 use App\Services\Frontend\Payment\Razer\RazerGatewayImplement;
 use Illuminate\Contracts\Support\DeferrableProvider;
@@ -23,6 +26,7 @@ class PaymentServiceProvider extends ServiceProvider implements DeferrableProvid
         PaymentService::class => PaymentServiceImplement::class,
         PaymentGatewayService::class => MotionpayGatewayService::class,
         GocpayGatewayService::class => GocpayGatewayImplement::class,
+        GudangVoucherGatewayService::class => GudangVoucherGatewayImplement::class,
         RazerGateWayService::class => RazerGatewayImplement::class,
     ];
 
@@ -33,6 +37,7 @@ class PaymentServiceProvider extends ServiceProvider implements DeferrableProvid
             PaymentRepository::class,
             PaymentService::class,
             RazerGateWayService::class,
+            GocpayGatewayService::class,
             GocpayGatewayService::class,
             MotionpayGatewayService::class,
         ];
