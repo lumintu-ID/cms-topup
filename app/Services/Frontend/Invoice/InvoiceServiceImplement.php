@@ -108,9 +108,9 @@ class InvoiceServiceImplement implements InvoiceService
         return json_encode($dataAttribute);
         break;
 
-      case env("MOTIONPAY_CODE_PAYMENT"):
-
+      case env('MOTIONPAY_CODE_PAYMENT'):
         $dataAttribute = $this->_motionpayGateWayService->generateDataParse($dataPayment);
+
         return $dataAttribute;
         break;
 
@@ -120,7 +120,7 @@ class InvoiceServiceImplement implements InvoiceService
         return json_encode($dataAttribute);
         break;
 
-      case env("RAZOR_CODE_PAYMENT"):
+      case env('RAZOR_CODE_PAYMENT'):
         $dataAttribute = $this->_razorGateWayService->generateDataParse($dataPayment);
 
         return json_encode($dataAttribute);
