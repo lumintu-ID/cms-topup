@@ -3,11 +3,11 @@
 namespace App\Services\Frontend\Invoice;
 
 use App\Repository\Frontend\Invoice\InvoiceRepository;
-use App\Services\Frontend\Payment\GudangVoucherGatewayService;
 use App\Services\Frontend\Payment\MotionpayGatewayService;
 use App\Services\Frontend\Payment\UnipinGatewayService;
 
 use App\Services\Frontend\Payment\Gocpay\GocpayGatewayService;
+use App\Services\Frontend\Payment\GudangVoucher\GudangVoucherGatewayService;
 use App\Services\Frontend\Payment\Razer\RazerGatewayService;
 use Carbon\Carbon;
 use Exception;
@@ -19,10 +19,10 @@ class InvoiceServiceImplement implements InvoiceService
 
   public function __construct(
     private InvoiceRepository $_invoiceRepository,
-    private GudangVoucherGatewayService $_gudangVoucherGatewayService,
     private MotionpayGatewayService $_motionpayGateWayService,
     private UnipinGatewayService $_unipinGatewayService,
 
+    private GudangVoucherGatewayService $_gudangVoucherGatewayService,
     private GocpayGatewayService $_gocpayGatewayService,
     private RazerGatewayService $_razerGateWayService,
   ) {

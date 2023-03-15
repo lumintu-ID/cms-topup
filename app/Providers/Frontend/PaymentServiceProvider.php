@@ -38,7 +38,7 @@ class PaymentServiceProvider extends ServiceProvider implements DeferrableProvid
             PaymentService::class,
             RazerGateWayService::class,
             GocpayGatewayService::class,
-            GocpayGatewayService::class,
+            GudangVoucherGatewayService::class,
             MotionpayGatewayService::class,
         ];
     }
