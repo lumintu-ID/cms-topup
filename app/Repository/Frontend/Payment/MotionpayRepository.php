@@ -10,14 +10,12 @@ class MotionpayRepository
 {
   public function checkReference(string $id)
   {
-    $data = Reference::where('invoice', $id)->first();
-    return $data;
+    return Reference::where('invoice', $id)->first();
   }
 
   public function checkReferenceVa(string $id)
   {
-    $data = VirtualAccount::where('invoice', $id)->first();
-    return $data;
+    return VirtualAccount::where('invoice', $id)->first();
   }
 
   public function saveReference(string $trasnId, string $orderId)
@@ -33,18 +31,16 @@ class MotionpayRepository
 
   public function getInvoceVa(string $id)
   {
-    $data = VirtualAccount::select(
+    return VirtualAccount::select(
       'VA as va_number',
       'expired_time'
     )->where('invoice', $id)->first();
-    return $data;
   }
 
   public function getStatusTransaction(string $id)
   {
-    $data = Transaction::select(
+    return Transaction::select(
       'status'
     )->where('invoice', $id)->first();
-    return $data;
   }
 }

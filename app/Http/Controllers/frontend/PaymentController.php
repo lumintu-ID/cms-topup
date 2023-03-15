@@ -109,4 +109,14 @@ class PaymentController extends Controller
             abort($error->getCode(), $error->getMessage());
         }
     }
+
+    public function checkInvoice(Request $request)
+    {
+        $activeLink = $this->_activeLink;
+        if ($request['id']) {
+            echo 'check invoice ' . $request['id'];
+            return;
+        }
+        return view('frontend.payment.check-invoice', compact('activeLink'));
+    }
 }
