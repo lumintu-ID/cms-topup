@@ -23,6 +23,7 @@ use App\Helpers\GudangVoucher;
 use App\Helpers\MotionPay;
 use App\Helpers\Razor;
 use App\Helpers\Unipin;
+use App\Models\GameList;
 
 class TransactionController extends Controller
 {
@@ -33,13 +34,14 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         try {
-
+            $now = Carbon::now();
 
             $title = "Transaction History";
+            $game = GameList::all();
 
-            $data = Transaction::with('price', 'pricepoint', 'payment', 'game', 'transactionDetail')->orderBy('created_at', 'desc')->get();
+            $data = Transaction::where('created_at', $now)->with('price', 'pricepoint', 'payment', 'game', 'transactionDetail')->orderBy('created_at', 'desc')->get();
 
-            return view('cms.pages.transaction.index', compact('title', 'data'));
+            return view('cms.pages.transaction.index', compact('title', 'game', 'data'));
         } catch (\Throwable $th) {
             $notif = array(
                 'message' => 'Internal Server Error',

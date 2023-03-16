@@ -10,4 +10,9 @@ class ppi_list extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    public function pricepoint()
+    {
+        return $this->belongsTo(PricePoint::class, 'price_point_id');
+    }
 }
