@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Repository\Frontend\Payment;
+namespace App\Repository\Frontend\Payment\Motionpay;
 
 use App\Models\Reference;
 use App\Models\Transaction;
 use App\Models\VirtualAccount;
 
-class MotionpayRepository
+class MotionpayRepositoryImplement implements MotionpayRepository
 {
   public function checkReference(string $id)
   {

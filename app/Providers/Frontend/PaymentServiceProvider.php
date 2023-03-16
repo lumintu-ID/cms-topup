@@ -7,6 +7,12 @@ use App\Repository\Frontend\Payment\PaymentRepositoryImplement;
 use App\Services\Frontend\Payment\PaymentService;
 use App\Services\Frontend\Payment\PaymentServiceImplement;
 
+
+// Repositories Payment Gateway
+use App\Repository\Frontend\Payment\Motionpay\MotionpayRepository;
+use App\Repository\Frontend\Payment\Motionpay\MotionpayRepositoryImplement;
+
+// Services Payment Gateway
 use App\Services\Frontend\Payment\Gocpay\GocpayGatewayImplement;
 use App\Services\Frontend\Payment\Gocpay\GocpayGatewayService;
 use App\Services\Frontend\Payment\GudangVoucher\GudangVoucherGatewayImplement;
@@ -26,6 +32,7 @@ class PaymentServiceProvider extends ServiceProvider implements DeferrableProvid
 
     public array $singletons = [
         PaymentRepository::class => PaymentRepositoryImplement::class,
+        MotionpayRepository::class => MotionpayRepositoryImplement::class,
         PaymentService::class => PaymentServiceImplement::class,
         GocpayGatewayService::class => GocpayGatewayImplement::class,
         GudangVoucherGatewayService::class => GudangVoucherGatewayImplement::class,

@@ -2,7 +2,7 @@
 
 namespace App\Services\Frontend\Payment\Motionpay;
 
-use App\Repository\Frontend\Payment\MotionpayRepository;
+use App\Repository\Frontend\Payment\Motionpay\MotionpayRepository;
 use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
