@@ -40,7 +40,7 @@ Route::prefix('v1')->group(function () {
                 return \response()->json([
                     'code' => 404,
                     'status' => 'NOT_FOUND',
-                    'message' => 'Data Player id ' . $request->query('player_id') . ' not found',
+                    'message' => 'Data ID Player' . $request->query('player_id') . ' not found',
                 ], 404);
             }
         } catch (\Throwable $th) {
