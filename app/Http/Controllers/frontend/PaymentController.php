@@ -11,23 +11,26 @@ class PaymentController extends Controller
 {
     private $_invoiceService;
     private $_paymentService;
-    private $activeLink = 'payment';
-    private $dataset = [
+    private $_activeLink = 'payment';
+    private $_dataset = [
         'infoTextInput' => [
-            'idPlayer' => 'Please input your id',
-            'country' => 'Please choose your country',
-            'warning' => 'ID Player is required',
-            'playerNotFound' => 'error, please try again'
+            'idPlayer' => 'Please input your id.',
+            'country' => 'Please choose your country.',
+            'warning' => 'ID Player is required.',
+            'playerNotFound' => 'Error, please try again.'
         ],
         'titleModal' => [
             'purchase' => 'Detail Purchases',
             'alertInfo' => 'Alert',
         ],
         'alert' => [
-            'idPlayer' => 'Id player is required',
-            'country' => 'Country must be choosed',
-            'payment' => 'Payment must be choosed',
-            'item' => 'Item must be choosed',
+            'idPlayer' => 'Id player is required.',
+            'checkIdPlayer' => 'Please check your id.',
+            'country' => 'Country must be choosed.',
+            'payment' => 'Payment must be choosed.',
+            'phone' => 'Phone number is required.',
+            'item' => 'Item must be choosed.',
+            'notAvaliable' => 'Data not avaliable'
         ],
         'noPayment' => 'Payment not avaliable',
     ];
@@ -41,47 +44,69 @@ class PaymentController extends Controller
     public function index(Request $request)
     {
         try {
+            $activeLink = $this->_activeLink;
             if ($request->slug) {
                 $slug = $request->slug;
                 $dataGame = $this->_paymentService->getDataGame($slug);
                 $countries = $this->_paymentService->getAllDataCountry();
-                $activeLink = $this->activeLink;
-                $textAttribute = json_encode($this->dataset);
+                $textAttribute = json_encode($this->_dataset);
                 $categoryPayment = json_encode($this->_paymentService->getAllCategoryPayment());
 
                 return view('frontend.payment.index', compact('countries', 'dataGame', 'activeLink', 'textAttribute', 'categoryPayment'));
             }
 
-            return redirect()->route('home');
+            return view('frontend.payment.check-invoice', compact('activeLink'));
         } catch (\Throwable $th) {
-            dd($th);
+            abort(500);
         }
     }
 
     public function confirmation(Request $request)
     {
         try {
-            if (!$request->query('invoice')) return 'not found';
+            if (!$request->query('invoice')) return 'Not found';
 
+            $activeLink = $this->_activeLink;
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
-            $activeLink = $this->activeLink;
+            $alert = $this->_dataset['alert']['notAvaliable'];
 
-            return response()->view('frontend.payment.confirmation', compact('data', 'activeLink'));
-        } catch (\Throwable $th) {
-            dd($th);
+            // dd($data);
+            if (empty($data['attribute'])) {
+                return view('frontend.payment.confirmation-success', compact('data', 'activeLink', 'alert'));
+            }
+
+            if (!empty($data['attribute']['va_number'])) {
+                return view('frontend.payment.confirmation-va', compact('data', 'activeLink', 'alert'));
+            }
+
+            return response()->view('frontend.payment.confirmation', compact('data', 'activeLink', 'alert'));
+        } catch (\Throwable $error) {
+            abort(404);
         }
     }
 
     public function parseToVendor(Request $request)
     {
-        // dd($urlRedirect = $this->_invoiceService->redirectToPayment($request->code, $request->all()));
         try {
             $urlRedirect = $this->_invoiceService->redirectToPayment($request->code, $request->all());
             if ($urlRedirect) {
                 return redirect($urlRedirect);
             }
-        } catch (\Throwable $th) {
-            echo 'Prosess can not continue, internal error.';
+        } catch (\Throwable $error) {
+            abort($error->getCode(), $error->getMessage());
+        }
+    }
+
+    public function infoPayment(Request $request)
+    {
+        try {
+            if ($request) {
+                $data = $this->_invoiceService->confrimInfo($request->all());
+                echo $data['message'];
+                return;
+            }
+        } catch (\Throwable $error) {
+            abort($error->getCode(), $error->getMessage());
         }
     }
 }

@@ -36,13 +36,17 @@ use App\Http\Controllers\frontend\TransactionController as FrontendTransactionCo
 */
 
 Route::get('/', [HomeFrontend::class, 'index'])->name('home');
-// Route::get('/test', [HomeFrontend::class, 'test'])->name('home.test');
 Route::get('/games', [GameFrontend::class, 'index'])->name('games');
-Route::get('/payment', [PaymentFrontend::class, 'index'])->name('payment');
+Route::prefix('payment')->group(function () {
+    Route::get('/invoice', [PaymentFrontend::class, 'index'])->name('payment');
+    Route::prefix('confirmation')->group(function () {
+        Route::get('/', [PaymentFrontend::class, 'confirmation'])->name('payment.confirmation');
+        Route::post('/', [PaymentFrontend::class, 'infoPayment'])->name('payment.confirmation.info');
+        Route::post('/va', [PaymentFrontend::class, 'vaPayment'])->name('payment.confirmation.va');
+    });
+    Route::get('/{slug}', [PaymentFrontend::class, 'index'])->name('payment.games');
+});
 Route::post('/payment-vendor/{code}', [PaymentFrontend::class, 'parseToVendor'])->name('payment.parse.vendor');
-Route::get('/payment/{slug}', [PaymentFrontend::class, 'index'])->name('payment.games');
-Route::post('/payment/test', [PaymentFrontend::class, 'test'])->name('payment.test');
-Route::get('/confirmation', [PaymentFrontend::class, 'confirmation'])->name('payment.confirmation');
 Route::post('/transaction', [FrontendTransactionController::class, 'transaction'])->name('payment.transaction');
 
 Route::get('/administrator/login', [AuthController::class, 'index'])->name('login');
@@ -136,6 +140,8 @@ Route::middleware(['auth', 'access'])->group(function () {
 
     // price point
     Route::get('/administrator/pricepoint', [PricePointController::class, 'index'])->name('cms.pricepoint');
+    Route::get('/administrator/pricepoint/add', [PricePointController::class, 'add'])->name('cms.pricepoint.add');
+    Route::get('/administrator/pricepoint/{id}', [PricePointController::class, 'list'])->name('cms.pricepoint.list');
     Route::post('/administrator/pricepoint', [PricePointController::class, 'store'])->name('cms.pricepoint.store');
     Route::patch('/administrator/pricepoint', [PricePointController::class, 'update'])->name('cms.pricepoint.update');
     Route::delete('/administrator/pricepoint', [PricePointController::class, 'destroy'])->name('cms.pricepoint.delete');

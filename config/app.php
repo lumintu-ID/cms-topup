@@ -196,11 +196,17 @@ return [
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        
+
         // Frontend Service Provider
         App\Providers\Frontend\GeneralServiceProvider::class,
         App\Providers\Frontend\InvoiceServiceProvider::class,
         App\Providers\Frontend\PaymentServiceProvider::class,
+
+
+
+        // CMS
+
+        App\Providers\CMS\PaymentServiceProvider::class,
 
     ],
 
@@ -216,6 +222,11 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        'GOC' => \App\Helpers\Goc::class,
+        'GV' => \App\Helpers\GudangVoucher::class,
+        'Unipin' => \App\Helpers\Unipin::class,
+        'MotionPay' => \App\Helpers\MotionPay::class,
+        'Razor' => \App\Helpers\Razor::class,
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 

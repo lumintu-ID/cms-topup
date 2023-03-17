@@ -36,7 +36,7 @@ class GudangVoucherGatewayService extends PaymentGatewayService
     return $dataAttribute;
   }
 
-  public function generateSignature(string $plainText)
+  public function generateSignature(string $plainText = null)
   {
     $signature = hash('md5', $plainText);
     return $signature;

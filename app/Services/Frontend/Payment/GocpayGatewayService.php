@@ -11,8 +11,8 @@ class GocpayGatewayService extends PaymentGatewayService
   {
     $this->_merchantId = env('GOC_MERCHANT_ID');
     $this->_haskey = env('GOC_HASHKEY');
-    $this->urlReturn = route('home');
     $this->urlPayment = env('GOC_URL_DEVELOPMENT');
+    $this->urlReturn = route('home');
   }
 
   public function generateDataParse($dataPayment)
@@ -46,7 +46,7 @@ class GocpayGatewayService extends PaymentGatewayService
     return $dataAttribute;
   }
 
-  public function generateSignature($plainText)
+  public function generateSignature($plainText = null)
   {
     $signature = hash('sha256', $plainText);
     return $signature;

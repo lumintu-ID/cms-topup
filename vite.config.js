@@ -8,6 +8,9 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
+                'resources/js/payment.js',
+                'resources/js/confirmation.js',
+                'resources/js/confirmation-va.js',
             ],
             refresh: true,
         }),

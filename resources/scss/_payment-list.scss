@@ -7,14 +7,82 @@
 }
 
 .input-form__player>.form-control:focus,
-.input-form__country>.form-select:focus {
-  border-color: colors.$color-fourth;
+.input-form__country>.form-select:focus,
+.input-form__phone>.form-control:focus {
+  border-color: lighten($color: colors.$color-fourth, $amount: 30);
   outline: .1rem;
-  box-shadow: 0 0 0 0.2rem transparentize($color: colors.$color-fourth, $amount: .8);
+  box-shadow: 0 0 0 0.15rem transparentize($color: colors.$color-fourth, $amount: .8);
+}
+
+.input-form__player>button#btnCheckId {
+  border-top-right-radius: .5rem;
+  border-bottom-right-radius: .5rem;
+}
+
+.input-form__phone {
+  animation: fadein 1s;
+
+  &>input::placeholder {
+    font-size: .9rem;
+  }
+}
+
+.nav-tabs {
+
+  border-bottom: 1px darken($color: #ffffff, $amount: 30) solid;
+
+  & .nav-link {
+    font-size: .8rem;
+    color: lighten($color: $black, $amount: 50);
+    padding: .5rem;
+    transition: unset;
+
+    &.active {
+      margin-bottom: -1px;
+      color: colors.$color-third;
+      border-top-color: darken($color: $white, $amount: 30);
+      border-left-color: darken($color: $white, $amount: 30);
+      border-right-color: darken($color: $white, $amount: 30);
+      border-bottom: unset;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      transition: unset;
+
+      &:hover {
+        color: colors.$color-third;
+        border-top-color: darken($color: $white, $amount: 30);
+        border-left-color: darken($color: $white, $amount: 30);
+        border-right-color: darken($color: $white, $amount: 30);
+        transform: unset;
+      }
+    }
+
+    &:hover {
+      color: colors.$color-third;
+      border-top-color: transparent;
+      border-left-color: transparent;
+      border-right-color: transparent;
+      border-bottom: none;
+      transform: scale(1.05);
+      // margin-bottom: -1px;
+      // border-bottom: unset;
+      // transition: unset;
+      // border-bottom: none;
+      // border: unset;
+    }
+
+
+  }
+}
+
+.info-payment {
+  padding-top: 1rem;
+  min-height: 10vh;
+  // background-color: aqua;
 }
 
 .payment-list {
-  padding-top: 1rem;
+  min-height: 7vh;
 
   &__items {
     display: flex;
@@ -50,12 +118,10 @@
   }
 
   @include media-breakpoint-down(sm) {
-    min-height: 10vh;
-
+    padding-top: 1rem;
   }
 
   @include media-breakpoint-up(sm) {
-    min-height: 20vh;
     margin: 1rem 0;
   }
 }
@@ -83,9 +149,10 @@
 }
 
 .input-feedback {
-  padding: .1rem 0 .5rem 1rem;
+  padding: .2rem 0 .5rem 1rem;
   font-size: .8rem;
   font-style: italic;
+  color: lighten($color: $black, $amount: 20);
 
   &.invalid {
     color: colors.$color-second;
@@ -101,6 +168,8 @@
 }
 
 #paymentLoader,
-#paymentLoader .spinner-border {
-  display: none;
+#paymentLoader {
+  & .spinner-border {
+    display: none;
+  }
 }

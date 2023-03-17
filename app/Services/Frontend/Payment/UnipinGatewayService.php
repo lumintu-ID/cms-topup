@@ -2,6 +2,7 @@
 
 namespace App\Services\Frontend\Payment;
 
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
@@ -11,9 +12,9 @@ class UnipinGatewayService extends PaymentGatewayService
 
   public function __construct()
   {
-    $this->_guid = env('UNIPIN_DEV_GUID');
-    $this->_secretKey = env('UNIPIN_DEV_SECRET_KEY');
-    $this->urlPayment = env('UNIPIN_DEV_URL');
+    $this->_guid = env('UNIPIN_GUID_DEVELOPMENT');
+    $this->_secretKey = env('UNIPIN_SECRET_KEY_DEVELOPMENT');
+    $this->urlPayment = env('UNIPIN_URL_DEVELPOMENT');
   }
 
   public function generateDataParse(array $dataPayment, array $dataGame = null)
@@ -33,6 +34,12 @@ class UnipinGatewayService extends PaymentGatewayService
     return $dataAttribute;
   }
 
+  function generateSignature(string $plainText = null)
+  {
+    $signature = hash('sha256', $plainText);
+    return $signature;
+  }
+
   public function urlRedirect($dataParse)
   {
     $guid = $this->_guid;
@@ -42,7 +49,7 @@ class UnipinGatewayService extends PaymentGatewayService
     $urlAck = $this->urlNotify;
     $amount = $dataParse['total_price'];
     $denominations = $amount . $dataParse['description'];
-    $signature = hash('sha256', $guid . $reference . $urlAck . $currency . $denominations . $secretKey);
+    $signature = $this->generateSignature($guid . $reference . $urlAck . $currency . $denominations . $secretKey);
 
     $payload = [
       'guid' => $guid,
@@ -66,9 +73,21 @@ class UnipinGatewayService extends PaymentGatewayService
         'body' => json_encode($payload),
       ]);
       $dataResponse = json_decode($response->getBody()->getContents(), true);
+
+      if (!$this->_checkSignature($dataResponse)) throw new Exception('Invalid Signature', 403);
       if ($dataResponse['url']) return $dataResponse['url'];
     } catch (RequestException $error) {
       echo 'Error message: ' . $error->getCode() . ' ' . $error->getResponse()->getReasonPhrase();
     }
+  }
+
+  private function _checkSignature($dataResponse)
+  {
+    $signature = $this->generateSignature($dataResponse['status'] . $dataResponse['message'] . $dataResponse['url'] . $this->_secretKey);
+    // $signature = hash('sha256', $dataResponse['status'] . $dataResponse['message'] . $dataResponse['url'] . $this->_secretKey);
+
+    if ($signature == $dataResponse['signature']) return true;
+
+    return false;
   }
 }

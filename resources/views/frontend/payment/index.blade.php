@@ -12,9 +12,15 @@
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
-  <div class="payment-list row row-cols-2 row-cols-md-3 row-cols-xl-4 g-2" data-paymentcategory="{{ $categoryPayment }}">
+  <div id="nav-tab-payment" data-paymentcategory="{{ $categoryPayment }}">
+    <nav class="mt-4">
+      <div class="nav nav-tabs" id="nav-tab" role="tablist"></div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent"></div>
   </div>
-  <div class="price-list row row-cols-1 row-cols-md-3 row-cols-lg-4 gx-1 gx-md-3 gy-2"></div>
+  <div class="info-payment row row-cols-1 my-5"></div>
+  <div class="wrap-phone row row-cols-1"></div>
+  <div class="price-list row row-cols-1 row-cols-md-3 row-cols-lg-4 gx-1 gx-md-3 gy-2 mb-2"></div>
 </section>
 <section class="section-total-payment container-fluid container-lg py-lg-4">
   @include('frontend.payment._total-payment')
@@ -28,5 +34,6 @@
 @endsection
 
 @section('js-utilities')
-  @include('frontend.payment._js-script')
+  <script src="{{ asset('assets/website/js/jquery-3.5.1.slim.min.js') }}"></script>
+  @vite(['resources/js/payment.js'])
 @endsection
