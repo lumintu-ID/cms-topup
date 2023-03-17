@@ -137,9 +137,7 @@ $(document).ready(function () {
         errorResponse.json().then((error) => {
           $(".input-feedback.input-id-player").removeClass('valid invalid');
           $(".input-feedback.input-id-player").addClass('invalid');
-          $(".input-feedback.input-id-player").text(error.code == 300 ? 'Trouble in internal system, please wait.' : error.message);
-          $("#formCheckout").children('div').last().remove();
-          $("#formCheckout").append('<div class="info-user">Data user tidak tersedia, silahkan coba kembali</div>');
+          $(".input-feedback.input-id-player").text(error.code == 300 ? textInfo.badRequest : error.message);
         });
         $("#idPlayer").prop('disabled', true);
         $("#btnClearId").show();
