@@ -51,11 +51,23 @@
         <div class="col-md-2">
             <div class="col ">
                 <label class="col-form-label label-align">Filter By Game </label>
-                <select class="form-select" name="game" aria-label="Default select example">
-                    <option selected>Select Game</option>
+                <select class="form-select" name="game_list" aria-label="Default select example">
+                    <option value="null" selected>Select Game</option>
                     @foreach ($game as $ga)
                     <option value="{{ $ga->id }}">{{ $ga->game_title }}</option>
                     @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="col ">
+                <label class="col-form-label label-align">Filter By Status </label>
+                <select class="form-select" name="status" aria-label="Default select example">
+                    <option value="null" selected>Select Status Transaction</option>
+                    <option value="0">Pending</option>
+                    <option value="1">Success</option>
+                    <option value="2">Failed</option>
                 </select>
             </div>
         </div>
@@ -64,10 +76,10 @@
             <label class="col-form-label label-align">Filter By Date </label>
             <div>
                 <div class=" d-flex">
-                    <input id="birthday" name="dari" class="date-picker form-control" placeholder="dd-mm-yyyy"
+                    <input id="birthday" name="start_date" class="date-picker form-control" placeholder="dd-mm-yyyy"
                         type="date" onfocus="this.type='date'" onmouseover="this.type='date'"
                         onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
-                    <input id="birthday" name="sampai" class="date-picker form-control" placeholder="dd-mm-yyyy"
+                    <input id="birthday" name="end_date" class="date-picker form-control" placeholder="dd-mm-yyyy"
                         type="date" onfocus="this.type='date'" onmouseover="this.type='date'"
                         onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
                     <script>
@@ -108,8 +120,8 @@
             <tr>
                 <td>{{ $data->invoice }}</td>
                 <td>{{ $data->email }}</td>
-                <td>{{ $data->game->game_title }}</td>
-                <td>{{ $data->payment->name_channel }}</td>
+                <td>{{ $data->game_title }}</td>
+                <td>{{ $data->name_channel }}</td>
                 <td>{{ $data->total_price }}</td>
                 <td>
                     @if ($data->status == 0)
@@ -236,13 +248,13 @@
     function Detail(data) {
         // console.log(data);
         $('#INV').html(data.invoice)
-        $('#GAME').html(data.game.game_title)
+        $('#GAME').html(data.game_title)
         $('#USERID').html(data.id_Player)
-        $('#PAYMENT').html(data.payment.name_channel)
+        $('#PAYMENT').html(data.name_channel)
         $('#TTLPRICE').html(data.total_price)
-        $('#PPI').html(data.pricepoint.price_point)
+        $('#PPI').html(data.price_point)
         $('#AMOUNT').html(data.amount)
-        $('#PAID-DATE').html((data.status == 1) ? dateToYMD(new Date(data.transaction_detail.created_at)) : '')
+        $('#PAID-DATE').html((data.status == 1) ? dateToYMD(new Date(data.created_at)) : '')
 
         let status
         if (data.status == 0) {

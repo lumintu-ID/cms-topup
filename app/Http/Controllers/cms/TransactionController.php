@@ -25,6 +25,7 @@ use App\Helpers\Razor;
 use App\Helpers\Unipin;
 use App\Models\GameList;
 
+
 class TransactionController extends Controller
 {
 
@@ -34,12 +35,56 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         try {
+            $data = array();
             $now = Carbon::now();
-
             $title = "Transaction History";
             $game = GameList::all();
 
-            $data = Transaction::where('created_at', $now)->with('price', 'pricepoint', 'payment', 'game', 'transactionDetail')->orderBy('created_at', 'desc')->get();
+            $status = request('status');
+            $game_id = request('game_list');
+            $start_date = request('start_date');
+            $end_date = request('end_date');
+
+
+            // membuat query builder untuk tabel transactions
+            $query = Transaction::query();
+
+            // join ke tabel price
+            $query->join('prices', 'prices.price_id', '=', 'transactions.price_id');
+
+            // join ke tabel pricepoint
+            $query->join('price_points', 'price_points.id', '=', 'transactions.price_point_id');
+
+            // join ke tabel payment
+            $query->join('payments', 'payments.payment_id', '=', 'transactions.method_payment');
+
+            // join ke tabel game
+            $query->join('game_lists', 'game_lists.id', '=', 'transactions.game_id');
+
+
+            // // filter berdasarkan status
+            if ($status != 'null') {
+                $query->where('transactions.status', $status);
+            }
+
+            // filter berdasarkan daftar game
+            if ($game_id != 'null') {
+                $query->where('transactions.game_id', $game_id);
+            }
+
+
+            // filter berdasarkan rentang tanggal
+            if ($start_date != null) {
+
+                $query->whereDate('transactions.created_at', '>=', $start_date);
+            }
+
+            if ($end_date != null) {
+                $query->whereDate('transactions.created_at', '<=', $end_date);
+            }
+
+            // mengeksekusi query dan mendapatkan data yang sesuai dengan filter
+            $data = $query->get();
 
             return view('cms.pages.transaction.index', compact('title', 'game', 'data'));
         } catch (\Throwable $th) {
