@@ -14,6 +14,9 @@ class GudangVoucher
 {
     public static function UpdateStatus($request)
     {
+
+
+
         $dataXML = $request->data;
         $xmlObject = simplexml_load_string($dataXML);
 
@@ -29,10 +32,9 @@ class GudangVoucher
             $status = 2;
             Log::info('Cancel Transaction Paid', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Cancel Transaction Paid with GV Invoice ' . $phpArray['custom']]);
         };
-
         $trx = Transaction::where('invoice', $phpArray['custom'])->update([
             'status' => $status,
-            'paid_time' => date('d-m-Y H:i', $phpArray['payment_time']),
+            'paid_time' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         $detail = Transaction::where('invoice', $phpArray['custom'])->first();
@@ -48,7 +50,7 @@ class GudangVoucher
             'method' => $price->payment->name_channel,
             'amount' => $price->amount . ' ' . $price->name,
             'total_paid' => $detail->total_price,
-            'paid_time' => date('d-m-Y H:i', $phpArray['payment_time']),
+            'paid_time' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
     }
 
