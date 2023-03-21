@@ -62,29 +62,58 @@ class TransactionController extends Controller
             $query->join('game_lists', 'game_lists.id', '=', 'transactions.game_id');
 
 
-            // // filter berdasarkan status
-            if ($status != 'null') {
+            // filter berdasarkan status
+            if ($status != null && $status != "Select Status Transaction") {
+                // dd($status);
                 $query->where('transactions.status', $status);
             }
 
             // filter berdasarkan daftar game
-            if ($game_id != 'null') {
+            if ($game_id != null && $game_id != "Select Game") {
+                // dd($game_id);
                 $query->where('transactions.game_id', $game_id);
             }
 
 
             // filter berdasarkan rentang tanggal
             if ($start_date != null) {
-
+                // dd('start');
                 $query->whereDate('transactions.created_at', '>=', $start_date);
             }
 
             if ($end_date != null) {
+                // dd('end');
                 $query->whereDate('transactions.created_at', '<=', $end_date);
             }
 
+            if ($status == null && $game_id == null && $start_date == null && $end_date == null) {
+                $query->whereDate('transactions.created_at', '=', $now);
+            }
+
             // mengeksekusi query dan mendapatkan data yang sesuai dengan filter
-            $data = $query->get();
+            $data = $query->select(
+                'transactions.invoice',
+                'transactions.id_Player AS id_player',
+                'transactions.game_id',
+                'transactions.method_payment',
+                'transactions.price_point_id',
+                'transactions.price_id',
+                'transactions.email',
+                'transactions.phone',
+                'transactions.amount',
+                'transactions.total_price',
+                'transactions.status',
+                'transactions.created_at',
+                'prices.name',
+                'prices.price',
+                'price_points.country_id',
+                'price_points.price_point AS PPI',
+                'payments.name_channel',
+                'game_lists.game_title',
+                'transactions.paid_time',
+
+            )->orderBy('transactions.created_at', 'desc')->get();
+
 
             return view('cms.pages.transaction.index', compact('title', 'game', 'data'));
         } catch (\Throwable $th) {
@@ -106,7 +135,6 @@ class TransactionController extends Controller
 
         DB::beginTransaction();
         try {
-
             Log::info('info', ['data' => $request->all()]);
 
             if ($request->trans_id) {

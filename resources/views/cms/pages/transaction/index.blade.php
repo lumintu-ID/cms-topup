@@ -52,7 +52,7 @@
             <div class="col ">
                 <label class="col-form-label label-align">Filter By Game </label>
                 <select class="form-select" name="game_list" aria-label="Default select example">
-                    <option value="null" selected>Select Game</option>
+                    <option selected>Select Game</option>
                     @foreach ($game as $ga)
                     <option value="{{ $ga->id }}">{{ $ga->game_title }}</option>
                     @endforeach
@@ -64,7 +64,7 @@
             <div class="col ">
                 <label class="col-form-label label-align">Filter By Status </label>
                 <select class="form-select" name="status" aria-label="Default select example">
-                    <option value="null" selected>Select Status Transaction</option>
+                    <option selected>Select Status Transaction</option>
                     <option value="0">Pending</option>
                     <option value="1">Success</option>
                     <option value="2">Failed</option>
@@ -249,12 +249,12 @@
         // console.log(data);
         $('#INV').html(data.invoice)
         $('#GAME').html(data.game_title)
-        $('#USERID').html(data.id_Player)
+        $('#USERID').html(data.id_player)
         $('#PAYMENT').html(data.name_channel)
         $('#TTLPRICE').html(data.total_price)
-        $('#PPI').html(data.price_point)
+        $('#PPI').html(data.PPI)
         $('#AMOUNT').html(data.amount)
-        $('#PAID-DATE').html((data.status == 1) ? dateToYMD(new Date(data.created_at)) : '')
+        $('#PAID-DATE').html((data.status == 1) ? dateToYMD(new Date(data.paid_time)) : '')
 
         let status
         if (data.status == 0) {

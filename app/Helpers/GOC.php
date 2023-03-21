@@ -24,7 +24,8 @@ class Goc
         };
 
         $trx = Transaction::where('invoice', $request->trxId)->update([
-            'status' => $status
+            'status' => $status,
+            'paid_time' => $request->paidDate,
         ]);
 
         $detail = Transaction::where('invoice', $request->trxId)->first();
