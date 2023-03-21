@@ -22,14 +22,12 @@ use App\Http\Controllers\cms\TransactionController;
 Route::prefix('v1')->group(function () {
     Route::get('/player', function (Request $request) {
         try {
-
-            if ($request->query('player_id') == 1234567890) {
+            if ($request->query('player_id') == "1234567890") {
                 $result = [
                     'id' => $request->query('player_id'),
                     'username' => "demo_player",
                     'email' => "demo@gmail.com",
                 ];
-
                 return \response()->json([
                     'code' => 200,
                     'status' => 'OK',
@@ -40,7 +38,7 @@ Route::prefix('v1')->group(function () {
                 return \response()->json([
                     'code' => 404,
                     'status' => 'NOT_FOUND',
-                    'message' => 'Data ID Player' . $request->query('player_id') . ' not found',
+                    'message' => 'ID Player ' . $request->query('player_id') . ' not found',
                 ], 404);
             }
         } catch (\Throwable $th) {

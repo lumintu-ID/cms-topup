@@ -3,11 +3,12 @@
 namespace App\Services\Frontend\Invoice;
 
 use App\Repository\Frontend\Invoice\InvoiceRepository;
-use App\Services\Frontend\Payment\GocpayGatewayService;
-use App\Services\Frontend\Payment\GudangVoucherGatewayService;
-use App\Services\Frontend\Payment\MotionpayGatewayService;
-use App\Services\Frontend\Payment\RazorGateWayService;
-use App\Services\Frontend\Payment\UnipinGatewayService;
+use App\Services\Frontend\Payment\Gocpay\GocpayGatewayService;
+use App\Services\Frontend\Payment\GudangVoucher\GudangVoucherGatewayService;
+use App\Services\Frontend\Payment\Motionpay\MotionpayGatewayService;
+use App\Services\Frontend\Payment\Razer\RazerGatewayService;
+use App\Services\Frontend\Payment\Unipin\UnipinGatewayService;
+
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Str;
@@ -18,11 +19,12 @@ class InvoiceServiceImplement implements InvoiceService
 
   public function __construct(
     private InvoiceRepository $_invoiceRepository,
-    private GocpayGatewayService $_gocpayGatewayService,
-    private GudangVoucherGatewayService $_gudangVoucherGatewayService,
+
     private MotionpayGatewayService $_motionpayGateWayService,
-    private RazorGateWayService $_razorGateWayService,
-    private UnipinGatewayService $_unipinGatewayService
+    private GudangVoucherGatewayService $_gudangVoucherGatewayService,
+    private GocpayGatewayService $_gocpayGatewayService,
+    private RazerGatewayService $_razerGateWayService,
+    private UnipinGatewayService $_unipinGatewayService,
   ) {
   }
 
@@ -69,7 +71,7 @@ class InvoiceServiceImplement implements InvoiceService
         return $this->_unipinGatewayService->urlRedirect($dataParse);
         break;
       case env("RAZOR_CODE_PAYMENT"):
-        return $this->_razorGateWayService->urlRedirect($dataParse);
+        return $this->_razerGateWayService->urlRedirect($dataParse);
         break;
       default:
         echo 'No code payment';
@@ -121,7 +123,7 @@ class InvoiceServiceImplement implements InvoiceService
         break;
 
       case env('RAZOR_CODE_PAYMENT'):
-        $dataAttribute = $this->_razorGateWayService->generateDataParse($dataPayment);
+        $dataAttribute = $this->_razerGateWayService->generateDataParse($dataPayment);
 
         return json_encode($dataAttribute);
         break;

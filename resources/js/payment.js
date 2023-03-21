@@ -137,9 +137,13 @@ $(document).ready(function () {
         errorResponse.json().then((error) => {
           $(".input-feedback.input-id-player").removeClass('valid invalid');
           $(".input-feedback.input-id-player").addClass('invalid');
+<<<<<<< HEAD
           $(".input-feedback.input-id-player").text(error.code == 300 ? 'Trouble in internal system, please wait.' : error.message);
           // $("#formCheckout").children('div').last().remove();
           // $("#formCheckout").append('<div class="info-user">Data user tidak tersedia, silahkan coba kembali</div>');
+=======
+          $(".input-feedback.input-id-player").text(error.code == 300 ? textInfo.badRequest : error.message);
+>>>>>>> frontend
         });
         $("#idPlayer").prop('disabled', true);
         $("#btnClearId").show();
@@ -174,7 +178,7 @@ $(document).ready(function () {
 
       await fetch(urlPayment)
         .then((response) => {
-          if (response.status === 404) {
+          if (response.code === 404) {
             addRemoveClass({ element: ".info-payment", addClass: "justify-content-center" })
             $("#nav-tab-payment").hide();
             $(".info-payment").show();

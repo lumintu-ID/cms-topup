@@ -38,7 +38,7 @@ use App\Http\Controllers\frontend\TransactionController as FrontendTransactionCo
 Route::get('/', [HomeFrontend::class, 'index'])->name('home');
 Route::get('/games', [GameFrontend::class, 'index'])->name('games');
 Route::prefix('payment')->group(function () {
-    Route::get('/invoice', [PaymentFrontend::class, 'index'])->name('payment');
+    Route::get('/invoice', [PaymentFrontend::class, 'checkInvoice'])->name('payment');
     Route::prefix('confirmation')->group(function () {
         Route::get('/', [PaymentFrontend::class, 'confirmation'])->name('payment.confirmation');
         Route::post('/', [PaymentFrontend::class, 'infoPayment'])->name('payment.confirmation.info');

@@ -15,19 +15,16 @@ class PaymentServiceImplement implements PaymentService
 
   public function getAllCategoryPayment()
   {
-    $data = $this->_paymentRepository->getAllCategoryPayment();
-    return $data;
+    return $this->_paymentRepository->getAllCategoryPayment();
   }
 
   public function getAllDataCountry()
   {
-    $data = $this->_generalRepository->getAllDataCountry();
-    return $data;
+    return $this->_generalRepository->getAllDataCountry();
   }
 
   public function getDataGame(string $slug)
   {
-    $data = $this->_generalRepository->getDataGameBySlug($slug);
-    return $data;
+    return $this->_generalRepository->getDataGameBySlug($slug);
   }
 }

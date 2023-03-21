@@ -1,20 +1,23 @@
 <?php
 
-namespace App\Services\Frontend\Payment;
+namespace App\Services\Frontend\Payment\Unipin;
 
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
-class UnipinGatewayService extends PaymentGatewayService
+class UnipinGatewayImplement implements UnipinGatewayService
 {
-  private $_guid, $_secretKey;
+  private $_guid, $_secretKey, $_urlPayment, $_methodActionPost, $_currencyIDR, $_urlNotify;
 
   public function __construct()
   {
+    $this->_methodActionPost = 'POST';
+    $this->_urlNotify = 'https://esi-paymandashboard.azurewebsites.net/api/v1/transaction/notify';
     $this->_guid = env('UNIPIN_GUID_DEVELOPMENT');
     $this->_secretKey = env('UNIPIN_SECRET_KEY_DEVELOPMENT');
-    $this->urlPayment = env('UNIPIN_URL_DEVELPOMENT');
+    $this->_urlPayment = env('UNIPIN_URL_DEVELPOMENT');
+    $this->_currencyIDR = 'IDR';
   }
 
   public function generateDataParse(array $dataPayment, array $dataGame = null)
@@ -23,7 +26,7 @@ class UnipinGatewayService extends PaymentGatewayService
     $reference =  $dataPayment['invoice'];
     $remark = $dataGame['game_title'];
     $dataAttribute = [
-      ['methodAction' => $this->methodActionPost],
+      ['methodAction' => $this->_methodActionPost],
       ['urlAction' => $urlAction],
       ['reference' => $reference],
       ['remark' => $remark],
@@ -33,20 +36,18 @@ class UnipinGatewayService extends PaymentGatewayService
 
     return $dataAttribute;
   }
-
-  function generateSignature(string $plainText = null)
+  public function generateSignature(string $plainText = null)
   {
     $signature = hash('sha256', $plainText);
     return $signature;
   }
-
   public function urlRedirect($dataParse)
   {
     $guid = $this->_guid;
     $secretKey = $this->_secretKey;
-    $currency = $this->currencyIDR;
+    $currency = $this->_currencyIDR;
     $reference =  $dataParse['reference'];
-    $urlAck = $this->urlNotify;
+    $urlAck = $this->_urlNotify;
     $amount = $dataParse['total_price'];
     $denominations = $amount . $dataParse['description'];
     $signature = $this->generateSignature($guid . $reference . $urlAck . $currency . $denominations . $secretKey);
@@ -68,23 +69,22 @@ class UnipinGatewayService extends PaymentGatewayService
 
     try {
       $client = new Client();
-      $response = $client->request('POST', $this->urlPayment, [
+      $response = $client->request('POST', $this->_urlPayment, [
         'headers' => ['Content-type' => 'application/json'],
         'body' => json_encode($payload),
       ]);
       $dataResponse = json_decode($response->getBody()->getContents(), true);
 
-      if (!$this->_checkSignature($dataResponse)) throw new Exception('Invalid Signature', 403);
+      if (!$this->checkSignature($dataResponse)) throw new Exception('Invalid Signature', 403);
+
       if ($dataResponse['url']) return $dataResponse['url'];
     } catch (RequestException $error) {
       echo 'Error message: ' . $error->getCode() . ' ' . $error->getResponse()->getReasonPhrase();
     }
   }
-
-  private function _checkSignature($dataResponse)
+  public function checkSignature($dataResponse)
   {
     $signature = $this->generateSignature($dataResponse['status'] . $dataResponse['message'] . $dataResponse['url'] . $this->_secretKey);
-    // $signature = hash('sha256', $dataResponse['status'] . $dataResponse['message'] . $dataResponse['url'] . $this->_secretKey);
 
     if ($signature == $dataResponse['signature']) return true;
 
