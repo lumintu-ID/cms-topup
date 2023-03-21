@@ -13,6 +13,7 @@ class UnipinGatewayImplement implements UnipinGatewayService
   public function __construct()
   {
     $this->_methodActionPost = 'POST';
+    $this->_urlNotify = 'https://esi-paymandashboard.azurewebsites.net/api/v1/transaction/notify';
     $this->_guid = env('UNIPIN_GUID_DEVELOPMENT');
     $this->_secretKey = env('UNIPIN_SECRET_KEY_DEVELOPMENT');
     $this->_urlPayment = env('UNIPIN_URL_DEVELPOMENT');
