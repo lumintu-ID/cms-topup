@@ -25,7 +25,8 @@ class MotionPay
         };
 
         $trx = Transaction::where('invoice', $request->order_id)->update([
-            'status' => $status
+            'status' => $status,
+            'paid_time' => $request->datetime_payment
         ]);
 
         $detail = Transaction::where('invoice', $request->order_id)->first();

@@ -12,6 +12,7 @@ use App\Imports\PriceImport;
 use Illuminate\Http\Request;
 use App\Http\Requests\PriceRequest;
 use App\Http\Controllers\Controller;
+use App\Models\ppi_list;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Repository\Price\PriceImplement;
 
@@ -63,51 +64,51 @@ class PriceController extends Controller
 
 
 
-        try {
+        // try {
+        dd($request);
 
 
-
-            // cek game
-
-
-            // cek payment
-
-            // set new data to save in database
-
-            $newData = [];
-
-            for ($i = 0; $i < count($request->ppi); $i++) {
-                $ppi = PricePoint::where('id', $request->ppi[$i])->first();
-
-                $result = [
-                    'game_id' => $request->game,
-                    'payment_id' => $request->payment,
-                    'name' => $request->name,
-                    'price_point_id' => $ppi->id,
-                    'amount' => ($request->amount[$i] == null) ? $ppi->amount : $request->amount[$i],
-                    'price' => $request->price[$i] == null ? $ppi->price : $request->price[$i],
-                ];
-
-                \array_push($newData, $result);
-            };
+        // cek game
 
 
-            $this->priceImplement->Create($newData);
+        // cek payment
 
-            $notif = array(
-                'message' => 'Success Create Price',
-                'alert-info' => 'success'
-            );
+        // set new data to save in database
 
-            return redirect(route('cms.price'))->with($notif);
-        } catch (\Throwable $th) {
-            $notif = array(
-                'message' => 'Internal Server Error',
-                'alert-info' => 'warning'
-            );
+        $newData = [];
 
-            return redirect()->back()->with($notif);
-        }
+        for ($i = 0; $i < count($request->ppi); $i++) {
+            $ppi = PricePoint::where('id', $request->ppi[$i])->first();
+
+            $result = [
+                'game_id' => $request->game,
+                'payment_id' => $request->payment,
+                'name' => $request->name,
+                'price_point_id' => $ppi->id,
+                'amount' => ($request->amount[$i] == null) ? $ppi->amount : $request->amount[$i],
+                'price' => $request->price[$i] == null ? $ppi->price : $request->price[$i],
+            ];
+
+            \array_push($newData, $result);
+        };
+
+
+        $this->priceImplement->Create($newData);
+
+        $notif = array(
+            'message' => 'Success Create Price',
+            'alert-info' => 'success'
+        );
+
+        return redirect(route('cms.price'))->with($notif);
+        // } catch (\Throwable $th) {
+        //     $notif = array(
+        //         'message' => 'Internal Server Error',
+        //         'alert-info' => 'warning'
+        //     );
+
+        //     return redirect()->back()->with($notif);
+        // }
     }
 
 
@@ -118,14 +119,14 @@ class PriceController extends Controller
         try {
             // cek game
 
+            $ppi = ppi_list::with('pricepoint')->where('game_id', $request->game)->get();
+
+
             // cek payment
 
             // set new data to save in database
 
             $newData = [];
-
-
-            $ppi = PricePoint::all();
 
 
 
@@ -135,9 +136,9 @@ class PriceController extends Controller
                     'game_id' => $request->game,
                     'payment_id' => $request->payment,
                     'name' => $request->name,
-                    'price_point_id' => $ppi[$i]->id,
-                    'amount' => $ppi[$i]->amount,
-                    'price' => $ppi[$i]->price,
+                    'price_point_id' => $ppi[$i]->price_point_id,
+                    'amount' => $ppi[$i]->pricepoint->amount,
+                    'price' => $ppi[$i]->pricepoint->price,
                 ];
 
                 \array_push($newData, $result);

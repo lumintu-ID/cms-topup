@@ -109,16 +109,12 @@ $(document).ready(function () {
       return;
     }
 
-    await fetch(`${baseUrl}/api/v1/player`)
+    const urlPlayer = new URL(`${baseUrl}/api/v1/player`);
+    urlPlayer.searchParams.set('player_id', $("#idPlayer").val());
+
+    await fetch(urlPlayer)
       .then((response) => {
-        if (response.status === 404) {
-          $(".input-feedback.input-id-player").removeClass('valid invalid');
-          $(".input-feedback.input-id-player").addClass('invalid');
-          $(".input-feedback.input-id-player").text(textInfo.infoTextInput.playerNotFound);
-          $("#formCheckout").children('div').last().remove();
-          $("#formCheckout").append('<div class="info-user">Data user tidak tersedia, silahkan coba kembali</div>');
-          return;
-        }
+        if (!response.ok) return Promise.reject(response);
         return response.json();
       })
       .then((data) => {
@@ -136,8 +132,17 @@ $(document).ready(function () {
         $(".modal-body #emailInpt span").text(player.email);
         $("#idPlayer").prop('disabled', true);
       })
-      .catch(e => {
-        console.error(e);
+      .catch((errorResponse) => {
+        $(this).hide();
+        errorResponse.json().then((error) => {
+          $(".input-feedback.input-id-player").removeClass('valid invalid');
+          $(".input-feedback.input-id-player").addClass('invalid');
+          $(".input-feedback.input-id-player").text(error.code == 300 ? 'Trouble in internal system, please wait.' : error.message);
+          // $("#formCheckout").children('div').last().remove();
+          // $("#formCheckout").append('<div class="info-user">Data user tidak tersedia, silahkan coba kembali</div>');
+        });
+        $("#idPlayer").prop('disabled', true);
+        $("#btnClearId").show();
       });
   });
 

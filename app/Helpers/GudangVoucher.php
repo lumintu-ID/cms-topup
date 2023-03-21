@@ -21,7 +21,6 @@ class GudangVoucher
         $phpArray = json_decode($json, true);
 
         Log::info('info', ['data' => $phpArray]);
-        EventsTransaction::dispatch($phpArray['custom']);
 
         if ($phpArray['status'] == "SUCCESS") {
             $status = 1;
@@ -32,7 +31,8 @@ class GudangVoucher
         };
 
         $trx = Transaction::where('invoice', $phpArray['custom'])->update([
-            'status' => $status
+            'status' => $status,
+            'paid_time' => date('d-m-Y H:i', $phpArray['payment_time']),
         ]);
 
         $detail = Transaction::where('invoice', $phpArray['custom'])->first();

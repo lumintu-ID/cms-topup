@@ -29,7 +29,8 @@ class Razor
 
 
         Transaction::where('invoice', $request->referenceId)->update([
-            'status' => $status
+            'status' => $status,
+            'paid_time' => $request->paymentStatusDate
         ]);
 
 

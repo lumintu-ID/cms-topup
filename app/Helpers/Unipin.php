@@ -24,7 +24,8 @@ class Unipin
         };
 
         $trx = Transaction::where('invoice', $request['transaction']['reference'])->update([
-            'status' => $status
+            'status' => $status,
+            'paid_time' => date('d-m-Y H:i', $request['transaction']['time'])
         ]);
 
         $detail = Transaction::where('invoice', $request['transaction']['reference'])->first();
