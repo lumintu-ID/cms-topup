@@ -63,4 +63,5 @@ Route::prefix('v1')->group(function () {
 
 
     Route::post('/transaction/notify', [TransactionController::class, 'notify']);
+    Route::get('/transaction/notify', [TransactionController::class, 'notify']);
 });

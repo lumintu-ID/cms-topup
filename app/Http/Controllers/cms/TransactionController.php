@@ -2,28 +2,23 @@
 
 namespace App\Http\Controllers\cms;
 
-use App\Models\Price;
-use GuzzleHttp\Client;
-use App\Models\Payment;
-use App\Models\Transaction;
+use App\Helpers\Goc;
+use App\Helpers\Coda;
 
-use Illuminate\Support\Str;
+use App\Helpers\Razor;
+use App\Helpers\Unipin;
+use App\Models\GameList;
+use App\Helpers\MotionPay;
+use App\Models\Transaction;
 use App\Models\Code_payment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Helpers\GudangVoucher;
 use Illuminate\Support\Carbon;
-use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
-use App\Events\Transaction as EventsTransaction;
-use App\Helpers\Goc;
-use App\Helpers\GudangVoucher;
-use App\Helpers\MotionPay;
-use App\Helpers\Razor;
-use App\Helpers\Unipin;
-use App\Models\GameList;
 
 
 class TransactionController extends Controller
@@ -133,73 +128,32 @@ class TransactionController extends Controller
         $trx = null;
         $status = null;
 
-        DB::beginTransaction();
-        try {
-            Log::info('info', ['data' => $request->all()]);
+        $result = null;
 
-            if ($request->trans_id) {
-                // Motion Pay
+        Log::info('info', ['data' => $request->all()]);
 
-                MotionPay::UpdateStatus($request);
-            } else if ($request->data) {
-                // GV
-
-                GudangVoucher::UpdateStatus($request);
-            } else if ($request->applicationCode) {
-
-                // Razor
-
-
-                Razor::UpdateStatus($request);
-                // Log::info('info', ['data' => $request->all()]);
-                // EventsTransaction::dispatch($request->referenceId);
-
-            } else if ($request->transaction) {
-
-                // Unipin ;
-
-                Unipin::UpdateStatus($request);
+        if ($request->trans_id) {
+            // Motion Pay
+            $result =  MotionPay::UpdateStatus($request);
+        } else if ($request->data) {
+            // GV
+            $result = GudangVoucher::UpdateStatus($request);
+        } else if ($request->applicationCode) {
+            // Razor
+            $result = Razor::UpdateStatus($request);
+        } else if ($request->transaction) {
+            // Unipin ;
+            $result = Unipin::UpdateStatus($request);
+        } else if ($request->TxnId) {
+            // Coda
+            $result = Coda::UpdateStatus($request);
+        } else {
+            // GOC ;
+            $result = Goc::UpdateStatus($request);
+        };
 
 
-                // Log::info('info', ['data' => $request->all()]);
-                // EventsTransaction::dispatch($request->transaction['reference']);
-
-            } else {
-
-                // GOC ;
-
-                Goc::UpdateStatus($request);
-
-                // Log::info('info', ['data' => $request->all()]);
-                // EventsTransaction::dispatch($request->trxId);
-
-            };
-
-            DB::commit();
-
-            if ($request->transaction) {
-                return \response()->json([
-                    'status' => $request['transaction']['status'],
-                    'message' => 'Reload Successful',
-                ], Response::HTTP_OK);
-            } else if ($request->applicationCode) {
-                return \response()->json([
-                    'status' => 200,
-                    'message' => '200 OK',
-                ], Response::HTTP_OK);
-            } else {
-                return "OK";
-            };
-        } catch (\Throwable $th) {
-            DB::rollback();
-            Log::error('Error Notify TopUp Transaction ', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | ERR ' . ' | Error Notify TopUp Transaction']);
-
-            return \response()->json([
-                'code' => Response::HTTP_BAD_REQUEST,
-                'status' => 'BAD_REQUEST',
-                'error' => 'BAD REQUEST',
-            ], Response::HTTP_BAD_REQUEST);
-        }
+        return $result;
     }
 
 
