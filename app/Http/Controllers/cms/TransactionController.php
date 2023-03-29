@@ -175,11 +175,8 @@ class TransactionController extends Controller
         $code_payment = Code_payment::where('id', $trx->payment->code_payment)->first();
 
         if ($code_payment->code_payment == 'GV') {
-
             GudangVoucher::Check($request);
         } else if ($code_payment->code_payment == 'GOC') {
-
-
             GOC::Check($request);
         } else if ($code_payment->code_payment == 'UNIPIN') {
 
