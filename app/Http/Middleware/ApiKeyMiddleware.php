@@ -16,7 +16,7 @@ class ApiKeyMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        $apiKey = env('API_KEY');
+        $apiKey = env('VITE_API_KEY');
 
         $clientApiKey = $request->header('X-Api-Key');
 

@@ -17,8 +17,8 @@ class ScedularTransaction
             ->where('status', 0)
             ->get();
 
-        echo "running scedular"
-        
+        echo "running scedular";
+
         if ($transactions) {
             // Loop melalui setiap transaksi
             foreach ($transactions as $transaction) {
@@ -39,6 +39,6 @@ class ScedularTransaction
             }
         }
 
-        echo "running scedular done"
+        echo "running scedular done";
     }
 }
