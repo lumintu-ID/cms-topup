@@ -3,6 +3,8 @@
 namespace App\Services\Frontend\Invoice;
 
 use App\Repository\Frontend\Invoice\InvoiceRepository;
+
+use App\Services\Frontend\Payment\Coda\CodaGatewayService;
 use App\Services\Frontend\Payment\Gocpay\GocpayGatewayService;
 use App\Services\Frontend\Payment\GudangVoucher\GudangVoucherGatewayService;
 use App\Services\Frontend\Payment\Motionpay\MotionpayGatewayService;
@@ -20,6 +22,7 @@ class InvoiceServiceImplement implements InvoiceService
   public function __construct(
     private InvoiceRepository $_invoiceRepository,
 
+    private CodaGatewayService $_codaGateWayService,
     private MotionpayGatewayService $_motionpayGateWayService,
     private GudangVoucherGatewayService $_gudangVoucherGatewayService,
     private GocpayGatewayService $_gocpayGatewayService,
@@ -32,6 +35,7 @@ class InvoiceServiceImplement implements InvoiceService
   {
     try {
       $dataTransaction = $this->_invoiceRepository->getTransactionById($id);
+
       if (!$dataTransaction) throw new Exception('No data', 404);
 
       $now = Carbon::createFromTimeString(Carbon::now());
@@ -98,6 +102,13 @@ class InvoiceServiceImplement implements InvoiceService
     if (empty($dataPayment) || empty($dataGame)) return 'data is null';
 
     switch (Str::upper($dataPayment['code_payment'])) {
+      case env('CODA_CODE_PAYMENT'):
+        $dataAttribute = $this->_codaGateWayService->generateDataParse($dataPayment);
+        dd(json_encode($dataAttribute));
+
+        return json_encode($dataAttribute);
+        break;
+
       case env('GOC_CODE_PAYMENT'):
         $dataAttribute = $this->_gocpayGatewayService->generateDataParse($dataPayment);
 

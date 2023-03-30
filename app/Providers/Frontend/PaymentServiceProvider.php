@@ -2,17 +2,19 @@
 
 namespace App\Providers\Frontend;
 
+// Services & Repositories General Payment
 use App\Repository\Frontend\Payment\PaymentRepository;
 use App\Repository\Frontend\Payment\PaymentRepositoryImplement;
 use App\Services\Frontend\Payment\PaymentService;
 use App\Services\Frontend\Payment\PaymentServiceImplement;
-
 
 // Repositories Payment Gateway
 use App\Repository\Frontend\Payment\Motionpay\MotionpayRepository;
 use App\Repository\Frontend\Payment\Motionpay\MotionpayRepositoryImplement;
 
 // Services Payment Gateway
+use App\Services\Frontend\Payment\Coda\CodaGatewayImplement;
+use App\Services\Frontend\Payment\Coda\CodaGatewayService;
 use App\Services\Frontend\Payment\Gocpay\GocpayGatewayImplement;
 use App\Services\Frontend\Payment\Gocpay\GocpayGatewayService;
 use App\Services\Frontend\Payment\GudangVoucher\GudangVoucherGatewayImplement;
@@ -33,7 +35,9 @@ class PaymentServiceProvider extends ServiceProvider implements DeferrableProvid
     public array $singletons = [
         PaymentRepository::class => PaymentRepositoryImplement::class,
         MotionpayRepository::class => MotionpayRepositoryImplement::class,
+
         PaymentService::class => PaymentServiceImplement::class,
+        CodaGatewayService::class => CodaGatewayImplement::class,
         GocpayGatewayService::class => GocpayGatewayImplement::class,
         GudangVoucherGatewayService::class => GudangVoucherGatewayImplement::class,
         MotionpayGatewayService::class => MotionpayGatewayImplement::class,
@@ -45,8 +49,11 @@ class PaymentServiceProvider extends ServiceProvider implements DeferrableProvid
     public function provides(): array
     {
         return [
+            MotionpayRepository::class,
             PaymentRepository::class,
+
             PaymentService::class,
+            CodaGatewayService::class,
             GocpayGatewayService::class,
             GudangVoucherGatewayService::class,
             MotionpayGatewayService::class,
