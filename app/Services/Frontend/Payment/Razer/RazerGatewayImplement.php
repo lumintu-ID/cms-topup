@@ -23,6 +23,7 @@ class RazerGatewayImplement implements RazerGatewayService
     $this->_urlReturn = route('home');
     $this->_addZero = "00";
   }
+
   public function generateDataParse(array $dataPayment)
   {
     $urlAction = route('payment.parse.vendor', strtolower($dataPayment['code_payment']));
@@ -43,6 +44,7 @@ class RazerGatewayImplement implements RazerGatewayService
 
     return $dataAttribute;
   }
+
   public function urlRedirect(array $dataParse)
   {
     try {
@@ -56,22 +58,7 @@ class RazerGatewayImplement implements RazerGatewayService
         . $this->_urlReturn
         . $this->_version;
 
-      $client = new Client();
-      $response = $client->request('POST', $this->_urlPayment, [
-        'headers' => ['Content-type' => 'application/x-www-form-urlencoded'],
-        'form_params' => [
-          "applicationCode" => $this->_applicationCode,
-          "referenceId" => $dataParse['referenceId'],
-          "version" => $this->_version,
-          "amount" => $dataParse['amount'] . $this->_addZero,
-          "currencyCode" => $dataParse['currencyCode'],
-          "returnUrl" => $this->_urlReturn,
-          "description" => $dataParse['description'],
-          "customerId" => $dataParse['customerId'],
-          "hashType" => $this->_hashType,
-          "signature" => $this->generateSignature($plainText),
-        ]
-      ]);
+      $response = $this->_doRequestToApi($dataParse, $plainText);
       $dataResponse = json_decode($response->getBody()->getContents(), true);
 
       if (!$this->checkSignature($dataResponse)) {
@@ -124,5 +111,27 @@ class RazerGatewayImplement implements RazerGatewayService
       DB::rollback();
       abort(500, 'Internal error, please try again');
     }
+  }
+
+  private function _doRequestToApi(array $dataParse, string $plainText)
+  {
+    $client = new Client();
+    $response = $client->request($this->_methodActionPost, $this->_urlPayment, [
+      'headers' => ['Content-type' => 'application/x-www-form-urlencoded'],
+      'form_params' => [
+        "applicationCode" => $this->_applicationCode,
+        "referenceId" => $dataParse['referenceId'],
+        "version" => $this->_version,
+        "amount" => $dataParse['amount'] . $this->_addZero,
+        "currencyCode" => $dataParse['currencyCode'],
+        "returnUrl" => $this->_urlReturn,
+        "description" => $dataParse['description'],
+        "customerId" => $dataParse['customerId'],
+        "hashType" => $this->_hashType,
+        "signature" => $this->generateSignature($plainText),
+      ]
+    ]);
+
+    return $response;
   }
 }

@@ -6,6 +6,6 @@ interface UnipinGatewayService
 {
   public function generateDataParse(array $dataPayment, array $dataGame = null);
   public function generateSignature(string $plainText = null);
-  public function urlRedirect($dataParse);
+  public function urlRedirect(array $dataParse);
   public function checkSignature($dataResponse);
 }

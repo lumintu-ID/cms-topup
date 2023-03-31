@@ -22,25 +22,24 @@ class UnipinGatewayImplement implements UnipinGatewayService
 
   public function generateDataParse(array $dataPayment, array $dataGame = null)
   {
-    $urlAction = route('payment.parse.vendor', strtolower($dataPayment['code_payment']));
-    $reference =  $dataPayment['invoice'];
-    $remark = $dataGame['game_title'];
     $dataAttribute = [
       ['methodAction' => $this->_methodActionPost],
-      ['urlAction' => $urlAction],
-      ['reference' => $reference],
-      ['remark' => $remark],
+      ['urlAction' => route('payment.parse.vendor', strtolower($dataPayment['code_payment']))],
+      ['reference' => $dataPayment['invoice']],
+      ['remark' => $dataGame['game_title']],
       ['total_price' => $dataPayment['total_price']],
       ['description' => $dataPayment['amount'] . ' ' . $dataPayment['name']],
     ];
 
     return $dataAttribute;
   }
+
   public function generateSignature(string $plainText = null)
   {
     $signature = hash('sha256', $plainText);
     return $signature;
   }
+
   public function urlRedirect($dataParse)
   {
     $guid = $this->_guid;
@@ -68,20 +67,26 @@ class UnipinGatewayImplement implements UnipinGatewayService
     ];
 
     try {
-      $client = new Client();
-      $response = $client->request('POST', $this->_urlPayment, [
-        'headers' => ['Content-type' => 'application/json'],
-        'body' => json_encode($payload),
-      ]);
-      $dataResponse = json_decode($response->getBody()->getContents(), true);
+      $dataResponse = $this->_doRequestToApi($payload);
 
       if (!$this->checkSignature($dataResponse)) throw new Exception('Invalid Signature', 403);
-
       if ($dataResponse['url']) return $dataResponse['url'];
     } catch (RequestException $error) {
       echo 'Error message: ' . $error->getCode() . ' ' . $error->getResponse()->getReasonPhrase();
     }
   }
+
+  private function _doRequestToApi(array $payload)
+  {
+    $client = new Client();
+    $response = $client->request($this->_methodActionPost, $this->_urlPayment, [
+      'headers' => ['Content-type' => 'application/json'],
+      'body' => json_encode($payload),
+    ]);
+
+    return json_decode($response->getBody()->getContents(), true);
+  }
+
   public function checkSignature($dataResponse)
   {
     $signature = $this->generateSignature($dataResponse['status'] . $dataResponse['message'] . $dataResponse['url'] . $this->_secretKey);
