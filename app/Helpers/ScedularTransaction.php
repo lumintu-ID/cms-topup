@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ScedularTransaction
 {
@@ -18,6 +19,12 @@ class ScedularTransaction
             ->get();
 
         echo "running scedular";
+        Log::info(
+            'Running Scedular',
+            [
+                'date' => Carbon::now()->format('Y-m-d H:i:s')
+            ]
+        );
 
         if ($transactions) {
             // Loop melalui setiap transaksi
@@ -40,5 +47,11 @@ class ScedularTransaction
         }
 
         echo "running scedular done";
+        Log::info(
+            'Running Scedular Done',
+            [
+                'date' => Carbon::now()->format('Y-m-d H:i:s')
+            ]
+        );
     }
 }
