@@ -38,10 +38,10 @@ class InvoiceServiceImplement implements InvoiceService
 
       if (!$dataTransaction) throw new Exception('No data', 404);
 
-      $now = Carbon::createFromTimeString(Carbon::now());
-      $expireInvoice = Carbon::createFromFormat('Y-m-d H:i:s', $dataTransaction['date'])->addMinutes($this->_expireInvoiceTimeMinute);
+      // $now = Carbon::createFromTimeString(Carbon::now());
+      // $expireInvoice = Carbon::createFromFormat('Y-m-d H:i:s', $dataTransaction['date'])->addMinutes($this->_expireInvoiceTimeMinute);
 
-      if ($now >= $expireInvoice->toDateTimeString()) throw new Exception('No data', 404);
+      // if ($now >= $expireInvoice->toDateTimeString()) throw new Exception('No data', 404);
 
       $dataPayment = $this->_invoiceRepository->getDetailPrice($dataTransaction->price_id)->toArray();
 
@@ -54,6 +54,8 @@ class InvoiceServiceImplement implements InvoiceService
       $result['payment']['phone'] = $dataTransaction->phone;
       $result['payment']['ppn'] = $this->_invoiceRepository->getAllDataPpn()[0]['ppn'];
       $result['payment']['total_price'] = $dataTransaction->total_price;
+
+      // dd($result);
 
       if ($dataTransaction['status'] == 0) {
         $result['attribute'] = $this->_getPaymentAttribute($result['payment'], $result['game']);
@@ -71,11 +73,15 @@ class InvoiceServiceImplement implements InvoiceService
     if (empty($dataParse)) return 'Prosess can not be continued, no value.';
 
     switch (Str::upper(($codePayment))) {
-      case env("UNIPIN_CODE_PAYMENT"):
-        return $this->_unipinGatewayService->urlRedirect($dataParse);
+      case env("CODA_CODE_PAYMENT"):
+        dd($this->_codaGateWayService->urlRedirect($dataParse));
+        // return $this->_codaGateWayService->urlRedirect($dataParse);
         break;
       case env("RAZOR_CODE_PAYMENT"):
         return $this->_razerGateWayService->urlRedirect($dataParse);
+        break;
+      case env("UNIPIN_CODE_PAYMENT"):
+        return $this->_unipinGatewayService->urlRedirect($dataParse);
         break;
       default:
         echo 'No code payment';
@@ -88,6 +94,7 @@ class InvoiceServiceImplement implements InvoiceService
     $data = [
       'message' => 'No info'
     ];
+
     if ($dataRequest['trans_id']) {
       $data['message'] = ($dataRequest['status_desc'] == 'failed') ? 'Payment ' . $dataRequest['status_desc'] . ', please try again.' : 'Payment success, thanks';
       $data['payment'] = 'Motionpay';
@@ -104,7 +111,7 @@ class InvoiceServiceImplement implements InvoiceService
     switch (Str::upper($dataPayment['code_payment'])) {
       case env('CODA_CODE_PAYMENT'):
         $dataAttribute = $this->_codaGateWayService->generateDataParse($dataPayment);
-        dd(json_encode($dataAttribute));
+        // dd($dataAttribute);
 
         return json_encode($dataAttribute);
         break;
