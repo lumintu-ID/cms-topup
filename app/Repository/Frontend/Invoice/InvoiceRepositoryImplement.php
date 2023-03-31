@@ -39,6 +39,7 @@ class InvoiceRepositoryImplement implements InvoiceRepository
     return Price::join('payments', 'prices.payment_id', '=', 'payments.payment_id')
       ->join('code_payments', 'payments.code_payment', '=', 'code_payments.id')
       ->select(
+        'price_id',
         'channel_id',
         'name_channel',
         'price',
