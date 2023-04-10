@@ -31,7 +31,7 @@
     "isEntry": true
   },
   "resources/js/libpayment.js": {
-    "file": "assets/libpayment.989305de.js",
+    "file": "assets/libpayment.8df61400.js",
     "src": "resources/js/libpayment.js",
     "isEntry": true,
     "imports": [

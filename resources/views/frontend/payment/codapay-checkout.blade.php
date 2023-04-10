@@ -8,15 +8,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="token" content="{{ csrf_token() }}" />
-  <meta name="key-genarate" content="{{ env("APP_KEY") }}" />
-  <title>ESIPAYMENT</title>
+  {{-- <meta name="token" content="{{ csrf_token() }}" />
+  <meta name="key-genarate" content="{{ env("APP_KEY") }}" /> --}}
+  <title>ESI GAME SHOP</title>
 </head>
 <body data-payment="{{$dataRedirect}}">
   
   <h1>Codapay Checkout</h1>
 
-  <iframe id="idIframe" src="about:blank" frameborder="0" style="display: none" ></iframe>
+  <iframe id="idIframe" src="about:blank" frameborder="0" ></iframe>
 
   @vite(['resources/js/libpayment.js'])
   

@@ -1,52 +1,27 @@
 'use strict';
 
-// import sha256 from 'crypto-js/sha256';
-// import hmacSHA512 from 'crypto-js/hmac-sha512';
-// import Base64 from 'crypto-js/enc-base64';
-
-// const message = 'hello';
-// const nonce = 'nonce';
-// const path = 'path'
-// const privateKey = 'privatekey';
-// const hashDigest = sha256(nonce + message);
-// const hmacDigest = Base64.stringify(hmacSHA512(path + hashDigest, privateKey));
-
-// console.log(hmacDigest);
 import CryptoJS from 'crypto-js';
 
-const token = document.querySelector('meta[name="token"]').content;
 const dataPayment = JSON.parse(document.getElementsByTagName('body')[0].dataset.payment);
-const keyGenrate = document.querySelector('meta[name="key-genarate"]').content;
+const apiKey = dataPayment['initrequest']['key'];
 
-console.log(dataPayment['initrequest']['key']);
+const keyDecode = (keyEncode) => {
+  let key = atob(keyEncode).split('-');
+  if (key[0] === CryptoJS.MD5(import.meta.env.VITE_FRONTEND_APP_KEY).toString()) return key;
+  return ['Invalid key', 'no API Key'];
+}
 
-console.log(keyGenrate);
-console.log(token);
-
-// Encrypt
-let ciphertext = CryptoJS.AES.encrypt('tablorrr', keyGenrate).toString();
-console.log(ciphertext); // 'my message'
-
-// // Decrypt
-// let bytes = CryptoJS.AES.decrypt(ciphertext, 'secret key 123');
-// let originalText = bytes.toString(CryptoJS.enc.Utf8);
-
-// console.log(originalText); // 'my message'
+const key = keyDecode(apiKey);
+// console.log(atob(key[1]));
+// console.log(dataPayment);
+delete dataPayment.initrequest.key;
+dataPayment.initrequest.apiKey = atob(key[1]);
+console.log(dataPayment);
 
 
 
-// Decrypt
-let bytes = CryptoJS.AES.decrypt(ciphertext, keyGenrate);
-// console.log(bytes);
-let originalText = bytes.toString(CryptoJS.enc.Utf8);
-
-// let token = document.querySelector("meta[name='token']").getAttribute("content");
-// console.log(token);
-
-console.log(originalText); // 'my message'
-
-
-// window.addEventListener("load", function () {
-//   var iframe = document.getElementById("idIframe");
-//   iframe.contentWindow.location.href = "https://fightoflegends.co.id/";
-// });
+window.addEventListener("load", function () {
+  let iframe = document.getElementById("idIframe");
+  iframe.src = "https://sandbox.codapayments.com/airtime/begin";
+  // iframe.contentWindow.location.href = "https://fightoflegends.co.id/";
+});

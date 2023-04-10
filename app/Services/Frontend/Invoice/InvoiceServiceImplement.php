@@ -55,8 +55,6 @@ class InvoiceServiceImplement implements InvoiceService
       $result['payment']['ppn'] = $this->_invoiceRepository->getAllDataPpn()[0]['ppn'];
       $result['payment']['total_price'] = $dataTransaction->total_price;
 
-      // dd($result);
-
       if ($dataTransaction['status'] == 0) {
         $result['attribute'] = $this->_getPaymentAttribute($result['payment'], $result['game']);
         return $result;
