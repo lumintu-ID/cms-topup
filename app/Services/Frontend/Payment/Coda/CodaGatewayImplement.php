@@ -3,16 +3,16 @@
 namespace App\Services\Frontend\Payment\Coda;
 
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Crypt;
 
 class CodaGatewayImplement implements CodaGatewayService
 {
-  private $_methodActionPost, $_urlPayment;
+  private $_methodActionPost, $_urlPayment, $_urlRedirect;
 
   public function __construct()
   {
     $this->_methodActionPost = "POST";
     $this->_urlPayment = env('CODA_URL_DEVELOPMENT');
+    $this->_urlRedirect = 'https://sandbox.codapayments.com/airtime/begin';
   }
 
   public function generateDataParse(array $dataPayment)
@@ -34,14 +34,11 @@ class CodaGatewayImplement implements CodaGatewayService
 
   public function urlRedirect(array $dataParse)
   {
-    $apiKey = base64_encode(env("CODA_API_KEY"));
-    $keyAppFe = hash('md5', env('FRONTEND_APP_KEY'));
     $initRequest['initRequest'] = [
       'country' => 360,
       'currency' => 360,
       'orderId' => $dataParse['orderId'],
       'apiKey' => env("CODA_API_KEY"),
-      // 'key' => base64_encode($keyAppFe . '-' . $apiKey),
       'payType' => $dataParse['channelId'],
       'items' => [
         "code" => $dataParse['priceId'],
@@ -63,16 +60,12 @@ class CodaGatewayImplement implements CodaGatewayService
       ],
     ];
 
-    // dd($initRequest);
     $response = $this->_doRequestToApi($initRequest);
-    // $dataResponse = json_decode($response->getBody()->getContents(), true);
-    // dd($response['initResult']);
+
     if ($response['initResult']['resultCode'] == 0) {
-      $url = 'https://sandbox.codapayments.com/airtime/begin?type=3&txn_id=' . $response['initResult']['txnId'];
+      $url = $this->_urlRedirect . '?type=3&txn_id=' . $response['initResult']['txnId'];
       return $url;
     }
-
-    // if()
 
     return json_encode($initRequest);
   }
@@ -84,9 +77,6 @@ class CodaGatewayImplement implements CodaGatewayService
       'headers' => ['Content-type' => 'application/json'],
       'body' => json_encode($payload),
     ]);
-    // $dataResponse = json_decode($response->getBody()->getContents(), true);
-
-    // dd($dataResponse);
 
     return json_decode($response->getBody()->getContents(), true);
   }
