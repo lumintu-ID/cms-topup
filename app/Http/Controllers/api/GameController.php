@@ -26,7 +26,6 @@ class GameController extends Controller
             $data = $this->apiImplement->getGameList($request->query('limit'));
 
             if (!$data) {
-                Log::warning('Get Game List Not Found', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | WARN ' . ' | Data Game List not found']);
                 return response()->json([
                     'code' => 404,
                     'status' => 'NOT_FOUND',
@@ -80,7 +79,6 @@ class GameController extends Controller
             $country = Country::get();
 
             if (!$game) {
-                Log::warning('Detail Game Not Found', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | WARN ' . ' | Game ' . $slug . ' not found']);
                 return \response()->json([
                     'code' => 404,
                     'status' => 'NOT_FOUND',

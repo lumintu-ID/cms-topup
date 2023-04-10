@@ -49,11 +49,9 @@ class ApiImplement implements ApiRepository
                 "channelId" => $pay->channel_id,
                 "name_channel" => $pay->name_channel,
                 "logo_channel" => url('/image/' . $pay->logo_channel),
-                "url"   => $pay->url,
-                "phone_required" => ($pay->channel_id == "94" || $pay->channel_id == "SPIN") ? true : false,
+                "url" => $pay->url,
+                "phone_required" => ($pay->channel_id == "94" || $pay->channel_id == "SPIN" || $pay->channel_id == "22") ? true : false,
             );
-
-
 
             $data["payment"] = $p;
             $data["price"] = $price;

@@ -39,7 +39,6 @@ class TransactionController extends Controller
             $game = GameList::where('id', $request->game_id)->get();
 
             if (count($game) == 0) {
-                Log::warning('Game Not Found', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | WARN ' . ' | data not found ']);
 
                 $notif = array(
                     'message' => 'Game not found',
@@ -53,7 +52,6 @@ class TransactionController extends Controller
             $payment = Payment::where('payment_id', $request->payment_id)->get();
 
             if (count($payment) == 0) {
-                Log::warning('Payment Method Not Found', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | WARN ' . ' | data not found ']);
 
                 $notif = array(
                     'message' => 'Payment not found',
@@ -66,7 +64,6 @@ class TransactionController extends Controller
             $price = Price::with('pricepoint')->where('price_id', $request->price_id)->get();
 
             if (count($price) == 0) {
-                Log::warning('Price List Not Found', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | WARN ' . ' | data not found ']);
 
                 $notif = array(
                     'message' => 'Price not found',

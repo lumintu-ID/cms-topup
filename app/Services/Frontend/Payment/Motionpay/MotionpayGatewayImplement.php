@@ -1,24 +1,27 @@
 <?php
 
-namespace App\Services\Frontend\Payment;
+namespace App\Services\Frontend\Payment\Motionpay;
 
-use App\Repository\Frontend\Payment\MotionpayRepository;
+use App\Repository\Frontend\Payment\Motionpay\MotionpayRepository;
 use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\DB;
 
-class MotionpayGatewayService extends PaymentGatewayService
+class MotionpayGatewayImplement implements MotionpayGatewayService
 {
-  private $_dateTime, $_merchantCode, $_secretKey, $_timeLimitVa, $_motionpayRepository, $_statusPending, $_statusSuccess, $_statusFailed;
+  private $_dateTime, $_merchantCode, $_secretKey, $_timeLimitVa, $_motionpayRepository, $_statusPending, $_statusSuccess, $_statusFailed, $_urlPayment, $_methodActionPost, $_urlNotify, $_currencyIDR;
 
   public function __construct(MotionpayRepository $motionpayRepository)
   {
+    $this->_methodActionPost = 'POST';
+    $this->_urlNotify = 'https://esi-paymandashboard.azurewebsites.net/api/v1/transaction/notify';
+    $this->_currencyIDR = 'IDR';
     $this->_motionpayRepository = $motionpayRepository;
     $this->_merchantCode = env("MOTIONPAY_MERCHANT_CODE");
     $this->_secretKey = env("MOTIONPAY_SECRET_KEY");
-    $this->urlPayment = env("MOTIONPAY_URL_DEVELOPMENT");
+    $this->_urlPayment = env("MOTIONPAY_URL_DEVELOPMENT");
     $this->_timeLimitVa = 60;
     $this->_statusPending = 'Pending';
     $this->_statusSuccess = 'Success';
@@ -28,31 +31,28 @@ class MotionpayGatewayService extends PaymentGatewayService
   public function generateDataParse(array $dataPayment)
   {
     try {
-      // dd($this->_checkInvoice($dataPayment['invoice']));
 
-      if ($this->_checkInvoice($dataPayment['invoice'])) {
-        $dataVa = $this->_checkInvoice($dataPayment['invoice']);
-        $dataVa['leftTime'] = $this->_calculateLeftTime($dataVa['expired_time']);
+      if ($this->checkInvoice($dataPayment['invoice'])) {
+        $dataVa = $this->checkInvoice($dataPayment['invoice']);
+        $dataVa['leftTime'] = $this->calculateLeftTime($dataVa['expired_time']);
 
         return $dataVa;
       }
 
-      // dd($dataPayment);
-
-      $response = $this->_getDataToRedirect($dataPayment);
+      $response = $this->getDataToRedirect($dataPayment);
 
       if (!empty($response['va_number'])) {
-        if (!$this->_checkSignature($response, $response['va_number'])) throw new Exception('Invalid Signature', 403);
+        if (!$this->checkSignature($response, $response['va_number'])) throw new Exception('Invalid Signature', 403);
 
-        $this->_saveReferenceVa($response);
-        $response['leftTime'] = $this->_calculateLeftTime($response['expired_time']);
+        $this->saveReferenceVa($response);
+        $response['leftTime'] = $this->calculateLeftTime($response['expired_time']);
         return $response;
       }
 
-      if (!$this->_checkSignature($response)) throw new Exception('Invalid Signature', 403);
+      if (!$this->checkSignature($response)) throw new Exception('Invalid Signature', 403);
 
       $dataAttribute = [
-        ['methodAction' => $this->methodActionPost],
+        ['methodAction' => $this->_methodActionPost],
         ['urlAction' => $response['frontend_url']],
         ['trans_id' => $response['trans_id']],
         ['merchant_code' => $response['merchant_code']],
@@ -65,14 +65,12 @@ class MotionpayGatewayService extends PaymentGatewayService
       abort($error->getCode(), $error->getMessage());
     }
   }
-
   public function generateSignature(string $plainText = null)
   {
     $signature = hash('sha1', md5($plainText));
     return $signature;
   }
-
-  private function _getDataToRedirect(array $dataParse)
+  public function getDataToRedirect(array $dataParse)
   {
     try {
       $this->_dateTime = Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('YmdHis');
@@ -84,7 +82,7 @@ class MotionpayGatewayService extends PaymentGatewayService
       $orderId = $dataParse['invoice'];
       $numberReference = $dataParse['invoice'];
       $amount = (string)$dataParse['total_price'];
-      $currency = $this->currencyIDR;
+      $currency = $this->_currencyIDR;
       $itemDetails =  $dataParse['amount'] . ' ' . $dataParse['name'];
       $paymentMethod = $dataParse['channel_id'] ?? 'ALL';
       $thanksUrl = route('payment.confirmation.info');
@@ -101,7 +99,7 @@ class MotionpayGatewayService extends PaymentGatewayService
         . $this->_dateTime
         . $paymentMethod
         . $this->_timeLimitVa
-        . $this->urlNotify
+        . $this->_urlNotify
         . $thanksUrl
         . $this->_secretKey;
 
@@ -119,27 +117,26 @@ class MotionpayGatewayService extends PaymentGatewayService
         'datetime_request' => $this->_dateTime,
         'payment_method' => $paymentMethod,
         'time_limit' => $this->_timeLimitVa,
-        'notif_url' => $this->urlNotify,
+        'notif_url' => $this->_urlNotify,
         'thanks_url' => $thanksUrl,
         'signature' => $this->generateSignature($plainText)
       ];
 
       $client = new Client();
-      $response = $client->request($this->methodActionPost, $this->urlPayment, [
+      $response = $client->request($this->_methodActionPost, $this->_urlPayment, [
         'headers' => ['Content-type' => 'application/json'],
         'body' => json_encode($payload),
       ]);
 
       $dataResponse = json_decode($response->getBody()->getContents(), true);
 
-      $this->_saveReference($dataResponse['trans_id'], $dataResponse['order_id']);
+      $this->saveReference($dataResponse['trans_id'], $dataResponse['order_id']);
       return $dataResponse;
     } catch (RequestException $error) {
       echo 'Error message: ' . $error;
     }
   }
-
-  private function _checkSignature($dataResponse, $vaNumber = null)
+  public function checkSignature($dataResponse, $vaNumber = null)
   {
     $plainText = null;
 
@@ -171,8 +168,7 @@ class MotionpayGatewayService extends PaymentGatewayService
 
     return false;
   }
-
-  private function _saveReference(string $trasnId, string $orderId)
+  public function saveReference(string $trasnId, string $orderId)
   {
     DB::beginTransaction();
     try {
@@ -185,8 +181,7 @@ class MotionpayGatewayService extends PaymentGatewayService
       abort(500, 'Internal error, please try again');
     }
   }
-
-  private function _saveReferenceVa($data)
+  public function saveReferenceVa($data)
   {
     DB::beginTransaction();
     try {
@@ -199,16 +194,14 @@ class MotionpayGatewayService extends PaymentGatewayService
       abort(500);
     }
   }
-
-  private function _calculateLeftTime($expireDate)
+  public function calculateLeftTime($expireDate)
   {
     $expireTime = Carbon::createFromFormat('Y-m-d H:i:s', $expireDate);
     $current =  Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now());
     $leftTime = Carbon::parse($current)->diffForHumans($expireTime);
     return $leftTime;
   }
-
-  private function _checkInvoice(string $id)
+  public function checkInvoice(string $id)
   {
     $dataStatusTransaction = $this->_motionpayRepository->getStatusTransaction($id);
     $dataInvoice = $this->_motionpayRepository->getInvoceVa($id);

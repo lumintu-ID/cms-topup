@@ -1,24 +1,26 @@
 <?php
 
-namespace App\Services\Frontend\Payment;
+namespace App\Services\Frontend\Payment\Razer;
 
 use App\Models\Reference;
+use App\Services\Frontend\Payment\Razer\RazerGatewayService;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\DB;
 
-class RazorGateWayService extends PaymentGatewayService
+class RazerGatewayImplement implements RazerGatewayService
 {
-  private $_applicationCode, $_version, $_hashType, $_addZero;
+  private $_applicationCode, $_version, $_hashType, $_addZero, $_urlPayment, $_urlReturn, $_methodActionPost;
 
   public function __construct()
   {
+    $this->_methodActionPost = 'POST';
     $this->_version = 'v1';
     $this->_hashType = 'hmac-sha256';
     $this->_applicationCode = env("RAZOR_MERCHANT_CODE");
-    $this->urlPayment = env("RAZOR_URL_DEVELPOMENT");
-    $this->urlReturn = route('home');
+    $this->_urlPayment = env("RAZOR_URL_DEVELPOMENT");
+    $this->_urlReturn = route('home');
     $this->_addZero = "00";
   }
 
@@ -31,7 +33,7 @@ class RazorGateWayService extends PaymentGatewayService
     $currencyCode = 'IDR';
     $description = $dataPayment['amount'] . ' ' . $dataPayment['name'];
     $dataAttribute = [
-      ['methodAction' => $this->methodActionPost],
+      ['methodAction' => $this->_methodActionPost],
       ['urlAction' => $urlAction],
       ['referenceId' => $referenceId],
       ['amount' => $amount],
@@ -53,33 +55,18 @@ class RazorGateWayService extends PaymentGatewayService
         . $dataParse['description']
         . $this->_hashType
         . $dataParse['referenceId']
-        . $this->urlReturn
+        . $this->_urlReturn
         . $this->_version;
 
-      $client = new Client();
-      $response = $client->request('POST', $this->urlPayment, [
-        'headers' => ['Content-type' => 'application/x-www-form-urlencoded'],
-        'form_params' => [
-          "applicationCode" => $this->_applicationCode,
-          "referenceId" => $dataParse['referenceId'],
-          "version" => $this->_version,
-          "amount" => $dataParse['amount'] . $this->_addZero,
-          "currencyCode" => $dataParse['currencyCode'],
-          "returnUrl" => $this->urlReturn,
-          "description" => $dataParse['description'],
-          "customerId" => $dataParse['customerId'],
-          "hashType" => $this->_hashType,
-          "signature" => $this->generateSignature($plainText),
-        ]
-      ]);
+      $response = $this->_doRequestToApi($dataParse, $plainText);
       $dataResponse = json_decode($response->getBody()->getContents(), true);
 
-      if (!$this->_checkSignature($dataResponse)) {
+      if (!$this->checkSignature($dataResponse)) {
         throw new Exception('Invalid Signature', 403);
       }
 
       if ($dataResponse['paymentUrl']) {
-        $this->_saveReference($dataResponse['paymentId'], $dataResponse['referenceId']);
+        $this->saveReference($dataResponse['paymentId'], $dataResponse['referenceId']);
         return $dataResponse['paymentUrl'];
       }
     } catch (RequestException $error) {
@@ -94,7 +81,7 @@ class RazorGateWayService extends PaymentGatewayService
     return $signature;
   }
 
-  private function _checkSignature($dataResponse)
+  public function checkSignature($dataResponse)
   {
     $plainText = $dataResponse['amount']
       . $dataResponse['applicationCode']
@@ -111,7 +98,7 @@ class RazorGateWayService extends PaymentGatewayService
     return false;
   }
 
-  private function _saveReference(string $paymentId, string $orderId)
+  public function saveReference(string $paymentId, string $orderId)
   {
     DB::beginTransaction();
     try {
@@ -124,5 +111,27 @@ class RazorGateWayService extends PaymentGatewayService
       DB::rollback();
       abort(500, 'Internal error, please try again');
     }
+  }
+
+  private function _doRequestToApi(array $dataParse, string $plainText)
+  {
+    $client = new Client();
+    $response = $client->request($this->_methodActionPost, $this->_urlPayment, [
+      'headers' => ['Content-type' => 'application/x-www-form-urlencoded'],
+      'form_params' => [
+        "applicationCode" => $this->_applicationCode,
+        "referenceId" => $dataParse['referenceId'],
+        "version" => $this->_version,
+        "amount" => $dataParse['amount'] . $this->_addZero,
+        "currencyCode" => $dataParse['currencyCode'],
+        "returnUrl" => $this->_urlReturn,
+        "description" => $dataParse['description'],
+        "customerId" => $dataParse['customerId'],
+        "hashType" => $this->_hashType,
+        "signature" => $this->generateSignature($plainText),
+      ]
+    ]);
+
+    return $response;
   }
 }

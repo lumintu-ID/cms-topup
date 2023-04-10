@@ -13,7 +13,7 @@ class InvoiceRepositoryImplement implements InvoiceRepository
 {
   public function getTransactionById(string $id)
   {
-    $data = Transaction::select(
+    return Transaction::select(
       'invoice',
       'game_id',
       'id_player',
@@ -23,26 +23,23 @@ class InvoiceRepositoryImplement implements InvoiceRepository
       'total_price',
       'status',
       'created_at as date'
-    )
-      ->where('invoice', $id)
-      ->first();
-    return $data;
+    )->where('invoice', $id)->first();
   }
 
   public function getGameInfo(string $id)
   {
-    $data = GameList::select('game_title')
+    return GameList::select('game_title')
       ->where('id', $id)
       ->first()
       ->toArray();
-    return $data;
   }
 
   public function getDetailPrice($id)
   {
-    $data = Price::join('payments', 'prices.payment_id', '=', 'payments.payment_id')
+    return Price::join('payments', 'prices.payment_id', '=', 'payments.payment_id')
       ->join('code_payments', 'payments.code_payment', '=', 'code_payments.id')
       ->select(
+        'price_id',
         'channel_id',
         'name_channel',
         'price',
@@ -51,10 +48,7 @@ class InvoiceRepositoryImplement implements InvoiceRepository
         'code_payments.code_payment',
         'category_id',
         'url'
-      )
-      ->where('price_id', $id)
-      ->first();
-    return $data;
+      )->where('price_id', $id)->first();
   }
 
   public function getNameCodePayment(string $id)
@@ -68,13 +62,11 @@ class InvoiceRepositoryImplement implements InvoiceRepository
 
   public function getAllDataPpn()
   {
-    $data = Ppn::select('id_ppn as id', 'ppn')->get()->toArray();
-    return $data;
+    return Ppn::select('id_ppn as id', 'ppn')->get()->toArray();
   }
 
   public function getAllCategoryPayment()
   {
-    $data = Category::select('category_id as id', 'category')->get()->toArray();
-    return $data;
+    return Category::select('category_id as id', 'category')->get()->toArray();
   }
 }

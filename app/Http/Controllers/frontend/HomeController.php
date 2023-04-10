@@ -10,20 +10,20 @@ class HomeController extends Controller
 {
     private $_activeLink = 'home';
     private $_generalRepository;
-    
+
     public function __construct(GeneralRepository $generalRepository)
     {
         $this->_generalRepository = $generalRepository;
     }
 
     public function index()
-    {   
+    {
         try {
             $games = $this->_generalRepository->getAllDataGame();
             $articles = $this->_curlArticle();
             $activeLink = $this->_activeLink;
             $banners = $this->_generalRepository->getAllBanner();
-    
+
             return view('frontend.home.index', compact('games', 'articles', 'activeLink', 'banners'));
         } catch (\Throwable $th) {
             throw $th;
@@ -59,7 +59,7 @@ class HomeController extends Controller
         $dom = HtmlDomParser::str_get_html($html);
 
         if ($dom->find('section.news')) {
-            $limitArictle = 3; 
+            $limitArictle = 3;
             $article['articles'] = [];
 
             for ($i = 0; $i < $limitArictle; $i++) {

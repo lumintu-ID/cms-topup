@@ -5,6 +5,7 @@ $(document).ready(function () {
   const dataGame = JSON.parse(document.getElementsByClassName('games-info__body')[0].dataset.game);
   const categoryPayment = JSON.parse(document.getElementById('nav-tab-payment').dataset.paymentcategory);
   const textInfo = JSON.parse(document.getElementsByClassName('player-input')[0].dataset.infotext);
+  const apiToken = import.meta.env.VITE_API_KEY;
   let player;
 
   $(".input-feedback.input-id-player").text(textInfo.infoTextInput.idPlayer);
@@ -112,7 +113,12 @@ $(document).ready(function () {
     const urlPlayer = new URL(`${baseUrl}/api/v1/player`);
     urlPlayer.searchParams.set('player_id', $("#idPlayer").val());
 
-    await fetch(urlPlayer)
+    await fetch(urlPlayer, {
+      credentials: "include",
+      headers: {
+        'X-Api-Key': apiToken
+      }
+    })
       .then((response) => {
         if (!response.ok) return Promise.reject(response);
         return response.json();
@@ -137,9 +143,7 @@ $(document).ready(function () {
         errorResponse.json().then((error) => {
           $(".input-feedback.input-id-player").removeClass('valid invalid');
           $(".input-feedback.input-id-player").addClass('invalid');
-          $(".input-feedback.input-id-player").text(error.code == 300 ? 'Trouble in internal system, please wait.' : error.message);
-          // $("#formCheckout").children('div').last().remove();
-          // $("#formCheckout").append('<div class="info-user">Data user tidak tersedia, silahkan coba kembali</div>');
+          $(".input-feedback.input-id-player").text(error.code == 300 ? textInfo.badRequest : error.message);
         });
         $("#idPlayer").prop('disabled', true);
         $("#btnClearId").show();
@@ -172,16 +176,14 @@ $(document).ready(function () {
       urlPayment.searchParams.set('country', this.value);
       urlPayment.searchParams.set('game_id', dataGame.id);
 
-      await fetch(urlPayment)
+      await fetch(urlPayment, {
+        credentials: "include",
+        headers: {
+          'X-Api-Key': apiToken
+        }
+      })
         .then((response) => {
-          if (response.status === 404) {
-            addRemoveClass({ element: ".info-payment", addClass: "justify-content-center" })
-            $("#nav-tab-payment").hide();
-            $(".info-payment").show();
-            $(".info-payment").empty();
-            $(".info-payment").append(textInfo.noPayment);
-            return;
-          }
+          if (!response.ok) return Promise.reject(response);
           return response.json();
         })
         .then((data) => {
@@ -233,14 +235,22 @@ $(document).ready(function () {
             });
           });
         })
-        .catch((error) => {
-          $("#nav-tab-payment").hide();
-          $("#paymentLoader, #paymentLoader .spinner-border").removeClass('mt-5').hide();
-          $(".payment-list").empty();
-          $(".payment-list").addClass("justify-content-center");
-          $(".payment-list").append(textInfo.noPayment);
-          $(".price-list").empty();
-          $(".info-payment").show();
+        .catch((errorResponse) => {
+          errorResponse.json().then((error) => {
+            addRemoveClass({ element: ".info-payment", addClass: "justify-content-center" })
+            $("#nav-tab-payment").hide();
+            $("#paymentLoader, #paymentLoader .spinner-border").removeClass('mt-5').hide();
+            $(".payment-list").empty();
+            $(".payment-list").addClass("justify-content-center");
+            $(".price-list").empty();
+            $(".info-payment").empty();
+            if (error.code == 401) {
+              $(".info-payment").append('Please try again.');
+            } else {
+              $(".info-payment").append(textInfo.noPayment);
+            }
+            $(".info-payment").show();
+          });
         });
     }
     return;

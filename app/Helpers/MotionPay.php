@@ -7,44 +7,63 @@ use GuzzleHttp\Client;
 use App\Models\Reference;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
+use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use App\Models\TransactionDetail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class MotionPay
 {
     public static function UpdateStatus($request)
     {
-        if ($request->status_code == 200) {
-            $status = 1;
-            Log::info('Success Transaction Paid', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Success Transaction Paid with Motion Pay Invoice ' . $request->order_id]);
-        } else {
+        DB::beginTransaction();
+        try {
+            if ($request->status_code == 200) {
+                $status = 1;
+                Log::info('Success Transaction Paid Motion Pay', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Success Transaction Paid with Motion Pay Invoice ' . $request->order_id]);
+            } else {
 
-            $status = 2;
-            Log::info('Cancel Transaction Paid', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Cancel Transaction Paid with Motion Pay Invoice ' . $request->order_id]);
-        };
+                $status = 2;
+                Log::info('Cancel Transaction Paid Motion Pay', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | INFO ' . ' | Cancel Transaction Paid with Motion Pay Invoice ' . $request->order_id]);
+            };
 
-        $trx = Transaction::where('invoice', $request->order_id)->update([
-            'status' => $status
-        ]);
-
-        $detail = Transaction::where('invoice', $request->order_id)->first();
-
-        $price = Price::with('payment', 'pricepoint')->where('price_id', $detail->price_id)->first();
-
-        if ($status == 1) {
-            TransactionDetail::create([
-                'detail_id' => Str::uuid(),
-                'invoice_id' => $detail->invoice,
-                'player_id' => $detail->id_Player,
-                'game_id' => $detail->game_id,
-                'ppi' => $price->pricepoint->price_point,
-                'method' => $price->payment->name_channel,
-                'amount' => $price->amount . ' ' . $price->name,
-                'total_paid' => $detail->total_price,
+            $trx = Transaction::where('invoice', $request->order_id)->update([
+                'status' => $status,
                 'paid_time' => $request->datetime_payment
             ]);
-        };
+
+            $detail = Transaction::where('invoice', $request->order_id)->first();
+
+            $price = Price::with('payment', 'pricepoint')->where('price_id', $detail->price_id)->first();
+
+            if ($status == 1) {
+                TransactionDetail::create([
+                    'detail_id' => Str::uuid(),
+                    'invoice_id' => $detail->invoice,
+                    'player_id' => $detail->id_Player,
+                    'game_id' => $detail->game_id,
+                    'ppi' => $price->pricepoint->price_point,
+                    'method' => $price->payment->name_channel,
+                    'amount' => $price->amount . ' ' . $price->name,
+                    'total_paid' => $detail->total_price,
+                    'paid_time' => $request->datetime_payment
+                ]);
+            };
+
+            DB::commit();
+
+            return "OK";
+        } catch (\Throwable $th) {
+            DB::rollback();
+            Log::error('Error Notify TopUp Motion Pay', ['DATA' => Carbon::now()->format('Y-m-d H:i:s') . ' | ERR ' . ' | Error Notify TopUp Transaction']);
+
+            return \response()->json([
+                'code' => Response::HTTP_BAD_REQUEST,
+                'status' => 'BAD_REQUEST',
+                'error' => 'BAD REQUEST',
+            ], Response::HTTP_BAD_REQUEST);
+        }
     }
 
     public static function Check($request)

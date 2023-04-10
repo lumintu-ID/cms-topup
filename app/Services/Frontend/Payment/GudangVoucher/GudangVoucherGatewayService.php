@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\Frontend\Payment;
+namespace App\Services\Frontend\Payment\GudangVoucher;
 
-abstract class PaymentGatewayService
+abstract class GudangVoucherGatewayService
 {
   protected $urlReturn, $urlPayment, $codePayment;
   protected $urlNotify = 'https://esi-paymandashboard.azurewebsites.net/api/v1/transaction/notify';
@@ -10,6 +10,6 @@ abstract class PaymentGatewayService
   protected $methodActionGet = 'GET';
   protected $currencyIDR = 'IDR';
 
-  abstract protected function generateDataParse(array $dataPayment);
-  abstract protected function generateSignature(string $plaintText = null);
+  abstract public function generateDataParse(array $dataPayment);
+  abstract public function generateSignature(string $plaintText);
 }

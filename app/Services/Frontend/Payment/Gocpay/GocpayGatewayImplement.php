@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\Frontend\Payment;
+namespace App\Services\Frontend\Payment\Gocpay;
 
-
-class GocpayGatewayService extends PaymentGatewayService
+class GocpayGatewayImplement extends GocpayGatewayService
 {
+
   private $_merchantId, $_haskey, $_trxDateTime;
 
   public function __construct()
@@ -15,7 +15,7 @@ class GocpayGatewayService extends PaymentGatewayService
     $this->urlReturn = route('home');
   }
 
-  public function generateDataParse($dataPayment)
+  public function generateDataParse(array $dataPayment)
   {
     $this->_trxDateTime = substr(\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'))->format('Y-m-d\TH:i:sP'), 0, -3);
     $plainText = $this->_merchantId
@@ -46,7 +46,7 @@ class GocpayGatewayService extends PaymentGatewayService
     return $dataAttribute;
   }
 
-  public function generateSignature($plainText = null)
+  public function generateSignature(string $plainText = null)
   {
     $signature = hash('sha256', $plainText);
     return $signature;

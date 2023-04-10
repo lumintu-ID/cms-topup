@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\Frontend\Payment;
+namespace App\Services\Frontend\Payment\GudangVoucher;
 
-class GudangVoucherGatewayService extends PaymentGatewayService
+class GudangVoucherGatewayImplement extends GudangVoucherGatewayService
 {
   private $_merchantId, $_mercahtKey;
 

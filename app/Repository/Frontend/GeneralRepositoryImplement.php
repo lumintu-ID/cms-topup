@@ -10,58 +10,47 @@ class GeneralRepositoryImplement implements GeneralRepository
 {
   public function getAllDataGame()
   {
-    $data = GameList::select(
+    return GameList::select(
       'slug_game',
       'game_title',
-      'cover')
-    ->get();
-    return $data;
+      'cover'
+    )->get();
   }
-  
+
   public function getDataGameById(string $id)
   {
-    $data = GameList::select(
+    return GameList::select(
       'id',
       'game_id as code_game',
       'game_title as title',
-      'cover')
-    ->where('id', $id)->first();
-    
-    return $data;
+      'cover'
+    )->where('id', $id)->first();
   }
 
   public function getDataGameBySlug(string $slug)
   {
-    $data = GameList::select(
+    return GameList::select(
       'id',
       'game_id as code_game',
       'game_title as title',
-      'cover')
-    ->where('slug_game', $slug)->first();
-    
-    return $data;
+      'cover'
+    )->where('slug_game', $slug)->first();
   }
 
   public function getAllDataCountry()
   {
-    $data = Country::select(
+    return Country::select(
       'country_id as id',
       'country',
-      'currency')
-    ->get()->toArray();
-    
-    return $data;
+      'currency'
+    )->get()->toArray();
   }
 
   public function getAllBanner(int $limit = 5)
   {
-    $data = Banner::select(
+    return $data = Banner::select(
       'id_banner as id',
       'banner as name',
     )->get();
-
-    return $data;
   }
-  
-
 }

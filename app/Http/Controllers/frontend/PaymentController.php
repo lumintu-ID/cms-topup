@@ -33,6 +33,7 @@ class PaymentController extends Controller
             'notAvaliable' => 'Data not avaliable'
         ],
         'noPayment' => 'Payment not avaliable',
+        'badRequest' => 'Trouble in internal system, please wait.'
     ];
 
     public function __construct(InvoiceService $invoiceService, PaymentService $paymentService)
@@ -70,7 +71,6 @@ class PaymentController extends Controller
             $data = $this->_invoiceService->getInvoice($request->query('invoice'));
             $alert = $this->_dataset['alert']['notAvaliable'];
 
-            // dd($data);
             if (empty($data['attribute'])) {
                 return view('frontend.payment.confirmation-success', compact('data', 'activeLink', 'alert'));
             }
@@ -89,9 +89,7 @@ class PaymentController extends Controller
     {
         try {
             $urlRedirect = $this->_invoiceService->redirectToPayment($request->code, $request->all());
-            if ($urlRedirect) {
-                return redirect($urlRedirect);
-            }
+            if ($urlRedirect) return redirect($urlRedirect);
         } catch (\Throwable $error) {
             abort($error->getCode(), $error->getMessage());
         }
@@ -108,5 +106,15 @@ class PaymentController extends Controller
         } catch (\Throwable $error) {
             abort($error->getCode(), $error->getMessage());
         }
+    }
+
+    public function checkInvoice(Request $request)
+    {
+        $activeLink = $this->_activeLink;
+        if ($request['id']) {
+            echo 'check invoice ' . $request['id'];
+            return;
+        }
+        return view('frontend.payment.check-invoice', compact('activeLink'));
     }
 }
