@@ -55,8 +55,6 @@ class InvoiceServiceImplement implements InvoiceService
       $result['payment']['ppn'] = $this->_invoiceRepository->getAllDataPpn()[0]['ppn'];
       $result['payment']['total_price'] = $dataTransaction->total_price;
 
-      // dd($result);
-
       if ($dataTransaction['status'] == 0) {
         $result['attribute'] = $this->_getPaymentAttribute($result['payment'], $result['game']);
         return $result;
@@ -74,8 +72,8 @@ class InvoiceServiceImplement implements InvoiceService
 
     switch (Str::upper(($codePayment))) {
       case env("CODA_CODE_PAYMENT"):
-        dd($this->_codaGateWayService->urlRedirect($dataParse));
-        // return $this->_codaGateWayService->urlRedirect($dataParse);
+        // dd($this->_codaGateWayService->urlRedirect($dataParse));
+        return $this->_codaGateWayService->urlRedirect($dataParse);
         break;
       case env("RAZOR_CODE_PAYMENT"):
         return $this->_razerGateWayService->urlRedirect($dataParse);

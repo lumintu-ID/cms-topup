@@ -6,12 +6,13 @@ use GuzzleHttp\Client;
 
 class CodaGatewayImplement implements CodaGatewayService
 {
-  private $_methodActionPost, $_urlPayment;
+  private $_methodActionPost, $_urlPayment, $_urlRedirect;
 
   public function __construct()
   {
     $this->_methodActionPost = "POST";
     $this->_urlPayment = env('CODA_URL_DEVELOPMENT');
+    $this->_urlRedirect = 'https://sandbox.codapayments.com/airtime/begin';
   }
 
   public function generateDataParse(array $dataPayment)
@@ -20,12 +21,12 @@ class CodaGatewayImplement implements CodaGatewayService
       ['methodAction' => $this->_methodActionPost],
       ['urlAction' => route('payment.parse.vendor', strtolower($dataPayment['code_payment']))],
       ['orderId' => $dataPayment['invoice']],
+      ['codePayment' => $dataPayment['code_payment']],
       ['channelId' => $dataPayment['channel_id']],
       ['name' => $dataPayment['amount'] . ' ' . $dataPayment['name']],
       ['priceId' => $dataPayment['price_id']],
       ['price' => $dataPayment['total_price']],
       ['user_id' => $dataPayment['user']],
-      ['phone' => $dataPayment['phone']],
     ];
 
     return $dataAttribute;
@@ -33,27 +34,40 @@ class CodaGatewayImplement implements CodaGatewayService
 
   public function urlRedirect(array $dataParse)
   {
-    $mnoCodeIndosat1 = 51001;
-    $mnoCodeIndosat2 = 51021;
-    $data['apiKey'] = env("CODA_API_KEY");
-    $data['orderId'] = $dataParse['orderId'];
-    $data['lang'] = 'id';
-    $data['merchant_name'] = env("CODA_MERCHANT_NAME");
-    $data['type'] = 1;
-    $data['pay_type'] = 1;
-    $data['mno_code'] = $mnoCodeIndosat1;
-    $data['items'] = [
-      "code" => $dataParse['priceId'],
-      "name" => $dataParse['name'],
-      "price" => $dataParse['price']
-    ];
-    $data['profile'] = [
-      "user_id" => $dataParse['user_id'],
+    $initRequest['initRequest'] = [
+      'country' => 360,
+      'currency' => 360,
+      'orderId' => $dataParse['orderId'],
+      'apiKey' => env("CODA_API_KEY"),
+      'payType' => $dataParse['channelId'],
+      'items' => [
+        "code" => $dataParse['priceId'],
+        "name" => $dataParse['name'],
+        "price" => number_format($dataParse['price'], 2, '.', ''),
+        "type" =>  1,
+      ],
+      'profile' => [
+        'entry' => [
+          [
+            "key" => 'user_id',
+            "value" => $dataParse['user_id'],
+          ],
+          [
+            "key" => 'need_mno_id',
+            "value" => 'yes',
+          ],
+        ]
+      ],
     ];
 
-    $dataResponse = $this->_doRequestToApi($data);
+    $response = $this->_doRequestToApi($initRequest);
 
-    return json_encode($dataResponse);
+    if ($response['initResult']['resultCode'] == 0) {
+      $url = $this->_urlRedirect . '?type=3&txn_id=' . $response['initResult']['txnId'];
+      return $url;
+    }
+
+    return json_encode($initRequest);
   }
 
   private function _doRequestToApi(array $payload)

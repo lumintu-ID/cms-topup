@@ -5,6 +5,7 @@ namespace App\Http\Controllers\frontend;
 use App\Http\Controllers\Controller;
 use App\Services\Frontend\Invoice\InvoiceService;
 use App\Services\Frontend\Payment\PaymentService;
+use Exception;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -53,12 +54,14 @@ class PaymentController extends Controller
                 $textAttribute = json_encode($this->_dataset);
                 $categoryPayment = json_encode($this->_paymentService->getAllCategoryPayment());
 
+                if (!$dataGame) throw new Exception('Not Found Game', 404);
+
                 return view('frontend.payment.index', compact('countries', 'dataGame', 'activeLink', 'textAttribute', 'categoryPayment'));
             }
 
             return view('frontend.payment.check-invoice', compact('activeLink'));
-        } catch (\Throwable $th) {
-            abort(500);
+        } catch (Exception $th) {
+            abort($th->getCode());
         }
     }
 
@@ -115,6 +118,21 @@ class PaymentController extends Controller
             echo 'check invoice ' . $request['id'];
             return;
         }
-        return view('frontend.payment.check-invoice', compact('activeLink'));
+        return view('frontend.payment.check-invoice2', compact('activeLink'));
+    }
+
+    public function codapayCheckout(Request $request)
+    {
+        try {
+            $urlRedirect = $this->_invoiceService->redirectToPayment('CODA', $request->all());
+            if ($urlRedirect) return redirect($urlRedirect);
+        } catch (\Throwable $error) {
+            abort($error->getCode(), $error->getMessage());
+        }
+        // dd($request->all());
+        // $dataRedirect = $this->_invoiceService->redirectToPayment($request->codePayment, $request->all());
+        // dd($dataRedirect);
+
+        // return view('frontend.payment.codapay-checkout', compact('dataRedirect'));
     }
 }
