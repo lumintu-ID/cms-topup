@@ -118,6 +118,6 @@ class PaymentController extends Controller
             echo 'check invoice ' . $request['id'];
             return;
         }
-        return view('frontend.payment.check-invoice2', compact('activeLink'));
+        return view('frontend.payment.check-invoice', compact('activeLink'));
     }
 }
