@@ -32,9 +32,19 @@ class TransactionController extends Controller
 
     public function transaction(TransactionRequest $request)
     {
-        // dd('controller transaksi');
+
         DB::beginTransaction();
         try {
+
+            $hashChecksum = hash(
+                'sha256',
+                $request['player_id']
+                    . $request['amount']
+                    . $request['price']
+                    . csrf_token()
+            );
+
+            if ($request['hash_checksum'] !== $hashChecksum) return redirect('/');
 
             $game = GameList::where('id', $request->game_id)->get();
 

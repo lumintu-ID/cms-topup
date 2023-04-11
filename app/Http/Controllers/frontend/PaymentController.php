@@ -120,19 +120,4 @@ class PaymentController extends Controller
         }
         return view('frontend.payment.check-invoice2', compact('activeLink'));
     }
-
-    public function codapayCheckout(Request $request)
-    {
-        try {
-            $urlRedirect = $this->_invoiceService->redirectToPayment('CODA', $request->all());
-            if ($urlRedirect) return redirect($urlRedirect);
-        } catch (\Throwable $error) {
-            abort($error->getCode(), $error->getMessage());
-        }
-        // dd($request->all());
-        // $dataRedirect = $this->_invoiceService->redirectToPayment($request->codePayment, $request->all());
-        // dd($dataRedirect);
-
-        // return view('frontend.payment.codapay-checkout', compact('dataRedirect'));
-    }
 }
