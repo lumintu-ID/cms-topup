@@ -24,6 +24,7 @@ class TransactionRequest extends FormRequest
     public function rules()
     {
         return [
+            'hash_checksum' => 'required',
             'email' => 'required|email',
             'game_id' => 'required',
             'payment_id' => 'required',

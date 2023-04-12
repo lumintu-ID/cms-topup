@@ -43,9 +43,11 @@ Route::prefix('payment')->group(function () {
         Route::get('/', [PaymentFrontend::class, 'confirmation'])->name('payment.confirmation');
         Route::post('/', [PaymentFrontend::class, 'infoPayment'])->name('payment.confirmation.info');
         Route::post('/va', [PaymentFrontend::class, 'vaPayment'])->name('payment.confirmation.va');
+        Route::get('/codapay', function () {
+            return 'codapay';
+        })->name('payment.confirmation.coda');
     });
     Route::get('/{slug}', [PaymentFrontend::class, 'index'])->name('payment.games');
-    Route::post('/codapay/checkout', [PaymentFrontend::class, 'codapayCheckout'])->name('payment.codapay.checkout');
 });
 Route::post('/payment-vendor/{code}', [PaymentFrontend::class, 'parseToVendor'])->name('payment.parse.vendor');
 Route::post('/transaction', [FrontendTransactionController::class, 'transaction'])->name('payment.transaction');

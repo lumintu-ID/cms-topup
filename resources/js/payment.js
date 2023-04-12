@@ -1,5 +1,7 @@
 'use strict';
 
+import CryptoJSsha256 from 'crypto-js/sha256 ';
+
 $(document).ready(function () {
   const baseUrl = window.location.origin;
   const dataGame = JSON.parse(document.getElementsByClassName('games-info__body')[0].dataset.game);
@@ -18,6 +20,18 @@ $(document).ready(function () {
   initInputPhone();
   listNavTab(categoryPayment);
   showHideElement({ showElement: '#formCheckout' })
+
+  const generateChecksum = () => {
+    const [token, amount, price] = [
+      document.querySelector('#formCheckout input[name=_token]').value,
+      $(".modal-body #amount span").text().trim(),
+      $(".modal-body #price span").text().trim()
+    ];
+    const hashCkecksum = CryptoJSsha256(player.id + amount + price + token).toString();
+
+    $(".modal-body #checksum :input").val(hashCkecksum);
+    return;
+  }
 
   $("#btnConfirm").prop("disabled", false);
   $("#btnConfirm").click(function () {
@@ -94,6 +108,7 @@ $(document).ready(function () {
       return;
     }
 
+    generateChecksum();
     changeModalTitle(textInfo.titleModal.purchase);
     showHideElement({ showElement: '#formCheckout', hideElement: '#infoCaution' });
     return;
@@ -151,6 +166,7 @@ $(document).ready(function () {
   });
 
   $("#btnClearId").click(function () {
+    player = null;
     $(this).hide();
     $("#btnCheckId").show();
     $("#idPlayer").prop('disabled', false);
@@ -358,3 +374,4 @@ const addRemoveClass = ({ element = null, addClass = null, removeClass = null })
   $(element).addClass(addClass);
   return;
 }
+
