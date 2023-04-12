@@ -271,6 +271,23 @@ $(document).ready(function () {
     }
     return;
   });
+
+  $('#reload').click(async function () {
+    // $.ajax({
+    //   type: 'GET',
+    //   url: 'reload-captcha',
+    //   success: function (data) {
+    //     $(".captcha span").html(data.captcha);
+    //   }
+    // });
+    await fetch(`${window.location.origin}/reload-captcha`).then((response) => {
+      return response.json();
+    })
+      .then((data) => {
+        console.log(data);
+        $(".captcha span").html(data.captcha);
+      });
+  });
 });
 
 const changeModalTitle = (title) => {
@@ -374,4 +391,6 @@ const addRemoveClass = ({ element = null, addClass = null, removeClass = null })
   $(element).addClass(addClass);
   return;
 }
+
+
 

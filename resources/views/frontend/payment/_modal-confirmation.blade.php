@@ -93,6 +93,27 @@
               <p>*Pastikan ID Player dan item yang dipilih sudah sesuai.</p>
             </div>
           </div>
+          <div class="row">
+            <div class="captcha col-12">
+              <div class="row">
+                <div class="col-6">
+                  <div class="row">
+                    <div class="col-6 pe-0">
+                      <span>{!! captcha_img() !!}</span>
+                    </div>
+                    <div class="col-4 ps-0">
+                      <button type="button" class="btn btn-danger" class="reload" id="reload">
+                        &#x21bb;
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <input id="captcha" type="text" class="form-control" placeholder="Enter Captcha" name="captcha">
+                </div>
+              </div>
+            </div>            
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="button__cancel" data-bs-dismiss="modal">Cancel</button>
