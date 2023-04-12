@@ -185,6 +185,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Mews\Captcha\CaptchaServiceProvider::class,
 
 
 
@@ -222,6 +223,8 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        'Captcha' => Mews\Captcha\Facades\Captcha::class,
+
         'GOC' => \App\Helpers\Goc::class,
         'GV' => \App\Helpers\GudangVoucher::class,
         'Unipin' => \App\Helpers\Unipin::class,

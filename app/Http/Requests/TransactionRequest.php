@@ -30,6 +30,7 @@ class TransactionRequest extends FormRequest
             'payment_id' => 'required',
             'price_id' => 'required',
             'player_id' => 'required',
+            'captcha' => 'required|captcha'
         ];
     }
 }

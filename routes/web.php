@@ -15,7 +15,7 @@ use App\Http\Controllers\cms\NavigationController;
 use App\Http\Controllers\cms\PricePointController;
 use App\Http\Controllers\cms\UserAccessController;
 use App\Http\Controllers\cms\TransactionController;
-
+use App\Http\Controllers\Frontend\CaptchaController;
 // use Illuminate\Http\Request;
 
 /* ============ Frontend Controller ============ */
@@ -49,6 +49,7 @@ Route::prefix('payment')->group(function () {
     });
     Route::get('/{slug}', [PaymentFrontend::class, 'index'])->name('payment.games');
 });
+Route::get('/reload-captcha', [CaptchaController::class, 'reloadCaptcha']);
 Route::post('/payment-vendor/{code}', [PaymentFrontend::class, 'parseToVendor'])->name('payment.parse.vendor');
 Route::post('/transaction', [FrontendTransactionController::class, 'transaction'])->name('payment.transaction');
 
