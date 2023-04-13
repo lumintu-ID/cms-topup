@@ -24,62 +24,62 @@
             <input type="text" name="hash_checksum" hidden>
           </div>
           <div class="row justify-content-around mb-2 mb-2" id="nameGame">
-            <div class="col-6">
+            <div class="col-4">
               Game :
             </div>
-            <div class="col-4 text-end">
+            <div class="col text-end">
               <span></span>
             </div>
             <input type="text" name="game_id" hidden>
           </div>
           <div class="row justify-content-around mb-2" id="playerId">
-            <div class="col-6">
+            <div class="col-4">
               Player ID :
             </div>
-            <div class="col-4 text-end">
+            <div class="col text-end">
               <span></span>
             </div>
             <input type="text" name="player_id" hidden>
           </div>
           <div class="row justify-content-around mb-2" id="playerName">
-            <div class="col-6">
+            <div class="col-4">
               Username :
             </div>
-            <div class="col-4 text-end">
+            <div class="col text-end">
               <span></span>
             </div>
             <input type="text" name="username" hidden>
           </div>
           <div class="row justify-content-around mb-2" id="emailInpt">
-            <div class="col-6">
+            <div class="col-4">
               Email :
             </div>
-            <div class="col-4 text-end">
+            <div class="col text-end">
               <span></span>
             </div>
             <input type="text" name="email" hidden>
           </div>
           <div class="row justify-content-around mb-2" id="amount">
-            <div class="col-6">
+            <div class="col-4">
               Amount :
             </div>
-            <div class="col-4 text-end">
+            <div class="col text-end">
               <span></span>
             </div>
             <input type="text" name="amount" hidden>
           </div>
           <div class="row justify-content-around mb-2" id="price">
-            <div class="col-6">
+            <div class="col-4">
               Price :
             </div>
-            <div class="col-4 text-end">
+            <div class="col text-end">
               <span></span>
             </div>
             <input type="text" name="price" hidden>
             <input type="text" name="price_id" id="priceId" hidden>
           </div>
           <div class="row justify-content-around mb-2" id="payment">
-            <div class="col-6">
+            <div class="col">
               Method Payment :
             </div>
             <div class="col-4 text-end">
@@ -112,8 +112,8 @@
           </div>
         </div>
         <div class="modal-footer">
+          <button type="submit" class="button__primary order-md-last">Continue</button>
           <button type="button" class="button__cancel" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="button__primary">Continue</button>
         </div>
       </form>
     </div>
