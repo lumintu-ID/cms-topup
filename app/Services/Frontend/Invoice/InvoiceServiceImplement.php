@@ -72,7 +72,6 @@ class InvoiceServiceImplement implements InvoiceService
 
     switch (Str::upper(($codePayment))) {
       case env("CODA_CODE_PAYMENT"):
-        // dd($this->_codaGateWayService->urlRedirect($dataParse));
         return $this->_codaGateWayService->urlRedirect($dataParse);
         break;
       case env("RAZOR_CODE_PAYMENT"):
@@ -109,7 +108,6 @@ class InvoiceServiceImplement implements InvoiceService
     switch (Str::upper($dataPayment['code_payment'])) {
       case env('CODA_CODE_PAYMENT'):
         $dataAttribute = $this->_codaGateWayService->generateDataParse($dataPayment);
-        // dd($dataAttribute);
 
         return json_encode($dataAttribute);
         break;

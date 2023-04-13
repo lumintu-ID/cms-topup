@@ -273,19 +273,12 @@ $(document).ready(function () {
   });
 
   $('#reload').click(async function () {
-    // $.ajax({
-    //   type: 'GET',
-    //   url: 'reload-captcha',
-    //   success: function (data) {
-    //     $(".captcha span").html(data.captcha);
-    //   }
-    // });
     await fetch(`${window.location.origin}/reload-captcha`).then((response) => {
       return response.json();
     })
       .then((data) => {
-        console.log(data);
         $(".captcha span").html(data.captcha);
+        $("#captcha").val('');
       });
   });
 });
