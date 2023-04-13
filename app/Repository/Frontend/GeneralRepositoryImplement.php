@@ -14,7 +14,7 @@ class GeneralRepositoryImplement implements GeneralRepository
       'slug_game',
       'game_title',
       'cover'
-    )->get();
+    )->where('is_active', 1)->get();
   }
 
   public function getDataGameById(string $id)
@@ -24,7 +24,8 @@ class GeneralRepositoryImplement implements GeneralRepository
       'game_id as code_game',
       'game_title as title',
       'cover'
-    )->where('id', $id)->first();
+    )->where('id', $id)
+      ->where('is_active', 1)->first();
   }
 
   public function getDataGameBySlug(string $slug)
@@ -34,7 +35,8 @@ class GeneralRepositoryImplement implements GeneralRepository
       'game_id as code_game',
       'game_title as title',
       'cover'
-    )->where('slug_game', $slug)->first();
+    )->where('slug_game', $slug)
+      ->where('is_active', 1)->first();
   }
 
   public function getAllDataCountry()
