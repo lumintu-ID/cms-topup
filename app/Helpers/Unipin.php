@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
 
 class Unipin
 {

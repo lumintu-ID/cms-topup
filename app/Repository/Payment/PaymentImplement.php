@@ -3,6 +3,7 @@
 namespace App\Repository\Payment;
 
 use App\Models\Payment;
+use App\Models\Price;
 use App\Repository\Payment\PaymentRepository;
 
 class PaymentImplement implements PaymentRepository
@@ -24,6 +25,8 @@ class PaymentImplement implements PaymentRepository
     public function delete($id)
     {
         $data = Payment::where('payment_id', $id)->delete();
+
+        Price::where('payment_id', $id)->delete();
 
         return $data;
     }

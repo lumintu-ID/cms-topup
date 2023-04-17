@@ -24,62 +24,62 @@
             <input type="text" name="hash_checksum" hidden>
           </div>
           <div class="row justify-content-around mb-2 mb-2" id="nameGame">
-            <div class="col-6">
+            <div class="col-4">
               Game :
             </div>
-            <div class="col-4 text-end">
+            <div class="col text-end">
               <span></span>
             </div>
             <input type="text" name="game_id" hidden>
           </div>
           <div class="row justify-content-around mb-2" id="playerId">
-            <div class="col-6">
+            <div class="col-4">
               Player ID :
             </div>
-            <div class="col-4 text-end">
+            <div class="col text-end">
               <span></span>
             </div>
             <input type="text" name="player_id" hidden>
           </div>
           <div class="row justify-content-around mb-2" id="playerName">
-            <div class="col-6">
+            <div class="col-4">
               Username :
             </div>
-            <div class="col-4 text-end">
+            <div class="col text-end">
               <span></span>
             </div>
             <input type="text" name="username" hidden>
           </div>
           <div class="row justify-content-around mb-2" id="emailInpt">
-            <div class="col-6">
+            <div class="col-4">
               Email :
             </div>
-            <div class="col-4 text-end">
+            <div class="col text-end">
               <span></span>
             </div>
             <input type="text" name="email" hidden>
           </div>
           <div class="row justify-content-around mb-2" id="amount">
-            <div class="col-6">
+            <div class="col-4">
               Amount :
             </div>
-            <div class="col-4 text-end">
+            <div class="col text-end">
               <span></span>
             </div>
             <input type="text" name="amount" hidden>
           </div>
           <div class="row justify-content-around mb-2" id="price">
-            <div class="col-6">
+            <div class="col-4">
               Price :
             </div>
-            <div class="col-4 text-end">
+            <div class="col text-end">
               <span></span>
             </div>
             <input type="text" name="price" hidden>
             <input type="text" name="price_id" id="priceId" hidden>
           </div>
           <div class="row justify-content-around mb-2" id="payment">
-            <div class="col-6">
+            <div class="col">
               Method Payment :
             </div>
             <div class="col-4 text-end">
@@ -93,31 +93,27 @@
               <p>*Pastikan ID Player dan item yang dipilih sudah sesuai.</p>
             </div>
           </div>
-          <div class="row">
-            <div class="captcha col-12">
-              <div class="row">
-                <div class="col-6">
-                  <div class="row">
-                    <div class="col-6 pe-0">
-                      <span>{!! captcha_img() !!}</span>
-                    </div>
-                    <div class="col-4 ps-0">
-                      <button type="button" class="btn btn-danger" class="reload" id="reload">
-                        &#x21bb;
-                      </button>
-                    </div>
+          <div class="captcha row">
+            <div class="col-12">
+              <div class="captcha-section">
+                <div class="captcha-section__item">
+                  <div class="captcha-section__image">
+                    <span>{!! captcha_img() !!}</span>
+                  </div>
+                  <div class="captcha-section__reload">
+                    <button type="button" class="reload" id="reload">&#x21bb;</button>
                   </div>
                 </div>
-                <div class="col-6">
-                  <input id="captcha" type="text" class="form-control" placeholder="Enter Captcha" name="captcha">
+                <div class="captcha-section__input">
+                  <input type="text" name="captcha" id="captcha">
                 </div>
               </div>
-            </div>            
+            </div>
           </div>
         </div>
         <div class="modal-footer">
+          <button type="submit" class="button__primary order-md-last">Continue</button>
           <button type="button" class="button__cancel" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="button__primary">Continue</button>
         </div>
       </form>
     </div>

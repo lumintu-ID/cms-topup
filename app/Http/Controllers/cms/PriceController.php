@@ -64,51 +64,51 @@ class PriceController extends Controller
 
 
 
-        // try {
-        dd($request);
+        try {
+            // dd($request);
 
 
-        // cek game
+            // cek game
 
 
-        // cek payment
+            // cek payment
 
-        // set new data to save in database
+            // set new data to save in database
 
-        $newData = [];
+            $newData = [];
 
-        for ($i = 0; $i < count($request->ppi); $i++) {
-            $ppi = PricePoint::where('id', $request->ppi[$i])->first();
+            for ($i = 0; $i < count($request->ppi); $i++) {
+                $ppi = PricePoint::where('id', $request->ppi[$i])->first();
 
-            $result = [
-                'game_id' => $request->game,
-                'payment_id' => $request->payment,
-                'name' => $request->name,
-                'price_point_id' => $ppi->id,
-                'amount' => ($request->amount[$i] == null) ? $ppi->amount : $request->amount[$i],
-                'price' => $request->price[$i] == null ? $ppi->price : $request->price[$i],
-            ];
+                $result = [
+                    'game_id' => $request->game,
+                    'payment_id' => $request->payment,
+                    'name' => $request->name,
+                    'price_point_id' => $ppi->id,
+                    'amount' => ($request->amount[$i] == null) ? $ppi->amount : $request->amount[$i],
+                    'price' => $request->price[$i] == null ? $ppi->price : $request->price[$i],
+                ];
 
-            \array_push($newData, $result);
-        };
+                \array_push($newData, $result);
+            };
 
 
-        $this->priceImplement->Create($newData);
+            $this->priceImplement->Create($newData);
 
-        $notif = array(
-            'message' => 'Success Create Price',
-            'alert-info' => 'success'
-        );
+            $notif = array(
+                'message' => 'Success Create Price',
+                'alert-info' => 'success'
+            );
 
-        return redirect(route('cms.price'))->with($notif);
-        // } catch (\Throwable $th) {
-        //     $notif = array(
-        //         'message' => 'Internal Server Error',
-        //         'alert-info' => 'warning'
-        //     );
+            return redirect(route('cms.price'))->with($notif);
+        } catch (\Throwable $th) {
+            $notif = array(
+                'message' => 'Internal Server Error',
+                'alert-info' => 'warning'
+            );
 
-        //     return redirect()->back()->with($notif);
-        // }
+            return redirect()->back()->with($notif);
+        }
     }
 
 
